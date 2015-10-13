@@ -1,0 +1,583 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>API Reference</title>
+
+    <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+      <script src="javascripts/all.js" type="text/javascript"></script>
+
+      <script>
+        $(function() {
+          setupLanguages(["http","shell"]);
+        });
+      </script>
+  </head>
+
+  <body class="index">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.png" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="http">http</a>
+              <a href="#" data-language-name="shell">shell</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to the Hub-of-All-Things API!</p>
+
+<p>Hub-of-All-Things is a platform for a Multi-Sided Market powered by the Internet of Things.</p>
+
+<p>The HAT code is publicly available on <a href="http://github.com/Hub-of-all-Things/HAT2.0">GitHub</a></p>
+
+<h2 id="license">License</h2>
+
+<p>The documentation is released under <a href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International</a></p>
+
+<p><a href="http://creativecommons.org/licenses/by-nc-nd/4.0/">http://creativecommons.org/licenses/by-nc-nd/4.0/</a></p>
+
+<h2 id="about-the-hat">About the HAT</h2>
+
+<p>A Personal Data Management System (“the HAT”) is a personal single tenant (“the individual self”) technology system that is fully individual self-service, to enable an individual to define a full set of “meta-data” defining as a specific set of personal data, personal preferences, personal behaviour events. The HAT allows individuals to share the right information (quality and quantity), with the right people, in the right situations for the right purposes and gain the benefits.</p>
+
+<p>The HAT and its personal data ecosystem is designed to allow individual HAT Users to collect, contextualise and exchange their personal data. The enabling technology for the HAT sits within the HATPDP, (mostly referred as “HAT”). The Personal HAT is a person “oriented” personal data platform, owned by the individuals, that allows us to unpick the silos in which our personal data sits and to collect all this data which we can acquire from internet-connected objects or services. The HAT then allow the transformation of this acquired data for individuals to contextualise and organise, to make it meaningful and useful for control decisions and actions. With that data, individuals can buy apps to analyse, view, create scenarios, trade or make important decisions based on our own data for a smarter and more effective life. The HAT is therefore a fully scalable platform that allows firms to offer individuals services for our personal data, and yet enables us as individuals to personalise that data to our own needs.</p>
+
+<p>The APIs detailed in this document detail how this functionality is achieved.</p>
+
+<h1 id="authentication">Authentication</h1>
+
+<blockquote>
+<p>To authorize, use this code:</p>
+</blockquote>
+<pre class="highlight shell"><code>
+curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET -d <span class="se">\</span>
+  <span class="s1">'$REQUEST_JSON'</span> <span class="se">\</span>
+  http://example.hatdex.org/<span class="nv">$API_ENDPOINT</span>?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+</code></pre>
+<pre class="highlight http"><code><span class="err">
+</span><span class="nf">GET</span> <span class="nn">$API_ENDPOINT?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+$REQUEST_JSON
+
+</code></pre>
+
+<blockquote>
+<p>Make sure to replace <code class="prettyprint">ACCESS_TOKEN</code> with your API ACCESS_TOKEN, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with</p>
+
+<p>You can also use username and password on behalf of the <em>owner</em> user or the <em>platform</em> user who have special privileges (covered later). Password-based authentication is disabled for other users</p>
+</blockquote>
+<pre class="highlight shell"><code>
+curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET -d <span class="se">\</span>
+  <span class="s1">'$REQUEST_JSON'</span> <span class="se">\</span>
+  http://example.hatdex.org/<span class="nv">$API_ENDPOINT</span>?username<span class="o">=</span>bob@example.com&amp;password<span class="o">=</span>bobIsSafe
+</code></pre>
+<pre class="highlight http"><code><span class="err">
+</span><span class="nf">GET</span> <span class="nn">$API_ENDPOINT?username=bob@example.com&amp;password=bobIsSafe</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+$REQUEST_JSON
+
+</code></pre>
+
+<p>For both the data import and export, the virtualised database will required permissions to ensure that a user has authorised certain API consumers to add or read the data from the various Tables within the database. For this, separate “Apps” that represent API user accounts will be present within each user’s PDS. Each App will own several permission sets within the database, which will determine which Tables the API consumers are able to access, in addition to the permissions the API consumers have on those Tables.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET http://example.hatdex.org/</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>access_token</td>
+<td>your access token used to authenticate</td>
+</tr>
+<tr>
+<td>username</td>
+<td>username used for authentication together with password, instead of access_token (user and platform only)</td>
+</tr>
+<tr>
+<td>pass</td>
+<td>password used for authentication together with username, instead of access_token (user and platform only)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API access token.
+</aside>
+
+<h1 id="raw-data-input-and-output">Raw Data Input and Output</h1>
+
+<p>The Raw Data level provides a flexible substrate for users to import a varying range of data. This is achieved through a virtualised database, allowing data providers to accurately map their existing data schemas to a user’s HAT through sets of: </p>
+
+<ul>
+<li>Tables</li>
+<li>Fields</li>
+<li>Records</li>
+<li>Values</li>
+<li>Table Relationships</li>
+<li>Data Record Relationships </li>
+</ul>
+
+<p>For example:</p>
+
+<ul>
+<li>if a user is importing their Facebook data, they may wish to create a separate “Table” for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”</li>
+<li>similarly, someone importing their viewing history from Netflix may wish to create a table for the Netflix items they have viewed, and a separate Table for the items they have rated.</li>
+</ul>
+
+<h2 id="configure-a-new-data-source">Configure a new Data Source</h2>
+<pre class="highlight shell"><code>
+curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+    "name": "kitchen",
+    "source": "fibaro",
+    "fields": [
+      { "name": "tableTestField" },
+      { "name": "tableTestField2" }
+    ],
+    "subTables": [
+      {
+        "name": "kitchenElectricity",
+        "source": "fibaro",
+        "fields": [
+          { "name": "tableTestField3" },
+          { "name": "tableTestField4" }
+        ]
+      }
+    ]
+  }'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/table?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+
+</code></pre>
+<pre class="highlight http"><code><span class="err">
+</span><span class="nf">POST</span> <span class="nn">/data/table?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField2"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricity"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">201</span><span class="w"> </span><span class="err">CREATED</span><span class="w">
+</span><span class="err">Content-Type:</span><span class="w"> </span><span class="err">application/json</span><span class="w">
+
+</span><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w"> 
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> 
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField2"</span><span class="p">,</span><span class="w"> 
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricity"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w"> 
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w"> 
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="p">,</span><span class="w"> 
+          </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-16T21:45:22.551Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+
+<p>When creating a new data source for the HAT you have to define the structure of the data that you will be using to format your input data. We work with a <em>virtualized</em> data structure, meaning that we can create any number of tables, subtables and fields within them that are necessary.</p>
+
+<p>The basic rules are:</p>
+
+<ul>
+<li>If it is a simple value (a leaf of a JSON tree), it will be stored as a <code class="prettyprint">field</code></li>
+<li>If it is a more complex object (JSON object with child nodes), it will be stored as a <code class="prettyprint">table</code></li>
+<li>Each <code class="prettyprint">table</code> (or <code class="prettyprint">subTable</code>) can have 0 or more <code class="prettyprint">fields</code></li>
+<li>If an object is part of another object or is the root object (node) of the JSON tree, it will be stored as a <code class="prettyprint">table</code>/<code class="prettyprint">subTable</code>. Any objects that are part of it will be stored as <code class="prettyprint">subTables</code></li>
+<li>Each table and each field has a <code class="prettyprint">name</code>. The names are used when reconstructing stored data back into JSON as property names</li>
+<li>Each field currently has a mandatory source name to avoid name clashes between unrelated data sources</li>
+</ul>
+
+<aside class="info">
+The <code>source</code> field will not be modifiable by the API caller from the next release of the HAT and it will be used to control who owns the specific tables (the same user who has created them) and hence who can write into them.
+</aside>
+
+<aside class="warning">
+Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
+</aside>
+
+<h2 id="creating-a-new-data-record">Creating a new Data Record</h2>
+<pre class="highlight shell"><code>
+curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'{
+    "name": "testRecord 1"
+  }'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/record?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+
+</code></pre>
+<pre class="highlight http"><code><span class="err">
+</span><span class="nf">POST</span> <span class="nn">/data/record?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">31</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testRecord 1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">201</span><span class="w"> </span><span class="err">Created</span><span class="w">
+</span><span class="err">Content-Type:</span><span class="w"> </span><span class="err">application/json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testRecord 1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span></code></pre>
+
+<p>Data Records define how sets data values should be grouped together into the data table structures. You should create a new <code class="prettyprint">record</code> for every set of values you want to be treated as a single record.</p>
+
+<p>For example, each GPS reading with separate longitude and latitude values would be put in a separate record taht contains both longitude and latitude, together with additional properties such as the timestamp of the record.</p>
+
+<h2 id="filling-data-records-with-data">Filling Data Records with Data</h2>
+<pre class="highlight http"><code><span class="err">
+</span><span class="nf">POST</span> <span class="nn">/record/RECORDID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w"> 
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="w"> 
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-3"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="w"> 
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+
+</span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">201</span><span class="w"> </span><span class="err">CREATED</span><span class="w">
+</span><span class="err">Content-Type:</span><span class="w"> </span><span class="err">application/json</span><span class="w">
+
+</span><span class="p">[{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">361</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">362</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">363</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-3"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}]</span><span class="w">
+
+</span></code></pre>
+<pre class="highlight shell"><code>
+curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'[
+  {
+    "value": "testValue2-1",
+    "field": { 
+      "id": 2,
+      "name": "tableTestField" 
+    }
+  },
+  {
+    "value": "testValue2-2",
+    "field": { 
+      "id": 3,
+      "name": "tableTestField3" 
+    }
+  },
+  {
+    "value": "testValue2-3",
+    "field": { 
+      "id": 4,
+      "name": "tableTestField4" 
+    },
+  }
+]'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/record/RECORDID/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+
+<span class="o">[{</span>
+  <span class="s2">"id"</span>: 361,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+  <span class="s2">"value"</span>: <span class="s2">"testValue2-1"</span>,
+  <span class="s2">"field"</span>: <span class="o">{</span>
+    <span class="s2">"id"</span>: 2,
+    <span class="s2">"name"</span>: <span class="s2">"tableTestField"</span>
+  <span class="o">}</span>
+<span class="o">}</span>, <span class="o">{</span>
+  <span class="s2">"id"</span>: 362,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+  <span class="s2">"value"</span>: <span class="s2">"testValue2-2"</span>,
+  <span class="s2">"field"</span>: <span class="o">{</span>
+    <span class="s2">"id"</span>: 3,
+    <span class="s2">"name"</span>: <span class="s2">"tableTestField3"</span>
+  <span class="o">}</span>
+<span class="o">}</span>, <span class="o">{</span>
+  <span class="s2">"id"</span>: 363,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+  <span class="s2">"value"</span>: <span class="s2">"testValue2-3"</span>,
+  <span class="s2">"field"</span>: <span class="o">{</span>
+    <span class="s2">"id"</span>: 4,
+    <span class="s2">"name"</span>: <span class="s2">"tableTestField4"</span>
+  <span class="o">}</span>
+<span class="o">}]</span>
+</code></pre>
+
+<blockquote>
+<p>RECORDID must be replaced with the id of the record you have just created with a <code class="prettyprint">POST</code> to  <code class="prettyprint">/data/record</code></p>
+</blockquote>
+
+<p>Currently the easiest way of putting new data into the HAT is to POST it to the <code class="prettyprint">/record/RECORDID/values</code> API endpoint, formatted as in the provided examples. RECORDID is extracted separately for each Data Record from the response of the API call to create a new record. In this case you submit a list of values taht each contain the value itself and the field it should be put in, together with its <code class="prettyprint">ID</code> and <code class="prettyprint">name</code>.</p>
+
+<aside class="info">
+Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
+</aside>
+
+<h2 id="retrieving-raw-data">Retrieving Raw Data</h2>
+
+<aside class="info">
+Raw data retrieval is only available for the <em>Owner</em> user for the use by the personal HAT User Interface. It may, however, be useful in development to better understand how the HAT works as well as to help you structure your data.
+</aside>
+
+<h3 id="by-table">By Table</h3>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>TABLE_ID must be replaced with the id of the table you want</p>
+</blockquote>
+
+<p>You can get all data that has been stored in a specific table (including its fields and subtables), listed by associated record ID (one record per list item), and the full nested structure of fields and subtables.</p>
+
+<h3 id="by-field">By Field</h3>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/field/FIELD_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>FIELD_ID must be replaced with the id of the field you want</p>
+</blockquote>
+
+<p>You can query the data by field (individual property) to get a list of all items that are stored in that field</p>
+
+<h3 id="by-record">By Record</h3>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>RECORD_ID must be replaced with the id of the record you want</p>
+</blockquote>
+
+<p>You can get all values associated with a record ID, in the form of the full, nested structure of tables, subtables, fields and values</p>
+
+<h1 id="contextualisation">Contextualisation</h1>
+
+<p>Each user will be able to “contextualise” their data through a set of five tables. These are: People, Organisations, Locations, Events and Things, where “Things” represents both virtual and physical objects. A connected home where a sensor measures when a door is opened or closed could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” table, in where objects (real or conceptual) that are not People, Organisations, Locations or Events are captured. The five tables interconnect through a series of cross-reference tables, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.</p>
+
+<p>The five contextualised tables link to the Raw Data itself through a series of Properties. The schema will host a number of user-defined Properties that may link to several records of the five tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person record (through a cross reference table) would point to separate Values stored within the Raw Data structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.</p>
+
+<p>Details TBD</p>
+
+<h1 id="data-bundling">Data Bundling</h1>
+
+<p>Explanation TBD </p>
+
+<p>Details TBD</p>
+
+<h1 id="sharing-and-direct-data-debits">Sharing and Direct Data Debits</h1>
+
+<p>The virtualised database (or “Raw Data”) also allows users to export the data, where (potentially) separate Tables are created to match the expected data format that an API consuming service expects. For example, if a user has cross-referenced the films they have “Liked” on Facebook to their viewing history on Netflix, then a service which wants to consume this data may expect a Table containing films that the user has Liked with a total number of times they have watched the film. To simplify this for the first phase, it is assumed that a service consuming the PDS API will be able to read the data held within the contextualised tables, and format the data appropriately within the virtualised database.</p>
+
+<p>Details TBD</p>
+
+          <h1 id="errors">Errors</h1>
+
+<p>The HAT API uses the standard HTTP error codes:</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Your request sucks</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; Your API key is wrong</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden &ndash; The action you requested is not allowed for you: it belongs to somebody else or is too private</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found &ndash; The specified data could not be found</td>
+</tr>
+<tr>
+<td>406</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone &ndash; The item requested has been removed from our servers</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests &ndash; You&rsquo;re asking for too much! Slow down!</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+</tr>
+</tbody></table>
+
+<p>Response body may optionally contain a more detailed explanation of the error</p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="http">http</a>
+                <a href="#" data-language-name="shell">shell</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
