@@ -2,8 +2,8 @@
 title: API Reference
 
 language_tabs:
-  - http
-  - shell
+- http
+- shell
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -42,47 +42,42 @@ The APIs detailed in this document detail how this functionality is achieved.
 
 > To authorize, use this code:
 
-```shell
+``` shell
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
-  -GET -d \
-  '$REQUEST_JSON' \
+  -GET \
   http://example.hatdex.org/$API_ENDPOINT?access_token=$ACCESS_TOKEN
 ```
 
-```http
+``` http
 
-GET $API_ENDPOINT?access_token=$ACCESS_TOKEN HTTP/1.1
+GET API_ENDPOINT?access_token=$ACCESS_TOKEN HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
 
-$REQUEST_JSON
-
 ```
 
-> Make sure to replace `ACCESS_TOKEN` with your API ACCESS_TOKEN, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with
+> Make sure to replace `ACCESS_TOKEN` with your API access token, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with
 
 > You can also use username and password on behalf of the _owner_ user or the _platform_ user who have special privileges (covered later). Password-based authentication is disabled for other users
 
-```shell
+``` shell
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
-  -GET -d \
-  '$REQUEST_JSON' \
+  -GET \
   http://example.hatdex.org/$API_ENDPOINT?username=bob@example.com&password=bobIsSafe
+
 ```
 
-```http
+``` http
 
-GET $API_ENDPOINT?username=bob@example.com&password=bobIsSafe HTTP/1.1
+GET API_ENDPOINT?username=bob@example.com&password=bobIsSafe HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
-
-$REQUEST_JSON
 
 ```
 
@@ -124,7 +119,7 @@ For example:
 
 ## Configure a new Data Source
 
-```shell
+``` shell
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
@@ -151,7 +146,7 @@ curl -H "Content-Type: application/json" \
 
 ```
 
-```http
+``` http
 
 POST /data/table?access_token=$ACCESS_TOKEN HTTP/1.1
 User-Agent: MyClient/1.0.0
@@ -177,8 +172,9 @@ Content-Type: application/json
     }
   ]
 }
-
-HTTP/1.1 201 CREATED
+```
+``` http
+HTTP/1.1 201 Created
 Content-Type: application/json
 
 {
@@ -250,7 +246,7 @@ Make sure to save the structure for yourself for each user you are storing the d
 
 ## Creating a new Data Record
 
-```shell
+``` shell
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
@@ -262,7 +258,7 @@ curl -H "Content-Type: application/json" \
 
 ```
 
-```http
+``` http
 
 POST /data/record?access_token=$ACCESS_TOKEN HTTP/1.1
 Accept: application/json
@@ -273,7 +269,8 @@ Content-Length: 31
 {
   "name": "testRecord 1"
 }
-
+```
+``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
 {
@@ -290,7 +287,7 @@ For example, each GPS reading with separate longitude and latitude values would 
 
 ## Filling Data Records with Data
 
-```http
+``` http
 
 POST /record/RECORDID/values?access_token=$ACCESS_TOKEN HTTP/1.1
 User-Agent: MyClient/1.0.0
@@ -321,8 +318,9 @@ Content-Type: application/json
     }
   }
 ]
-
-HTTP/1.1 201 CREATED
+```
+``` http
+HTTP/1.1 201 Created
 Content-Type: application/json
 
 [{
@@ -356,7 +354,7 @@ Content-Type: application/json
 
 ```
 
-```shell
+``` shell
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
@@ -434,11 +432,100 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 ### By Table
 
-```http
-GET /data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+``` http
+GET /data/table/TABLE_ID/values?username=bob@example.com&password=bobIsSafe HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "id": 44,
+    "name": "testRecord 1",
+    "dateCreated": "2015-10-13T18:10:42+01:00",
+    "lastUpdated": "2015-10-13T18:10:42+01:00",    
+    "tables": [
+      {
+        "id": 118,
+        "name": "kitchen",
+        "source": "fibaro",
+        "dateCreated": "2015-10-13T17:56:36+01:00",
+        "lastUpdated": "2015-10-13T17:56:36+01:00",
+        "fields": [
+          {
+            "id": 239,
+            "name": "tableTestField",
+            "dateCreated": "2015-10-13T17:56:36+01:00",
+            "lastUpdated": "2015-10-13T17:56:36+01:00",
+            "tableId": 118
+          },
+          {
+            "id": 240,
+            "name": "tableTestField2",
+            "dateCreated": "2015-10-13T17:56:36+01:00",
+            "lastUpdated": "2015-10-13T17:56:36+01:00",            
+            "tableId": 118,
+            "values": [
+              {
+                "id": 361,
+                "dateCreated": "2015-10-13T18:18:08+01:00",
+                "lastUpdated": "2015-10-13T18:18:08+01:00",
+                "value": "testValue2-1"
+              }
+            ]
+          }
+        ],
+        "subTables": [
+          {
+            "id": 119,
+            "name": "kitchenElectricity",
+            "source": "fibaro",
+            "dateCreated": "2015-10-13T17:56:36+01:00",
+            "lastUpdated": "2015-10-13T17:56:36+01:00",            
+            "fields": [
+              {
+                "id": 241,
+                "name": "tableTestField3",
+                "dateCreated": "2015-10-13T17:56:36+01:00",
+                "lastUpdated": "2015-10-13T17:56:36+01:00",                
+                "tableId": 119,
+                "values": [
+                  {
+                    "id": 362,
+                    "dateCreated": "2015-10-13T18:18:08+01:00",
+                    "lastUpdated": "2015-10-13T18:18:08+01:00",
+                    "value": "testValue2-2"
+                  }
+                ]
+              },
+              {
+                "id": 242,
+                "name": "tableTestField4",
+                "dateCreated": "2015-10-13T17:56:36+01:00",
+                "lastUpdated": "2015-10-13T17:56:36+01:00",                
+                "tableId": 119,
+                "values": [
+                  {
+                    "id": 363,
+                    "dateCreated": "2015-10-13T18:18:08+01:00",
+                    "lastUpdated": "2015-10-13T18:18:08+01:00",
+                    "value": "testValue2-3"
+                  }
+                ]
+              }
+            ],
+            "subTables": []
+          }
+        ]
+      }
+    ]
+  }
+]
 ```
 
 > TABLE_ID must be replaced with the id of the table you want
@@ -447,11 +534,33 @@ You can get all data that has been stored in a specific table (including its fie
 
 ### By Field
 
-```http
-GET /data/field/FIELD_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+``` http
+GET /data/field/FIELD_ID/values?username=bob@example.com&password=bobIsSafe HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "name": "tableTestField2",
+  "lastUpdated": "2015-10-13T17:56:36+01:00",
+  "id": 240,
+  "dateCreated": "2015-10-13T17:56:36+01:00",
+  "tableId": 118,
+  "values": [
+    {
+      "id": 361,
+      "dateCreated": "2015-10-13T18:18:08+01:00",
+      "lastUpdated": "2015-10-13T18:18:08+01:00",
+      "value": "testValue2-1"
+    }
+  ]
+}
+
 ```
 
 > FIELD_ID must be replaced with the id of the field you want
@@ -460,11 +569,98 @@ You can query the data by field (individual property) to get a list of all items
 
 ### By Record
 
-```http
-GET /data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+``` http
+GET /data/record/RECORD_ID/values?username=bob@example.com&password=bobIsSafe HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 44,
+  "name": "testRecord 1",
+  "dateCreated": "2015-10-13T18:10:42+01:00",
+  "lastUpdated": "2015-10-13T18:10:42+01:00",    
+  "tables": [
+    {
+      "id": 118,
+      "name": "kitchen",
+      "source": "fibaro",
+      "dateCreated": "2015-10-13T17:56:36+01:00",
+      "lastUpdated": "2015-10-13T17:56:36+01:00",
+      "fields": [
+        {
+          "id": 239,
+          "name": "tableTestField",
+          "dateCreated": "2015-10-13T17:56:36+01:00",
+          "lastUpdated": "2015-10-13T17:56:36+01:00",
+          "tableId": 118
+        },
+        {
+          "id": 240,
+          "name": "tableTestField2",
+          "dateCreated": "2015-10-13T17:56:36+01:00",
+          "lastUpdated": "2015-10-13T17:56:36+01:00",            
+          "tableId": 118,
+          "values": [
+            {
+              "id": 361,
+              "dateCreated": "2015-10-13T18:18:08+01:00",
+              "lastUpdated": "2015-10-13T18:18:08+01:00",
+              "value": "testValue2-1"
+            }
+          ]
+        }
+      ],
+      "subTables": [
+        {
+          "id": 119,
+          "name": "kitchenElectricity",
+          "source": "fibaro",
+          "dateCreated": "2015-10-13T17:56:36+01:00",
+          "lastUpdated": "2015-10-13T17:56:36+01:00",            
+          "fields": [
+            {
+              "id": 241,
+              "name": "tableTestField3",
+              "dateCreated": "2015-10-13T17:56:36+01:00",
+              "lastUpdated": "2015-10-13T17:56:36+01:00",                
+              "tableId": 119,
+              "values": [
+                {
+                  "id": 362,
+                  "dateCreated": "2015-10-13T18:18:08+01:00",
+                  "lastUpdated": "2015-10-13T18:18:08+01:00",
+                  "value": "testValue2-2"
+                }
+              ]
+            },
+            {
+              "id": 242,
+              "name": "tableTestField4",
+              "dateCreated": "2015-10-13T17:56:36+01:00",
+              "lastUpdated": "2015-10-13T17:56:36+01:00",                
+              "tableId": 119,
+              "values": [
+                {
+                  "id": 363,
+                  "dateCreated": "2015-10-13T18:18:08+01:00",
+                  "lastUpdated": "2015-10-13T18:18:08+01:00",
+                  "value": "testValue2-3"
+                }
+              ]
+            }
+          ],
+          "subTables": []
+        }
+      ]
+    }
+  ]
+}
 ```
 
 > RECORD_ID must be replaced with the id of the record you want
