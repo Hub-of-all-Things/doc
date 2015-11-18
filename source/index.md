@@ -676,6 +676,389 @@ The five contextualised tables link to the Raw Data itself through a series of P
 
 Details TBD
 
+# Data Type annotations
+
+## System Data Types
+
+Each data input is linked with its Type. The HAT defines a set of Types that can be used to annotate entities and data. For example, type "PostalAddress" is used to annotate physical address of item. Types can be freely customised by HAT users.
+
+### Creating a Type
+
+You should create a new `type` for every set of values you want to be treated as a specific type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `type`, the POST body should contain a new Type `name` and `description` and it should be posted to `/type/type`. The new Type id and times when it was created and updated will be recorded automatically.
+
+> Example of creating a new Data Type:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+      "name": "Date",
+      "description": "Date in time"
+   }' \
+  "http://example.hatdex.org/type/type?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /type/type?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+    "name": "Date",
+    "description": "Date in time"
+}
+```
+
+> Example response:
+
+``` shell
+{
+    "name": "Date",
+    "lastUpdated": "2015-11-17T21:01:59Z",
+    "description": "Date in time",
+    "id": 4,
+    "dateCreated": "2015-11-17T21:01:59Z"
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+    "name": "Date",
+    "lastUpdated": "2015-11-17T21:01:59Z",
+    "description": "Date in time",
+    "id": 4,
+    "dateCreated": "2015-11-17T21:01:59Z"
+}
+```
+### Creating links between Types
+
+It is useful to link various Types. For example, you might have types "address" (id 1), "place" (id 2) and "PostalAddress" (id 3), where you want "place" and "PostalAddress" to be treated as `subTypes` of type "address". To create such Type hierarchy, you need to link "address" to "place" and "address" to "PostalAddress" by defining a `relationship type`. This can be done by creating a POST body containing `relationshipType` name (e.g. "location") and typing `/type/1/type/2` and `/type/1/type/3` in POST lines to link "address" to "place" and "address" to "PostalAddress" respectively. Relationship ids will be created automatically.
+
+> Example of creating a link between two Types:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+      "relationshipType": "location"
+   }' \
+  "http://example.hatdex.org/type/1/type/2?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /type/1/type/2?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+    "relationshipType": "location"
+}
+```
+
+> Example response:
+
+``` shell
+{
+    "id": 1
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+    "id": 1
+}
+```
+
+### Listing available Types
+
+You might want to check what Types have been already created before defining a new one. To list all available Types, use GET with `/type/type?` in the line just before the `access_token`. The response of each Type will contain some additional information, i.e. its ID and times when it was created and updated.                                                                                                                                                                                                   
+
+> Example of listing all available Types:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/type/1/type/2?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /type/type?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+```
+> Example response:
+
+``` shell
+[
+    {
+        "name": "Country",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "Nationality of the person",
+        "id": 1,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    },
+    {
+        "name": "Date",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "Date of birth",
+        "id": 2,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "name": "Country",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "Nationality of the person",
+        "id": 1,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    },
+    {
+        "name": "Date",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "Date of birth",
+        "id": 2,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    }
+]
+```
+
+### Finding Types by Name
+
+You might need to extract some information about a particular Type, e.g. its id in the system. To do this, you can retrieve information about that Type using GET and specifying name of that Type. For example, to find the Type "PostalAddress", type `/type/type?name=PostalAddress&` just before the `access_token` in the GET line.
+
+> Example of finding a particular Type:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/type/type?name=PostalAddress&access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /type/type?name=PostalAddress&access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+```
+> Example response:
+
+``` shell
+{
+    "name": "PostalAddress",
+    "lastUpdated": "2015-11-04T02:50:47Z",
+    "description": "Physical address of the item",
+    "id": 10,
+    "dateCreated": "2015-11-04T02:50:47Z"
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "name": "PostalAddress",
+    "lastUpdated": "2015-11-04T02:50:47Z",
+    "description": "Physical address of the item",
+    "id": 10,
+    "dateCreated": "2015-11-04T02:50:47Z"
+}
+```
+
+## System Units of Measurement
+
+Each data input is associated with its Units of Measurement. The HAT defines a set of Units of Measurement that can be used. For example, a Unit of Measurement "kilograms" was set. Units of Measurements can be freely customised by HAT users.
+
+### Creating a Unit of Measurement
+
+You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the POST body should contain its `name`, `description` and `symbol`, and it should be posted to `/type/unitofmeasurement`. The new Unit of Measurement id and times when it was created and updated will be recorded automatically.
+
+> Example of creating a new Unit of Measurement:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+      "name": "kilograms",
+      "description": "measurement of weight",
+      "symbol": "kg"
+   }' \
+  "http://example.hatdex.org/type/unitofmeasurement?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /type/unitofmeasurement?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+    "name": "kilograms",
+    "description": "measurement of weight",
+    "symbol": "kg"
+}
+```
+> Example response:
+
+``` shell
+{
+    "id": 1,
+    "dateCreated": "2015-10-13T18:10:42+01:00",
+    "lastUpdated": "2015-10-13T18:10:42+01:00",
+    "name": "kilograms",
+    "description": "measurement of weight",
+    "symbol": "kg"
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+    "id": 1,
+    "dateCreated": "2015-10-13T18:10:42+01:00",
+    "lastUpdated": "2015-10-13T18:10:42+01:00",
+    "name": "kilograms",
+    "description": "measurement of weight",
+    "symbol": "kg"
+}
+
+```
+
+### Listing available Units of Measurement
+
+You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, use GET with `/type/unitofmeasurement?` in the line just before the `access_token`. The response of each Unit of Measurement will contain some additional information, i.e. its id and times when it was created and updated.                                                                                                                                                                                                   
+
+> Example of listing all available Units of Measurement:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/type/unitofmeasurement?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /type/unitofmeasurement?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+```
+> Example response:
+
+``` shell
+[
+    {
+        "name": "kilograms",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "measurement of weight",
+        "symbol": "kg",
+        "id": 1,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    },
+    {
+        "name": "meters",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "measurement of height or length",
+        "symbol": "m",
+        "id": 2,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "name": "kilograms",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "measurement of weight",
+        "symbol": "kg",
+        "id": 1,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    },
+    {
+        "name": "meters",
+        "lastUpdated": "2015-11-04T02:50:47Z",
+        "description": "measurement of height or length",
+        "symbol": "m",
+        "id": 2,
+        "dateCreated": "2015-11-04T02:50:47Z"
+    }
+]
+```
+
+### Finding Units of Measurement by Name
+
+You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement "meters", type `/type/type?name=meters&` just before the `access_token` in the GET line.
+
+> Example of finding a particular Unit of Measurement:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/type/unitofmeasurement?name=meters&access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /type/unitofmeasurement?name=meters&access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+```
+> Example response:
+
+``` shell
+{
+    "name": "meters",
+    "lastUpdated": "2015-11-04T02:50:47Z",
+    "description": "measurement of height or length",
+    "symbol": "m",
+    "id": 2,
+    "dateCreated": "2015-11-04T02:50:47Z"
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "name": "meters",
+    "lastUpdated": "2015-11-04T02:50:47Z",
+    "description": "measurement of height or length",
+    "symbol": "m",
+    "id": 2,
+    "dateCreated": "2015-11-04T02:50:47Z"
+}
+```
+
 # Data Bundling
 
 Explanation TBD 
