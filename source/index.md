@@ -680,11 +680,11 @@ Details TBD
 
 ## System Data Types
 
-Each data input is linked with its Type. The HAT defines a set of Types that can be used to annotate entities and data. For example, type "PostalAddress" is used to annotate physical address of item. Types can be freely customised by HAT users.
+Each contextualised data item is linked with its Type. The HAT defines a set of Types that can be used to annotate entities and data. For example, type "PostalAddress" is used to annotate physical address of item. A default set of Types, common across all HATs, is provided by HATDeX, however Types can be further customised by HAT developers.
 
 ### Creating a Type
 
-You should create a new `type` for every set of values you want to be treated as a specific type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `type`, the POST body should contain a new Type `name` and `description` and it should be posted to `/type/type`. The new Type id and times when it was created and updated will be recorded automatically.
+You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and `description` and it should be posted to `/type/type`. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Data Type:
 
@@ -737,7 +737,7 @@ Content-Type: application/json
 ```
 ### Creating links between Types
 
-It is useful to link various Types. For example, you might have types "address" (id 1), "place" (id 2) and "PostalAddress" (id 3), where you want "place" and "PostalAddress" to be treated as `subTypes` of type "address". To create such Type hierarchy, you need to link "address" to "place" and "address" to "PostalAddress" by defining a `relationship type`. This can be done by creating a POST body containing `relationshipType` name (e.g. "location") and typing `/type/1/type/2` and `/type/1/type/3` in POST lines to link "address" to "place" and "address" to "PostalAddress" respectively. Relationship ids will be created automatically.
+It is useful to link various Types. For example, you might have types "address" (ID 1), "place" (ID 2) and "PostalAddress" (ID 3), where you want "place" and "PostalAddress" to be treated as `subTypes` of type "address". To create such Type hierarchy, you need to link "address" to "place" and "address" to "PostalAddress" by defining a `relationship Type`. This can be done by creating an API request body containing `relationshipType` name (e.g. "subtype") and typing `/type/1/type/2` and `/type/1/type/3` in the POST request to link "address" to "place" and "address" to "PostalAddress" respectively. Relationship IDs will be created automatically.
 
 > Example of creating a link between two Types:
 
@@ -746,7 +746,7 @@ curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
   -POST -d \
   '{
-      "relationshipType": "location"
+      "relationshipType": "subtype"
    }' \
   "http://example.hatdex.org/type/1/type/2?access_token=$ACCESS_TOKEN"
 ```
@@ -758,7 +758,7 @@ Accept: application/json
 Host: example.hatdex.org
 
 {
-    "relationshipType": "location"
+    "relationshipType": "subtype"
 }
 ```
 
@@ -781,7 +781,7 @@ Content-Type: application/json
 
 ### Listing available Types
 
-You might want to check what Types have been already created before defining a new one. To list all available Types, use GET with `/type/type?` in the line just before the `access_token`. The response of each Type will contain some additional information, i.e. its ID and times when it was created and updated.                                                                                                                                                                                                   
+You might want to check what Types have been already created before defining a new one. To list all available Types, you should have `/type/type` in your GET request. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
 
 > Example of listing all available Types:
 
@@ -841,11 +841,11 @@ Content-Type: application/json
 ]
 ```
 
-### Finding Types by Name
+### Filtering Types
 
-You might need to extract some information about a particular Type, e.g. its id in the system. To do this, you can retrieve information about that Type using GET and specifying name of that Type. For example, to find the Type "PostalAddress", type `/type/type?name=PostalAddress&` just before the `access_token` in the GET line.
+You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type “PostalAddress”, include the parameter `name=PostalAddress` in the URL.
 
-> Example of finding a particular Type:
+> Example of finding a particular Type by name:
 
 ``` shell
 curl -H "Content-Type: application/json" \
@@ -887,11 +887,11 @@ Content-Type: application/json
 
 ## System Units of Measurement
 
-Each data input is associated with its Units of Measurement. The HAT defines a set of Units of Measurement that can be used. For example, a Unit of Measurement "kilograms" was set. Units of Measurements can be freely customised by HAT users.
+Each contextualised data property is associated with its Units of Measurement. The HAT defines a set of Units of Measurement that can be used. For example, a Unit of Measurement "kilograms" was set. A default set of Units of Measurement, common across all HATs, is provided by HATDeX, however Units of Measurement can be further customised by HAT developers.
 
 ### Creating a Unit of Measurement
 
-You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the POST body should contain its `name`, `description` and `symbol`, and it should be posted to `/type/unitofmeasurement`. The new Unit of Measurement id and times when it was created and updated will be recorded automatically.
+You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name`, `description` and `symbol`, and it should be posted to `/type/unitofmeasurement`. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Unit of Measurement:
 
@@ -949,7 +949,7 @@ Content-Type: application/json
 
 ### Listing available Units of Measurement
 
-You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, use GET with `/type/unitofmeasurement?` in the line just before the `access_token`. The response of each Unit of Measurement will contain some additional information, i.e. its id and times when it was created and updated.                                                                                                                                                                                                   
+You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should have `/type/unitofmeasurement` in your GET request. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
 
 > Example of listing all available Units of Measurement:
 
@@ -1013,11 +1013,11 @@ Content-Type: application/json
 ]
 ```
 
-### Finding Units of Measurement by Name
+### Filtering Units of Measurement
 
-You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement "meters", type `/type/type?name=meters&` just before the `access_token` in the GET line.
+You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement "meters", include the parameter `name=meters` in the URL.
 
-> Example of finding a particular Unit of Measurement:
+> Example of finding a particular Unit of Measurement by name:
 
 ``` shell
 curl -H "Content-Type: application/json" \
