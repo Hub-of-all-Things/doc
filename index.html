@@ -698,6 +698,313 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h1 id="data-type-annotations">Data Type annotations</h1>
 
+<h2 id="system-properties">System Properties</h2>
+
+<p>The collected data can be transformed into Thing, Person, Location, Event and Organisation and each of these can have their Properties. For example, a Person can have various properties, including: &ldquo;First Name&rdquo;, &ldquo;Last Name&rdquo;, &ldquo;Date of birth&rdquo; with no associated Units of Measurement and &ldquo;Weight&rdquo; with the Unit of Measurement &ldquo;kilograms&rdquo;. Each property is therefore a Collection of data (e.g. collection of first names). A default set of Properties, common across all HATs, is provided by HATDeX, however they can be further customised by HAT developers.</p>
+
+<h3 id="creating-a-property">Creating a Property</h3>
+
+<p>You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of a Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, <code class="prettyprint">description</code>, its Type and Unit of Measurement, and it should be posted to <code class="prettyprint">/property</code>. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of creating a new Property:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+      "name": "bodyWeight",
+      "description": "body weight of a person",
+      "propertyType": 
+      {
+          "name": "weight",
+          "description": "weight of a person",
+          "id": 19
+      },
+      "unitOfMeasurement": 
+      {
+         "name": "kilograms",
+         "description": "measurement of weight",
+         "symbol": "kg",
+         "id": 1
+      }
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/property?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/property?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+    "name": "bodyWeight",
+    "description": "body weight of a person",
+    "propertyType": 
+    {
+       "name": "weight",
+       "description": "weight of a person",
+       "id": 19
+    },
+    "unitOfMeasurement": 
+    {
+        "name": "kilograms",
+        "description": "measurement of weight",
+        "symbol": "kg",
+        "id": 1
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"bodyWeight"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-21T21:55:36Z"</span>,
+    <span class="s2">"description"</span>: <span class="s2">"body weight of a person"</span>,
+    <span class="s2">"propertyType"</span>: 
+    <span class="o">{</span>
+        <span class="s2">"id"</span>: 19,
+        <span class="s2">"name"</span>: <span class="s2">"weight"</span>,
+        <span class="s2">"description"</span>: <span class="s2">"weight of a person"</span>
+    <span class="o">}</span>,
+    <span class="s2">"id"</span>: 6,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-21T21:55:36Z"</span>,
+    <span class="s2">"unitOfMeasurement"</span>: 
+    <span class="o">{</span>
+        <span class="s2">"id"</span>: 1,
+        <span class="s2">"name"</span>: <span class="s2">"kilograms"</span>,
+        <span class="s2">"description"</span>: <span class="s2">"measurement of weight"</span>,
+        <span class="s2">"symbol"</span>: <span class="s2">"kg"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bodyWeight"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-21T21:55:36Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"body weight of a person"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"propertyType"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight of a person"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-21T21:55:36Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"unitOfMeasurement"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kilograms"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"measurement of weight"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kg"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="listing-available-properties">Listing available Properties</h3>
+
+<p>You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should have <code class="prettyprint">/property</code> in your GET request. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   </p>
+
+<blockquote>
+<p>Example of listing all available Properties:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/property?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/property?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+    <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"bodyWeight"</span>,
+        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+        <span class="s2">"description"</span>: <span class="s2">"Body weight of a person"</span>,
+        <span class="s2">"propertyType"</span>: 
+        <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"QuantitativeValue"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+            <span class="s2">"description"</span>: <span class="s2">"A quantitative (numerical) value"</span>,
+            <span class="s2">"id"</span>: 12,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>
+        <span class="o">}</span>,
+        <span class="s2">"id"</span>: 1,
+        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+        <span class="s2">"unitOfMeasurement"</span>: 
+        <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"kilograms"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+            <span class="s2">"description"</span>: <span class="s2">"measurement of weight"</span>,
+            <span class="s2">"symbol"</span>: <span class="s2">"kg"</span>,
+            <span class="s2">"id"</span>: 1,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>,
+    <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"name"</span>,
+        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+        <span class="s2">"description"</span>: <span class="s2">"Name"</span>,
+        <span class="s2">"propertyType"</span>: 
+        <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"Text"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+            <span class="s2">"description"</span>: <span class="s2">"A generic textual value"</span>,
+            <span class="s2">"id"</span>: 13,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>
+        <span class="o">}</span>,
+        <span class="s2">"id"</span>: 2,
+        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+        <span class="s2">"unitOfMeasurement"</span>: 
+        <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"none"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+            <span class="s2">"description"</span>: <span class="s2">"no unit of measurement (plain text)"</span>,
+            <span class="s2">"id"</span>: 3,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bodyWeight"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Body weight of a person"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"propertyType"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QuantitativeValue"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A quantitative (numerical) value"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unitOfMeasurement"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kilograms"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"measurement of weight"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kg"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Name"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"propertyType"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Text"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A generic textual value"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unitOfMeasurement"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no unit of measurement (plain text)"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+
+</span></code></pre>
+
+<h3 id="filtering-properties">Filtering Properties</h3>
+
+<p>You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property “height”, include the parameter <code class="prettyprint">name=height</code> in the URL.</p>
+
+<blockquote>
+<p>Example of finding a particular Property by name:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/property?name=height&amp;access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/property?name=height&amp;access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"height"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+    <span class="s2">"description"</span>: <span class="s2">"Body height of a person"</span>,
+    <span class="s2">"propertyType"</span>: 
+    <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"QuantitativeValue"</span>,
+        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+        <span class="s2">"description"</span>: <span class="s2">"A quantitative (numerical) value"</span>,
+        <span class="s2">"id"</span>: 12,
+        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>
+    <span class="o">}</span>,
+    <span class="s2">"id"</span>: 3,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+    <span class="s2">"unitOfMeasurement"</span>: 
+    <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"centimeters"</span>,
+        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>,
+        <span class="s2">"description"</span>: <span class="s2">"measurement of height or length"</span>,
+        <span class="s2">"symbol"</span>: <span class="s2">"cm"</span>,
+        <span class="s2">"id"</span>: 4,
+        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T02:50:47Z"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"height"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Body height of a person"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"propertyType"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QuantitativeValue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A quantitative (numerical) value"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"unitOfMeasurement"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"centimeters"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"measurement of height or length"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cm"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T02:50:47Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
 <h2 id="system-data-types">System Data Types</h2>
 
 <p>Each contextualised data item is linked with its Type. The HAT defines a set of Types that can be used to annotate entities and data. For example, type &ldquo;PostalAddress&rdquo; is used to annotate physical address of item. A default set of Types, common across all HATs, is provided by HATDeX, however Types can be further customised by HAT developers.</p>
@@ -794,7 +1101,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="listing-available-types">Listing available Types</h3>
 
-<p>You might want to check what Types have been already created before defining a new one. To list all available Types, you should have <code class="prettyprint">/type/type</code> in your GET request. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   </p>
+<p>You might want to check what Types have been already created before defining a new one. To list all available Types, you should have <code class="prettyprint">/type/type</code> in your GET request. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           </p>
 
 <blockquote>
 <p>Example of listing all available Types:</p>
@@ -802,7 +1109,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/1/type/2?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/type/type?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
 <pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/type?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
