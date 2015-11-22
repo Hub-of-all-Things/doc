@@ -700,11 +700,59 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h2 id="system-properties">System Properties</h2>
 
-<p>The collected data can be transformed into Thing, Person, Location, Event and Organisation and each of these can have their Properties. For example, a Person can have various properties, including: &ldquo;First Name&rdquo;, &ldquo;Last Name&rdquo;, &ldquo;Date of birth&rdquo; with no associated Units of Measurement and &ldquo;Weight&rdquo; with the Unit of Measurement &ldquo;kilograms&rdquo;. Each property is therefore a Collection of data (e.g. collection of first names). A default set of Properties, common across all HATs, is provided by HATDeX, however they can be further customised by HAT developers.</p>
+<p>The collected data can be transformed into Thing, Person, Location, Event and Organisation and each of these can have their Properties. For example, a Person can have various properties, including: &ldquo;First Name&rdquo; with the Unit of Measurement &ldquo;none&rdquo; (no unit of measurement) and &ldquo;Weight&rdquo; with the Unit of Measurement &ldquo;kilograms&rdquo;. Each property is therefore a Collection of data (e.g. collection of first names). A default set of Properties, common across all HATs, is provided by HATDeX, however they can be further customised by HAT developers.</p>
+
+<h3 id="property-structure">Property Structure</h3>
+
+<p>All Property API calls contain all the information defined in Property Structure. If you want to create a new property, you have to include all the mandatory information in the API request. Property structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>property ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the property was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateUpdated</td>
+<td>date when the property was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the property</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>description</td>
+<td>description of the property</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>propertyType</td>
+<td>type of the property</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>unitOfMeasurement</td>
+<td>unit of measurement of the property</td>
+<td>mandatory</td>
+</tr>
+</tbody></table>
 
 <h3 id="creating-a-property">Creating a Property</h3>
 
-<p>You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of a Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, <code class="prettyprint">description</code>, its Type and Unit of Measurement, and it should be posted to <code class="prettyprint">/property</code>. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, <code class="prettyprint">description</code>, its <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code>, and it should be posted to <code class="prettyprint">/property</code> endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Property:</p>
@@ -718,14 +766,11 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
       "propertyType": 
       {
           "name": "weight",
-          "description": "weight of a person",
           "id": 19
       },
       "unitOfMeasurement": 
       {
          "name": "kilograms",
-         "description": "measurement of weight",
-         "symbol": "kg",
          "id": 1
       }
    }'</span> <span class="se">\</span>
@@ -742,14 +787,11 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
     "propertyType": 
     {
        "name": "weight",
-       "description": "weight of a person",
        "id": 19
     },
     "unitOfMeasurement": 
     {
         "name": "kilograms",
-        "description": "measurement of weight",
-        "symbol": "kg",
         "id": 1
     }
 }
@@ -766,7 +808,6 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
     <span class="o">{</span>
         <span class="s2">"id"</span>: 19,
         <span class="s2">"name"</span>: <span class="s2">"weight"</span>,
-        <span class="s2">"description"</span>: <span class="s2">"weight of a person"</span>
     <span class="o">}</span>,
     <span class="s2">"id"</span>: 6,
     <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-21T21:55:36Z"</span>,
@@ -774,8 +815,6 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
     <span class="o">{</span>
         <span class="s2">"id"</span>: 1,
         <span class="s2">"name"</span>: <span class="s2">"kilograms"</span>,
-        <span class="s2">"description"</span>: <span class="s2">"measurement of weight"</span>,
-        <span class="s2">"symbol"</span>: <span class="s2">"kg"</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre>
@@ -806,7 +845,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="listing-available-properties">Listing available Properties</h3>
 
-<p>You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should have <code class="prettyprint">/property</code> in your GET request. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   </p>
+<p>You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should make a GET request to <code class="prettyprint">/property</code> endpoint. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   </p>
 
 <blockquote>
 <p>Example of listing all available Properties:</p>
@@ -932,7 +971,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="filtering-properties">Filtering Properties</h3>
 
-<p>You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property “height”, include the parameter <code class="prettyprint">name=height</code> in the URL.</p>
+<p>You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property named “height”, include the parameter <code class="prettyprint">name=height</code> in the URL.</p>
 
 <blockquote>
 <p>Example of finding a particular Property by name:</p>
@@ -1009,9 +1048,47 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <p>Each contextualised data item is linked with its Type. The HAT defines a set of Types that can be used to annotate entities and data. For example, type &ldquo;PostalAddress&rdquo; is used to annotate physical address of item. A default set of Types, common across all HATs, is provided by HATDeX, however Types can be further customised by HAT developers.</p>
 
+<h3 id="type-structure">Type Structure</h3>
+
+<p>All Type API calls contain all the information defined in Type Structure. If you want to create a new Type, you have to include all the mandatory information in the API request. Type structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>type ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the type was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateUpdated</td>
+<td>date when the type was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the type</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>description</td>
+<td>description of the type</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
 <h3 id="creating-a-type">Creating a Type</h3>
 
-<p>You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type &ldquo;Country&rdquo; to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new <code class="prettyprint">Type</code>, the API request body should contain a new Type <code class="prettyprint">name</code> and <code class="prettyprint">description</code> and it should be posted to <code class="prettyprint">/type/type</code>. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type &ldquo;Country&rdquo; to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new <code class="prettyprint">Type</code>, the API request body should contain a new Type <code class="prettyprint">name</code> and <code class="prettyprint">description</code> and it should be posted to <code class="prettyprint">/type/type</code> endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Data Type:</p>
@@ -1101,7 +1178,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="listing-available-types">Listing available Types</h3>
 
-<p>You might want to check what Types have been already created before defining a new one. To list all available Types, you should have <code class="prettyprint">/type/type</code> in your GET request. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           </p>
+<p>You might want to check what Types have been already created before defining a new one. To list all available Types, you should make a GET request to <code class="prettyprint">/type/type</code> endpoint. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           </p>
 
 <blockquote>
 <p>Example of listing all available Types:</p>
@@ -1160,7 +1237,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="filtering-types">Filtering Types</h3>
 
-<p>You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type “PostalAddress”, include the parameter <code class="prettyprint">name=PostalAddress</code> in the URL.</p>
+<p>You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type named “PostalAddress”, include the parameter <code class="prettyprint">name=PostalAddress</code> in the URL.</p>
 
 <blockquote>
 <p>Example of finding a particular Type by name:</p>
@@ -1203,9 +1280,52 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <p>Each contextualised data property is associated with its Units of Measurement. The HAT defines a set of Units of Measurement that can be used. For example, a Unit of Measurement &ldquo;kilograms&rdquo; was set. A default set of Units of Measurement, common across all HATs, is provided by HATDeX, however Units of Measurement can be further customised by HAT developers.</p>
 
+<h3 id="unit-of-measurement-structure">Unit of Measurement Structure</h3>
+
+<p>All Unit of Measurement API calls contain all the information defined in Unit of Measurement Structure. If you want to create a new Unit of Measurement, you have to include all the mandatory information in the API request. Unit of Measurement structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>unit of measurement ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the unit of measurement  was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateUpdated</td>
+<td>date when the unit of measurement  was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the unit of measurement</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>description</td>
+<td>description of the unit of measurement</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>symbol</td>
+<td>symbol of the unit of measurement</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
 <h3 id="creating-a-unit-of-measurement">Creating a Unit of Measurement</h3>
 
-<p>You should create a new <code class="prettyprint">Unit of Measurement</code> for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have &ldquo;kilograms&rdquo; and &ldquo;grams&rdquo; for weight Units of Measurement. To create a new <code class="prettyprint">Unit of Measurement</code>, the API request body should contain its <code class="prettyprint">name</code>, <code class="prettyprint">description</code> and <code class="prettyprint">symbol</code>, and it should be posted to <code class="prettyprint">/type/unitofmeasurement</code>. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new <code class="prettyprint">Unit of Measurement</code> for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have &ldquo;kilograms&rdquo; and &ldquo;grams&rdquo; for weight Units of Measurement. To create a new <code class="prettyprint">Unit of Measurement</code>, the API request body should contain its <code class="prettyprint">name</code>, <code class="prettyprint">description</code> and <code class="prettyprint">symbol</code>, and it should be posted to <code class="prettyprint">/type/unitofmeasurement</code> endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Unit of Measurement:</p>
@@ -1260,7 +1380,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="listing-available-units-of-measurement">Listing available Units of Measurement</h3>
 
-<p>You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should have <code class="prettyprint">/type/unitofmeasurement</code> in your GET request. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   </p>
+<p>You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to <code class="prettyprint">/property/unitofmeasurement</code> endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   </p>
 
 <blockquote>
 <p>Example of listing all available Units of Measurement:</p>
@@ -1323,7 +1443,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="filtering-units-of-measurement">Filtering Units of Measurement</h3>
 
-<p>You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement &ldquo;meters&rdquo;, include the parameter <code class="prettyprint">name=meters</code> in the URL.</p>
+<p>You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement named &ldquo;meters&rdquo;, include the parameter <code class="prettyprint">name=meters</code> in the URL.</p>
 
 <blockquote>
 <p>Example of finding a particular Unit of Measurement by name:</p>
