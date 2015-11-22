@@ -680,11 +680,25 @@ Details TBD
 
 ## System Properties
 
-The collected data can be transformed into Thing, Person, Location, Event and Organisation and each of these can have their Properties. For example, a Person can have various properties, including: "First Name", "Last Name", "Date of birth" with no associated Units of Measurement and "Weight" with the Unit of Measurement "kilograms". Each property is therefore a Collection of data (e.g. collection of first names). A default set of Properties, common across all HATs, is provided by HATDeX, however they can be further customised by HAT developers.
+The collected data can be transformed into Thing, Person, Location, Event and Organisation and each of these can have their Properties. For example, a Person can have various properties, including: "First Name" with the Unit of Measurement "none" (no unit of measurement) and "Weight" with the Unit of Measurement "kilograms". Each property is therefore a Collection of data (e.g. collection of first names). A default set of Properties, common across all HATs, is provided by HATDeX, however they can be further customised by HAT developers.
+
+### Property Structure
+
+All Property API calls contain all the information defined in Property Structure. If you want to create a new property, you have to include all the mandatory information in the API request. Property structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | property ID in the system | optional
+dateCreated | date when the property was created | optional
+dateUpdated | date when the property was updated | optional
+name | name of the property | mandatory
+description | description of the property | optional
+propertyType | type of the property | mandatory
+unitOfMeasurement | unit of measurement of the property | mandatory
 
 ### Creating a Property
 
-You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties "First Name" and "Last Name", or you might want to create a property "Full Name". It is important to note that a `Property` can have a `Type` and `Unit of Measurement` associated with it. For example, a property "bodyWeight" would be of a Type "weight" and would have Unit of Measurement "kilograms". To create a new `Property`, the API request body should contain a new Property `name`, `description`, its Type and Unit of Measurement, and it should be posted to `/property`. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties "First Name" and "Last Name", or you might want to create a property "Full Name". It is important to note that a `Property` can have a `Type` and `Unit of Measurement` associated with it. For example, a property "bodyWeight" would be of Type "weight" and would have Unit of Measurement "kilograms". To create a new `Property`, the API request body should contain a new Property `name`, `description`, its `Type` and `Unit of Measurement`, and it should be posted to `/property` endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Property:
 
@@ -698,14 +712,11 @@ curl -H "Content-Type: application/json" \
       "propertyType": 
       {
           "name": "weight",
-          "description": "weight of a person",
           "id": 19
       },
       "unitOfMeasurement": 
       {
          "name": "kilograms",
-         "description": "measurement of weight",
-         "symbol": "kg",
          "id": 1
       }
    }' \
@@ -724,14 +735,11 @@ Host: example.hatdex.org
     "propertyType": 
     {
        "name": "weight",
-       "description": "weight of a person",
        "id": 19
     },
     "unitOfMeasurement": 
     {
         "name": "kilograms",
-        "description": "measurement of weight",
-        "symbol": "kg",
         "id": 1
     }
 }
@@ -748,7 +756,6 @@ Host: example.hatdex.org
     {
         "id": 19,
         "name": "weight",
-        "description": "weight of a person"
     },
     "id": 6,
     "dateCreated": "2015-11-21T21:55:36Z",
@@ -756,8 +763,6 @@ Host: example.hatdex.org
     {
         "id": 1,
         "name": "kilograms",
-        "description": "measurement of weight",
-        "symbol": "kg"
     }
 }
 ```
@@ -790,7 +795,7 @@ Content-Type: application/json
 
 ### Listing available Properties
 
-You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should have `/property` in your GET request. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   
+You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should make a GET request to `/property` endpoint. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   
 
 > Example of listing all available Properties:
 
@@ -919,7 +924,7 @@ Content-Type: application/json
 
 ### Filtering Properties
 
-You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property “height”, include the parameter `name=height` in the URL.
+You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property named “height”, include the parameter `name=height` in the URL.
 
 > Example of finding a particular Property by name:
 
@@ -999,9 +1004,21 @@ Content-Type: application/json
 
 Each contextualised data item is linked with its Type. The HAT defines a set of Types that can be used to annotate entities and data. For example, type "PostalAddress" is used to annotate physical address of item. A default set of Types, common across all HATs, is provided by HATDeX, however Types can be further customised by HAT developers.
 
+### Type Structure
+
+All Type API calls contain all the information defined in Type Structure. If you want to create a new Type, you have to include all the mandatory information in the API request. Type structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | type ID in the system | optional
+dateCreated | date when the type was created | optional
+dateUpdated | date when the type was updated | optional
+name | name of the type | mandatory
+description | description of the type | optional
+
 ### Creating a Type
 
-You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and `description` and it should be posted to `/type/type`. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and `description` and it should be posted to `/type/type` endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Data Type:
 
@@ -1098,7 +1115,7 @@ Content-Type: application/json
 
 ### Listing available Types
 
-You might want to check what Types have been already created before defining a new one. To list all available Types, you should have `/type/type` in your GET request. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           
+You might want to check what Types have been already created before defining a new one. To list all available Types, you should make a GET request to `/type/type` endpoint. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           
 > Example of listing all available Types:
 
 ``` shell
@@ -1159,7 +1176,7 @@ Content-Type: application/json
 
 ### Filtering Types
 
-You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type “PostalAddress”, include the parameter `name=PostalAddress` in the URL.
+You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type named “PostalAddress”, include the parameter `name=PostalAddress` in the URL.
 
 > Example of finding a particular Type by name:
 
@@ -1205,9 +1222,22 @@ Content-Type: application/json
 
 Each contextualised data property is associated with its Units of Measurement. The HAT defines a set of Units of Measurement that can be used. For example, a Unit of Measurement "kilograms" was set. A default set of Units of Measurement, common across all HATs, is provided by HATDeX, however Units of Measurement can be further customised by HAT developers.
 
+### Unit of Measurement Structure
+
+All Unit of Measurement API calls contain all the information defined in Unit of Measurement Structure. If you want to create a new Unit of Measurement, you have to include all the mandatory information in the API request. Unit of Measurement structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | unit of measurement ID in the system | optional
+dateCreated | date when the unit of measurement  was created | optional
+dateUpdated | date when the unit of measurement  was updated | optional
+name | name of the unit of measurement  | mandatory
+description | description of the unit of measurement | optional
+symbol | symbol of the unit of measurement | optional
+
 ### Creating a Unit of Measurement
 
-You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name`, `description` and `symbol`, and it should be posted to `/type/unitofmeasurement`. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name`, `description` and `symbol`, and it should be posted to `/type/unitofmeasurement` endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Unit of Measurement:
 
@@ -1265,7 +1295,7 @@ Content-Type: application/json
 
 ### Listing available Units of Measurement
 
-You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should have `/type/unitofmeasurement` in your GET request. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
+You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to `/property/unitofmeasurement` endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
 
 > Example of listing all available Units of Measurement:
 
@@ -1331,7 +1361,7 @@ Content-Type: application/json
 
 ### Filtering Units of Measurement
 
-You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement "meters", include the parameter `name=meters` in the URL.
+You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement named "meters", include the parameter `name=meters` in the URL.
 
 > Example of finding a particular Unit of Measurement by name:
 
