@@ -148,17 +148,14 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 <li>Records</li>
 <li>Values</li>
 <li>Table Relationships</li>
-<li>Data Record Relationships </li>
+<li>Data Record Relationships</li>
 </ul>
 
-<p>For example:</p>
+<p><img title="Raw Data Structures" alt="Raw Data Structures" src="images/dataStructures.jpg" /></p>
 
-<ul>
-<li>if a user is importing their Facebook data, they may wish to create a separate “Table” for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”</li>
-<li>similarly, someone importing their viewing history from Netflix may wish to create a table for the Netflix items they have viewed, and a separate Table for the items they have rated.</li>
-</ul>
+<h2 id="system-data-sources">System Data Sources</h2>
 
-<h2 id="configure-a-new-data-source">Configure a new Data Source</h2>
+<h3 id="configure-a-new-data-source">Configure a new Data Source</h3>
 <pre class="highlight shell"><code>
 curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
@@ -281,46 +278,489 @@ The <code>source</code> field will not be modifiable by the API caller from the 
 Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
 </aside>
 
-<h2 id="creating-a-new-data-record">Creating a new Data Record</h2>
-<pre class="highlight shell"><code>
-curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
-  -POST -d <span class="se">\ </span>
-  <span class="s1">'{
-    "name": "testRecord 1"
-  }'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/record?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+<h3 id="listing-available-sources">Listing Available Sources</h3>
 
+<p>You might want to check what Sources have been already configured before configuring a new one. To list all available Sources, you should make a GET request to <code class="prettyprint">/data/sources</code> endpoint. The response will contain a list of sources with names of data structures associated with them, their names, IDs and times when they were created as well as updated. </p>
+
+<blockquote>
+<p>Example of listing available Sources:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/data/sources?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="err">
-</span><span class="nf">POST</span> <span class="nn">/data/record?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/sources?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-Length</span><span class="p">:</span> <span class="s">31</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"My Static Data"</span>,
+    <span class="s2">"source"</span>: <span class="s2">"MyStaticRecords"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-02T22:35:17Z"</span>,
+    <span class="s2">"id"</span>: 16,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-02T22:35:17Z"</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"HyperDataBrowser"</span>,
+    <span class="s2">"source"</span>: <span class="s2">"HyperDataBrowser"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-29T15:41:28Z"</span>,
+    <span class="s2">"id"</span>: 100,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-29T15:41:28Z"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Static Data"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyStaticRecords"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-02T22:35:17Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-02T22:35:17Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HyperDataBrowser"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HyperDataBrowser"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-29T15:41:28Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-29T15:41:28Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h2 id="system-data-tables">System Data Tables</h2>
+
+<p>Data Tables define how sets of Data Fields and subTables should be grouped together into the Data Table structures.</p>
+
+<h3 id="data-table-structure">Data Table Structure</h3>
+
+<p>All Table API calls contain all the information defined in Table Structure. If you want to create a new Table, you have to include all the mandatory information in the API request. Table structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>table ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the table was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>lastUpdated</td>
+<td>date when the table was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the table</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>source</td>
+<td>source of the table</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>fields</td>
+<td>fiels that the table contains</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>subTables</td>
+<td>subtables that the table contains</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-a-new-data-table">Creating a new Data Table</h3>
+
+<p>You should create a new <code class="prettyprint">table</code> for every set of values you want to be added to a particular table. For example, if a user is importing their Facebook data, they may wish to create a separate Table for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”. To create a new <code class="prettyprint">Table</code>, the API request body should contain a new Table <code class="prettyprint">name</code> and <code class="prettyprint">source</code> and it should be posted to <code class="prettyprint">/data/table</code> endpoint. The new Table ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of creating a new Table:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'{
+       "name": "kitchen",
+       "source": "fibaro"
+   }'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/table?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/table?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testRecord 1"</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+
+<blockquote>
+<p>Example of response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"name"</span>: <span class="s2">"kitchen"</span>,
+  <span class="s2">"source"</span>: <span class="s2">"fibaro"</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T20:54:41Z"</span>,
+  <span class="s2">"id"</span>: 13,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T20:54:41Z"</span>
+<span class="o">}</span>
+</code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="s">{</span>
-<span class="s">  "id": 42,</span>
-<span class="s">  "name": "testRecord 1"</span>
-<span class="s">}</span>
 
-<span class="w">
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T20:54:41Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T20:54:41Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>Data Records define how sets data values should be grouped together into the data table structures. You should create a new <code class="prettyprint">record</code> for every set of values you want to be treated as a single record.</p>
+<h3 id="filtering-tables">Filtering Tables</h3>
 
-<p>For example, each GPS reading with separate longitude and latitude values would be put in a separate record taht contains both longitude and latitude, together with additional properties such as the timestamp of the record.</p>
+<p>You might need to extract some information about a particular Table, e.g. a list of subTables it contains. You can retrieve information about that Table using a GET request and specifying ID of that Table. For example, to find the Table with ID = 13, include its ID in the URL, i.e. post it to <code class="prettyprint">/data/table/13</code> endpoint.</p>
 
-<h2 id="filling-data-records-with-data">Filling Data Records with Data</h2>
-<pre class="highlight http"><code><span class="err">
-</span><span class="nf">POST</span> <span class="nn">/record/RECORDID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<blockquote>
+<p>Example of finding a particular Table by ID:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/data/table/13?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/13?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"name"</span>: <span class="s2">"kitchen"</span>,
+  <span class="s2">"source"</span>: <span class="s2">"fibaro"</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T20:54:41Z"</span>,
+  <span class="s2">"subTables"</span>: <span class="o">[]</span>,
+  <span class="s2">"id"</span>: 13,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T20:54:41Z"</span>,
+  <span class="s2">"fields"</span>: <span class="o">[]</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T20:54:41Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T20:54:41Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="extract-table-values">Extract Table Values</h3>
+
+<p>Sometimes you might find it useful to extract Table Values. You can retrieve Table Values by specifying Table ID and making a GET request to <code class="prettyprint">table/tableID/values</code>.</p>
+
+<blockquote>
+<p>Example of extracting Table Values:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/data/table/1/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/1/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"profile0"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+    <span class="s2">"id"</span>: 34,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+    <span class="s2">"tables"</span>: 
+    <span class="o">[</span>
+      <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"profile"</span>,
+        <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+        <span class="s2">"subTables"</span>: 
+        <span class="o">[</span>
+          <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"hometown"</span>,
+            <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"subTables"</span>: <span class="o">[]</span>,
+            <span class="s2">"id"</span>: 2,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"fields"</span>: 
+            <span class="o">[</span>
+              <span class="o">{</span>
+                <span class="s2">"name"</span>: <span class="s2">"id"</span>,
+                <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+                <span class="s2">"id"</span>: 19,
+                <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+                <span class="s2">"tableId"</span>: 2,
+                <span class="s2">"values"</span>: 
+                <span class="o">[</span>
+                  <span class="o">{</span>
+                    <span class="s2">"id"</span>: 356,
+                    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                    <span class="s2">"value"</span>: <span class="s2">"101877916520606"</span>
+                  <span class="o">}</span>
+                <span class="o">]</span>
+              <span class="o">}</span>
+            <span class="o">]</span>
+          <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"id"</span>: 1,
+        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+        <span class="s2">"fields"</span>: <span class="o">[</span>
+          <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"id"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"id"</span>: 1,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"tableId"</span>: 1,
+            <span class="s2">"values"</span>: <span class="o">[</span>
+              <span class="o">{</span>
+                <span class="s2">"id"</span>: 351,
+                <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"10207930600321182"</span>
+              <span class="o">}</span>
+            <span class="o">]</span>
+          <span class="o">}</span>
+        <span class="o">]</span>
+      <span class="o">}</span>
+    <span class="o">]</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile0"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hometown"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+            </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">356</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101877916520606"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
+            </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">351</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10207930600321182"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h2 id="system-data-records">System Data Records</h2>
+
+<p>Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a Table row.</p>
+
+<h3 id="record-structure">Record Structure</h3>
+
+<p>All Record API calls contain all the information defined in Record Structure. If you want to create a new Record, you have to include all the mandatory information in the API request. Record structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>record ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the record was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>lastUpdated</td>
+<td>date when the record was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the record</td>
+<td>mandatory</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-a-new-record">Creating a new Record</h3>
+
+<p>You should create a new <code class="prettyprint">record</code> for every set of values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new <code class="prettyprint">Record</code>, the API request body should contain a new Record <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/data/record</code> endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of creating a new Record:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'{
+    "name": "testNewRecord"
+  }'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/record?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testNewRecord"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example of response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 39,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T17:22:57Z"</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T17:22:57Z"</span>,
+  <span class="s2">"name"</span>: <span class="s2">"newRecord"</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T17:22:57Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T17:22:57Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newRecord"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="filling-data-structures">Filling Data Structures</h3>
+
+<p>Currently the easiest way of putting new data into the HAT is to POST it to the <code class="prettyprint">/record/RECORDID/values</code> API endpoint, formatted as in the provided examples. RECORDID is extracted separately for each Record from the response of the API call to create a new Record. In this case you submit a list of values that each contain the value itself and the field it should be putin, together with its <code class="prettyprint">ID</code> and <code class="prettyprint">name</code>.</p>
+
+<aside class="info">
+Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
+</aside>
+
+<blockquote>
+<p>Example of filling data structures:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'[
+     {
+       "value": "testValue2-1",
+       "field": 
+           { 
+             "id": 2,
+             "name": "tableTestField" 
+           }
+     },
+     {
+       "value": "testValue2-2",
+       "field": 
+           { 
+             "id": 3,
+             "name": "tableTestField-3" 
+           }
+     }
+   ]'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/record/RECORDID/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/RECORDID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
@@ -328,128 +768,425 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 <span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
-      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w"> 
-    </span><span class="p">}</span><span class="w">
+    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w"> 
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w"> 
+        </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
-      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="w"> 
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-3"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
-      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="w"> 
-    </span><span class="p">}</span><span class="w">
+    </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w"> 
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField-3"</span><span class="w"> 
+        </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+     <span class="s2">"id"</span>: 361,
+     <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+     <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+     <span class="s2">"value"</span>: <span class="s2">"testValue2-1"</span>,
+     <span class="s2">"field"</span>: 
+     <span class="o">{</span>
+       <span class="s2">"id"</span>: 2,
+       <span class="s2">"name"</span>: <span class="s2">"tableTestField"</span>
+     <span class="o">}</span>
+  <span class="o">}</span>, 
+  <span class="o">{</span>
+     <span class="s2">"id"</span>: 362,
+     <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+     <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
+     <span class="s2">"value"</span>: <span class="s2">"testValue2-2"</span>,
+     <span class="s2">"field"</span>: 
+     <span class="o">{</span>
+       <span class="s2">"id"</span>: 3,
+       <span class="s2">"name"</span>: <span class="s2">"tableTestField3"</span>
+     <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
-<span class="p">[{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">361</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w">
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">361</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+     </span><span class="p">{</span><span class="w">
+       </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+       </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">362</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+     </span><span class="p">{</span><span class="w">
+       </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+       </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="w">
+     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">362</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">363</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-3"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}]</span><span class="w">
+</span><span class="p">]</span><span class="w">
 
 </span></code></pre>
-<pre class="highlight shell"><code>
-curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
-  -POST -d <span class="se">\ </span>
-  <span class="s1">'[
-  {
-    "value": "testValue2-1",
-    "field": { 
-      "id": 2,
-      "name": "tableTestField" 
-    }
-  },
-  {
-    "value": "testValue2-2",
-    "field": { 
-      "id": 3,
-      "name": "tableTestField3" 
-    }
-  },
-  {
-    "value": "testValue2-3",
-    "field": { 
-      "id": 4,
-      "name": "tableTestField4" 
-    },
-  }
-]'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/record/RECORDID/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
-
-<span class="o">[{</span>
-  <span class="s2">"id"</span>: 361,
-  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
-  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
-  <span class="s2">"value"</span>: <span class="s2">"testValue2-1"</span>,
-  <span class="s2">"field"</span>: <span class="o">{</span>
-    <span class="s2">"id"</span>: 2,
-    <span class="s2">"name"</span>: <span class="s2">"tableTestField"</span>
-  <span class="o">}</span>
-<span class="o">}</span>, <span class="o">{</span>
-  <span class="s2">"id"</span>: 362,
-  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
-  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
-  <span class="s2">"value"</span>: <span class="s2">"testValue2-2"</span>,
-  <span class="s2">"field"</span>: <span class="o">{</span>
-    <span class="s2">"id"</span>: 3,
-    <span class="s2">"name"</span>: <span class="s2">"tableTestField3"</span>
-  <span class="o">}</span>
-<span class="o">}</span>, <span class="o">{</span>
-  <span class="s2">"id"</span>: 363,
-  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
-  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-10-13T18:18:08+01:00"</span>,
-  <span class="s2">"value"</span>: <span class="s2">"testValue2-3"</span>,
-  <span class="s2">"field"</span>: <span class="o">{</span>
-    <span class="s2">"id"</span>: 4,
-    <span class="s2">"name"</span>: <span class="s2">"tableTestField4"</span>
-  <span class="o">}</span>
-<span class="o">}]</span>
-</code></pre>
 
 <blockquote>
-<p>RECORDID must be replaced with the id of the record you have just created with a <code class="prettyprint">POST</code> to  <code class="prettyprint">/data/record</code></p>
+<p>RECORDID must be replaced with the ID of the record you have just created with a <code class="prettyprint">POST</code> to  <code class="prettyprint">/data/record</code></p>
 </blockquote>
 
-<p>Currently the easiest way of putting new data into the HAT is to POST it to the <code class="prettyprint">/record/RECORDID/values</code> API endpoint, formatted as in the provided examples. RECORDID is extracted separately for each Data Record from the response of the API call to create a new record. In this case you submit a list of values taht each contain the value itself and the field it should be put in, together with its <code class="prettyprint">ID</code> and <code class="prettyprint">name</code>.</p>
+<h3 id="creating-a-new-record-and-filling-its-data-structures">Creating a New Record and Filling its Data Structures</h3>
+
+<p>If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new <code class="prettyprint">Record</code> and fill its data structures with <code class="prettyprint">Values</code> in one go. To do this, the API request body should contain a new Record <code class="prettyprint">name</code> and a list of <code class="prettyprint">values</code> and it should be posted to <code class="prettyprint">/data/record/values</code> endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response. Note that you can create a list of new Records by simply defining a list of them in the API request body.</p>
 
 <aside class="info">
 Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
 </aside>
+
+<blockquote>
+<p>Example of creating a new Record and filling it in one go:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'{
+     "record": 
+     {
+       "name": "kitchenElectricityRow"
+     },
+       "values": 
+     [
+       {
+         "value": "september2014",
+         "field": 
+         {
+           "id": 10,
+           "name": "month2014"
+         }
+       }, 
+       {
+         "value": "september2015",
+         "field": 
+         {
+           "id": 11,
+           "name": "month2015"
+         }
+       }
+     ]
+   }'</span> <span class="se">\</span>
+  http://example.hatdex.org/data/record/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"record"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricityRow"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"month2014"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">390</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"september2014"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"month2015"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">391</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"september2015"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"record"</span>: 
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 40,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T21:24:44Z"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T21:24:44Z"</span>,
+    <span class="s2">"name"</span>: <span class="s2">"kitchenElectricityRow"</span>
+  <span class="o">}</span>,
+  <span class="s2">"values"</span>: 
+  <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"field"</span>: 
+      <span class="o">{</span>
+        <span class="s2">"id"</span>: 10,
+        <span class="s2">"tableId"</span>: 23,
+        <span class="s2">"name"</span>: <span class="s2">"month2014"</span>
+      <span class="o">}</span>,
+      <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T21:24:44Z"</span>,
+      <span class="s2">"id"</span>: 390,
+      <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T21:24:44Z"</span>,
+      <span class="s2">"value"</span>: <span class="s2">"september2014"</span>
+    <span class="o">}</span>,
+    <span class="o">{</span>
+      <span class="s2">"field"</span>: 
+      <span class="o">{</span>
+        <span class="s2">"id"</span>: 11,
+        <span class="s2">"tableId"</span>: 24,
+        <span class="s2">"name"</span>: <span class="s2">"month2015"</span>
+      <span class="o">}</span>,
+      <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T21:24:44Z"</span>,
+      <span class="s2">"id"</span>: 391,
+      <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T21:24:44Z"</span>,
+      <span class="s2">"value"</span>: <span class="s2">"september2015"</span>
+    <span class="o">}</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"record"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricityRow"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"month2014"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">390</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"september2014"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"month2015"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">391</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:24:44Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"september2015"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="system-data-field">System Data Field</h2>
+
+<h3 id="field-structure">Field Structure</h3>
+
+<p>All Field API calls contain all the information defined in Field Structure. If you want to create a new Field, you have to include all the mandatory information in the API request. Field structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>field ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the field was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>lastUpdated</td>
+<td>date when the field was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>tableId</td>
+<td>ID of the table that the field belongs to</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the field</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>values</td>
+<td>data values that the field contains</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<h2 id="system-data-value">System Data Value</h2>
+
+<h3 id="value-structure">Value Structure</h3>
+
+<p>All Value API calls contain all the information defined in Value Structure. If you want to create a new Value, you have to include all the mandatory information in the API request. Value structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>value ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dateCreated</td>
+<td>date when the value was created</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>lastUpdated</td>
+<td>date when the value was updated</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>value</td>
+<td>some string</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>field</td>
+<td>field that the value belongs to</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>record</td>
+<td>record that the value belongs to</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-a-value-within-field-and-record">Creating a Value within Field and Record</h3>
+
+<p>To create a new <code class="prettyprint">Value</code>, the API request body should contain a new Value <code class="prettyprint">value</code> in a form of string and it should be posted to <code class="prettyprint">/value</code> endpoint. Note that values should be related to particular Fields and Records, therefore you should include Field and Record <code class="prettyprint">names</code> and <code class="prettyprint">IDs</code> that you want to store the new Value. Note that you can create a list of new Values by simply defining a list of them in the API request body.</p>
+
+<blockquote>
+<p>Example of creating a new Property:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+     "value": "testValue",
+     "field": 
+     { 
+       "id": 2,
+       "name": "tableTestField" 
+     },
+     "record": 
+     {
+       "id": 40,
+       "name": "kitchenElectricityRow"
+     }
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/property?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/value?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+  "value": "testValue",
+  "field": 
+  { 
+    "id": 2,
+    "name": "tableTestField" 
+  },
+  "record": 
+  {
+    "id": 40,
+    "name": "kitchenElectricityRow"
+  }
+}
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"field"</span>: 
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 2,
+    <span class="s2">"name"</span>: <span class="s2">"tableTestField"</span>
+  <span class="o">}</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-22T21:45:22Z"</span>,
+  <span class="s2">"id"</span>: 394,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-22T21:45:22Z"</span>,
+  <span class="s2">"value"</span>: <span class="s2">"testValue"</span>,
+  <span class="s2">"record"</span>: 
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 40,
+    <span class="s2">"name"</span>: <span class="s2">"kitchenElectricityRow"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:45:22Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">394</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-22T21:45:22Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"record"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricityRow"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
 <h2 id="retrieving-raw-data">Retrieving Raw Data</h2>
 
@@ -696,7 +1433,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <p>Details TBD</p>
 
-<h1 id="data-type-annotations">Data Type annotations</h1>
+<h1 id="data-type-annotations">Data Type Annotations</h1>
 
 <h2 id="system-properties">System Properties</h2>
 
@@ -704,7 +1441,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="property-structure">Property Structure</h3>
 
-<p>All Property API calls contain all the information defined in Property Structure. If you want to create a new property, you have to include all the mandatory information in the API request. Property structure is explained in the table below.</p>
+<p>All Property API calls contain all the information defined in Property Structure. If you want to create a new Property, you have to include all the mandatory information in the API request. Property structure is explained in the table below.</p>
 
 <table><thead>
 <tr>
@@ -724,7 +1461,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 <td>optional</td>
 </tr>
 <tr>
-<td>dateUpdated</td>
+<td>lastUpdated</td>
 <td>date when the property was updated</td>
 <td>optional</td>
 </tr>
@@ -752,7 +1489,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-a-property">Creating a Property</h3>
 
-<p>You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, <code class="prettyprint">description</code>, its <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code>, and it should be posted to <code class="prettyprint">/property</code> endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, its <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code>, and it should be posted to <code class="prettyprint">/property</code> endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Property:</p>
@@ -843,7 +1580,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<h3 id="listing-available-properties">Listing available Properties</h3>
+<h3 id="listing-available-properties">Listing Available Properties</h3>
 
 <p>You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should make a GET request to <code class="prettyprint">/property</code> endpoint. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   </p>
 
@@ -971,7 +1708,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="filtering-properties">Filtering Properties</h3>
 
-<p>You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property named “height”, include the parameter <code class="prettyprint">name=height</code> in the URL.</p>
+<p>You might need to extract some information about a particular Property, e.g. its ID in the system. You can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property named “height”, include the parameter <code class="prettyprint">name=height</code> in the URL.</p>
 
 <blockquote>
 <p>Example of finding a particular Property by name:</p>
@@ -1070,7 +1807,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 <td>optional</td>
 </tr>
 <tr>
-<td>dateUpdated</td>
+<td>lastUpdated</td>
 <td>date when the type was updated</td>
 <td>optional</td>
 </tr>
@@ -1088,7 +1825,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-a-type">Creating a Type</h3>
 
-<p>You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type &ldquo;Country&rdquo; to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new <code class="prettyprint">Type</code>, the API request body should contain a new Type <code class="prettyprint">name</code> and <code class="prettyprint">description</code> and it should be posted to <code class="prettyprint">/type/type</code> endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type &ldquo;Country&rdquo; to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new <code class="prettyprint">Type</code>, the API request body should contain a new Type <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/type/type</code> endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Data Type:</p>
@@ -1149,9 +1886,9 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
   <span class="s1">'{
       "relationshipType": "subtype"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/1/type/2?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/type/ID/type/ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/1/type/2?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/ID/type/ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
@@ -1176,7 +1913,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<h3 id="listing-available-types">Listing available Types</h3>
+<h3 id="listing-available-types">Listing Available Types</h3>
 
 <p>You might want to check what Types have been already created before defining a new one. To list all available Types, you should make a GET request to <code class="prettyprint">/type/type</code> endpoint. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           </p>
 
@@ -1237,7 +1974,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="filtering-types">Filtering Types</h3>
 
-<p>You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type named “PostalAddress”, include the parameter <code class="prettyprint">name=PostalAddress</code> in the URL.</p>
+<p>You might need to extract some information about a particular Type, e.g. its ID in the system. You can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type named “PostalAddress”, include the parameter <code class="prettyprint">name=PostalAddress</code> in the URL.</p>
 
 <blockquote>
 <p>Example of finding a particular Type by name:</p>
@@ -1302,7 +2039,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 <td>optional</td>
 </tr>
 <tr>
-<td>dateUpdated</td>
+<td>lastUpdated</td>
 <td>date when the unit of measurement  was updated</td>
 <td>optional</td>
 </tr>
@@ -1325,7 +2062,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-a-unit-of-measurement">Creating a Unit of Measurement</h3>
 
-<p>You should create a new <code class="prettyprint">Unit of Measurement</code> for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have &ldquo;kilograms&rdquo; and &ldquo;grams&rdquo; for weight Units of Measurement. To create a new <code class="prettyprint">Unit of Measurement</code>, the API request body should contain its <code class="prettyprint">name</code>, <code class="prettyprint">description</code> and <code class="prettyprint">symbol</code>, and it should be posted to <code class="prettyprint">/type/unitofmeasurement</code> endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new <code class="prettyprint">Unit of Measurement</code> for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have &ldquo;kilograms&rdquo; and &ldquo;grams&rdquo; for weight Units of Measurement. To create a new <code class="prettyprint">Unit of Measurement</code>, the API request body should contain its <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/type/unitofmeasurement</code> endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Unit of Measurement:</p>
@@ -1378,7 +2115,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 </span></code></pre>
 
-<h3 id="listing-available-units-of-measurement">Listing available Units of Measurement</h3>
+<h3 id="listing-available-units-of-measurement">Listing Available Units of Measurement</h3>
 
 <p>You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to <code class="prettyprint">/property/unitofmeasurement</code> endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   </p>
 
@@ -1443,7 +2180,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="filtering-units-of-measurement">Filtering Units of Measurement</h3>
 
-<p>You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement named &ldquo;meters&rdquo;, include the parameter <code class="prettyprint">name=meters</code> in the URL.</p>
+<p>You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. You can retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement named &ldquo;meters&rdquo;, include the parameter <code class="prettyprint">name=meters</code> in the URL.</p>
 
 <blockquote>
 <p>Example of finding a particular Unit of Measurement by name:</p>
