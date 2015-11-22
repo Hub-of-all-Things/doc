@@ -113,6 +113,8 @@ The Raw Data level provides a flexible substrate for users to import a varying r
 
 For example, if a user is importing their Facebook data, they may wish to create a separate “Table” for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”.
 
+![Raw Data Structures](/images/dataStructures.jpg "Raw Data Structures")
+
 ## System Data Sources
 
 ### Configure a new Data Source
