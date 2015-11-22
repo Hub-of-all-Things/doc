@@ -109,15 +109,13 @@ The Raw Data level provides a flexible substrate for users to import a varying r
 - Records
 - Values
 - Table Relationships
-- Data Record Relationships 
+- Data Record Relationships
 
-For example:
+For example, if a user is importing their Facebook data, they may wish to create a separate “Table” for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”.
 
-* if a user is importing their Facebook data, they may wish to create a separate “Table” for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”
-* similarly, someone importing their viewing history from Netflix may wish to create a table for the Netflix items they have viewed, and a separate Table for the items they have rated.
+## System Data Sources
 
-
-## Configure a new Data Source
+### Configure a new Data Source
 
 ``` shell
 
@@ -243,54 +241,142 @@ The <code>source</code> field will not be modifiable by the API caller from the 
 Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
 </aside>
 
+### getDataSourcesApi
 
-## Creating a new Data Record
+
+
+
+## System Data Tables
+
+Data Tables define how sets of Data Records should be grouped together into the Data Table structures. 
+
+### Data Table Structure
+
+All Table API calls contain all the information defined in Table Structure. If you want to create a new Table, you have to include all the mandatory information in the API request. Table structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | table ID in the system | optional
+dateCreated | date when the table was created | optional
+lastUpdated | date when the table was updated | optional
+name | name of the table | mandatory
+source | source of the table | mandatory
+fields | fiels that the table contains | optional
+subTables | subtables that the table contains | optional
+
+### Creating a new Data Table
+
+### getTableApi
+
+### findTableApi (kolkas nereikia)
+
+TBD
+
+### getTableValuesApi - includes data (istraukia struktura su vertem ir su pacia data)
+
+
+
+## System Data Records
+
+Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a table row of some structure.
+
+### Data Record Structure
+
+All Record API calls contain all the information defined in Record Structure. If you want to create a new Record, you have to include all the mandatory information in the API request. Record structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | record ID in the system | optional
+dateCreated | date when the record was created | optional
+lastUpdated | date when the record was updated | optional
+name | name of the record | mandatory
+
+### Creating a new Data Record
+
+You should create a new `record` for every set of values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new `Record`, the API request body should contain a new Record `name` and it should be posted to `/data/record` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.
+
+> Example of creating a new Record:
 
 ``` shell
-
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
   -POST -d \ 
   '{
-    "name": "testRecord 1"
+    "name": "testNewRecord"
   }' \
   http://example.hatdex.org/data/record?access_token=$ACCESS_TOKEN
-
 ```
 
 ``` http
-
 POST /data/record?access_token=$ACCESS_TOKEN HTTP/1.1
 Accept: application/json
 Host: example.hatdex.org
 Content-Type: application/json
-Content-Length: 31
 
 {
-  "name": "testRecord 1"
+  "name": "testNewRecord"
 }
 ```
+> Example of response:
+
+``` shell
+{
+  "id": 39,
+  "dateCreated": "2015-11-22T17:22:57Z",
+  "lastUpdated": "2015-11-22T17:22:57Z",
+  "name": "newRecord"
+}
+```
+
 ``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
+
 {
-  "id": 42,
-  "name": "testRecord 1"
+  "id": 39,
+  "dateCreated": "2015-11-22T17:22:57Z",
+  "lastUpdated": "2015-11-22T17:22:57Z",
+  "name": "newRecord"
 }
-
-
 ```
 
-Data Records define how sets data values should be grouped together into the data table structures. You should create a new `record` for every set of values you want to be treated as a single record.
+### Filling Data Structures
 
-For example, each GPS reading with separate longitude and latitude values would be put in a separate record taht contains both longitude and latitude, together with additional properties such as the timestamp of the record.
+Currently the easiest way of putting new data into the HAT is to POST it to the `/record/RECORDID/values` API endpoint, formatted as in the provided examples. RECORDID is extracted separately for each Record from the response of the API call to create a new Record. In this case you submit a list of values that each contain the value itself and the field it should be putin, together with its `ID` and `name`.
 
-## Filling Data Records with Data
+<aside class="info">
+Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
+</aside>
+
+> Example of filling data structures:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \ 
+  '[
+     {
+       "value": "testValue2-1",
+       "field": 
+           { 
+             "id": 2,
+             "name": "tableTestField" 
+           }
+     },
+     {
+       "value": "testValue2-2",
+       "field": 
+           { 
+             "id": 3,
+             "name": "tableTestField-3" 
+           }
+     }
+   ]' \
+  http://example.hatdex.org/data/record/RECORDID/values?access_token=$ACCESS_TOKEN
+```
 
 ``` http
-
-POST /record/RECORDID/values?access_token=$ACCESS_TOKEN HTTP/1.1
-User-Agent: MyClient/1.0.0
+POST /data/record/RECORDID/values?access_token=$ACCESS_TOKEN HTTP/1.1
 Accept: application/json
 Host: example.hatdex.org
 Content-Type: application/json
@@ -298,131 +384,201 @@ Content-Type: application/json
 [
   {
     "value": "testValue2-1",
-    "field": { 
-      "id": 2,
-      "name": "tableTestField" 
-    }
+    "field": 
+        { 
+          "id": 2,
+          "name": "tableTestField" 
+        }
   },
   {
     "value": "testValue2-2",
-    "field": { 
-      "id": 3,
-      "name": "tableTestField3" 
-    }
-  },
-  {
-    "value": "testValue2-3",
-    "field": { 
-      "id": 4,
-      "name": "tableTestField4" 
-    }
+    "field": 
+        { 
+          "id": 3,
+          "name": "tableTestField-3" 
+        }
   }
 ]
 ```
+> Example response:
+
+``` shell
+[
+  {
+     "id": 361,
+     "lastUpdated": "2015-10-13T18:18:08+01:00",
+     "dateCreated": "2015-10-13T18:18:08+01:00",
+     "value": "testValue2-1",
+     "field": 
+     {
+       "id": 2,
+       "name": "tableTestField"
+     }
+  }, 
+  {
+     "id": 362,
+     "lastUpdated": "2015-10-13T18:18:08+01:00",
+     "dateCreated": "2015-10-13T18:18:08+01:00",
+     "value": "testValue2-2",
+     "field": 
+     {
+       "id": 3,
+       "name": "tableTestField3"
+     }
+  }
+]
+```
+
 ``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-[{
-  "id": 361,
-  "lastUpdated": "2015-10-13T18:18:08+01:00",
-  "dateCreated": "2015-10-13T18:18:08+01:00",
-  "value": "testValue2-1",
-  "field": {
-    "id": 2,
-    "name": "tableTestField"
+[
+  {
+     "id": 361,
+     "lastUpdated": "2015-10-13T18:18:08+01:00",
+     "dateCreated": "2015-10-13T18:18:08+01:00",
+     "value": "testValue2-1",
+     "field": 
+     {
+       "id": 2,
+       "name": "tableTestField"
+     }
+  }, 
+  {
+     "id": 362,
+     "lastUpdated": "2015-10-13T18:18:08+01:00",
+     "dateCreated": "2015-10-13T18:18:08+01:00",
+     "value": "testValue2-2",
+     "field": 
+     {
+       "id": 3,
+       "name": "tableTestField3"
+     }
   }
-}, {
-  "id": 362,
-  "lastUpdated": "2015-10-13T18:18:08+01:00",
-  "dateCreated": "2015-10-13T18:18:08+01:00",
-  "value": "testValue2-2",
-  "field": {
-    "id": 3,
-    "name": "tableTestField3"
-  }
-}, {
-  "id": 363,
-  "lastUpdated": "2015-10-13T18:18:08+01:00",
-  "dateCreated": "2015-10-13T18:18:08+01:00",
-  "value": "testValue2-3",
-  "field": {
-    "id": 4,
-    "name": "tableTestField4"
-  }
-}]
+]
 
 ```
+> RECORDID must be replaced with the ID of the record you have just created with a `POST` to  `/data/record`
 
-``` shell
+### Creating a New Data Record and Filling its Data Structures
 
-curl -H "Content-Type: application/json" \
-  -H "Accept: application/json"  \
-  -POST -d \ 
-  '[
-  {
-    "value": "testValue2-1",
-    "field": { 
-      "id": 2,
-      "name": "tableTestField" 
-    }
-  },
-  {
-    "value": "testValue2-2",
-    "field": { 
-      "id": 3,
-      "name": "tableTestField3" 
-    }
-  },
-  {
-    "value": "testValue2-3",
-    "field": { 
-      "id": 4,
-      "name": "tableTestField4" 
-    },
-  }
-]' \
-  http://example.hatdex.org/data/record/RECORDID/values?access_token=$ACCESS_TOKEN
-
-[{
-  "id": 361,
-  "lastUpdated": "2015-10-13T18:18:08+01:00",
-  "dateCreated": "2015-10-13T18:18:08+01:00",
-  "value": "testValue2-1",
-  "field": {
-    "id": 2,
-    "name": "tableTestField"
-  }
-}, {
-  "id": 362,
-  "lastUpdated": "2015-10-13T18:18:08+01:00",
-  "dateCreated": "2015-10-13T18:18:08+01:00",
-  "value": "testValue2-2",
-  "field": {
-    "id": 3,
-    "name": "tableTestField3"
-  }
-}, {
-  "id": 363,
-  "lastUpdated": "2015-10-13T18:18:08+01:00",
-  "dateCreated": "2015-10-13T18:18:08+01:00",
-  "value": "testValue2-3",
-  "field": {
-    "id": 4,
-    "name": "tableTestField4"
-  }
-}]
-```
-
-> RECORDID must be replaced with the id of the record you have just created with a `POST` to  `/data/record`
-
-
-Currently the easiest way of putting new data into the HAT is to POST it to the `/record/RECORDID/values` API endpoint, formatted as in the provided examples. RECORDID is extracted separately for each Data Record from the response of the API call to create a new record. In this case you submit a list of values taht each contain the value itself and the field it should be put in, together with its `ID` and `name`.
+If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new `Record` and fill its data structures with `Values` in one go. To do this, the API request body should contain a new Record `name` and a list of `values` and it should be posted to `/data/record/values` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 <aside class="info">
 Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
 </aside>
 
+> Example of creating a new Record and filling it in one go:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \ 
+  '{
+       "record": 
+       {
+           "name": "kitchenElectricityRow"
+       },
+       "values": 
+       [
+           {
+               "value": "september2014",
+               "field": 
+               {
+                   "id": 10,
+                   "name": "month2014"
+               }
+           }, 
+           {
+               "value": "september2015",
+               "field": 
+               {
+                   "id": 11,
+                   "name": "month2015"
+               }
+           }
+       ]
+   }' \
+  http://example.hatdex.org/data/record/values?access_token=$ACCESS_TOKEN
+```
+
+``` http
+POST /data/record/values?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+
+{
+    "record": 
+    {
+        "name": "kitchenElectricityRow"
+    },
+     "values": 
+    [
+        {
+            "value": "september2014",
+            "field": 
+            {
+                "id": 10,
+                "name": "month2014"
+            }
+        }, 
+        {
+            "value": "september2015",
+            "field": 
+            {
+                "id": 11,
+                "name": "month2015"
+            }
+        }
+    ]
+}
+```
+> Example response: TBD -----------------------------------------------------------------------------------------------
+
+``` shell
+
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+```
+
+## System Data Field
+
+### System Data Field Structure
+
+All Field API calls contain all the information defined in Field Structure. If you want to create a new Field, you have to include all the mandatory information in the API request. Field structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | field ID in the system | optional
+dateCreated | date when the field was created | optional
+lastUpdated | date when the field was updated | optional
+tableId | ID of the table that the field belongs to | optional
+name | name of the field | mandatory
+values| data values that the field contains | optional
+
+## System Data Value
+
+### System Data Value Structure
+
+All Value API calls contain all the information defined in Value Structure. If you want to create a new Value, you have to include all the mandatory information in the API request. Value structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | value ID in the system | optional
+dateCreated | date when the value was created | optional
+lastUpdated | date when the value was updated | optional
+value | some string | mandatory
+field | field that the value belongs to | optional
+record | record that the value belongs to | optional
+
+### createValueApi - create a single value within a field and a record
+
+### storeValueListApi - create a list of values
 
 ## Retrieving Raw Data
 
@@ -676,7 +832,7 @@ The five contextualised tables link to the Raw Data itself through a series of P
 
 Details TBD
 
-# Data Type annotations
+# Data Type Annotations
 
 ## System Properties
 
@@ -684,13 +840,13 @@ The collected data can be transformed into Thing, Person, Location, Event and Or
 
 ### Property Structure
 
-All Property API calls contain all the information defined in Property Structure. If you want to create a new property, you have to include all the mandatory information in the API request. Property structure is explained in the table below.
+All Property API calls contain all the information defined in Property Structure. If you want to create a new Property, you have to include all the mandatory information in the API request. Property structure is explained in the table below.
 
 Parameter | Description | Optional / Mandatory
 --------- | ----------- | --------------------
 id | property ID in the system | optional
 dateCreated | date when the property was created | optional
-dateUpdated | date when the property was updated | optional
+lastUpdated | date when the property was updated | optional
 name | name of the property | mandatory
 description | description of the property | optional
 propertyType | type of the property | mandatory
@@ -698,7 +854,7 @@ unitOfMeasurement | unit of measurement of the property | mandatory
 
 ### Creating a Property
 
-You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties "First Name" and "Last Name", or you might want to create a property "Full Name". It is important to note that a `Property` can have a `Type` and `Unit of Measurement` associated with it. For example, a property "bodyWeight" would be of Type "weight" and would have Unit of Measurement "kilograms". To create a new `Property`, the API request body should contain a new Property `name`, `description`, its `Type` and `Unit of Measurement`, and it should be posted to `/property` endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties "First Name" and "Last Name", or you might want to create a property "Full Name". It is important to note that a `Property` can have a `Type` and `Unit of Measurement` associated with it. For example, a property "bodyWeight" would be of Type "weight" and would have Unit of Measurement "kilograms". To create a new `Property`, the API request body should contain a new Property `name`, its `Type` and `Unit of Measurement`, and it should be posted to `/property` endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Property:
 
@@ -1012,13 +1168,13 @@ Parameter | Description | Optional / Mandatory
 --------- | ----------- | --------------------
 id | type ID in the system | optional
 dateCreated | date when the type was created | optional
-dateUpdated | date when the type was updated | optional
+lastUpdated | date when the type was updated | optional
 name | name of the type | mandatory
 description | description of the type | optional
 
 ### Creating a Type
 
-You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and `description` and it should be posted to `/type/type` endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and it should be posted to `/type/type` endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Data Type:
 
@@ -1082,11 +1238,11 @@ curl -H "Content-Type: application/json" \
   '{
       "relationshipType": "subtype"
    }' \
-  "http://example.hatdex.org/type/1/type/2?access_token=$ACCESS_TOKEN"
+  "http://example.hatdex.org/type/ID/type/ID?access_token=$ACCESS_TOKEN"
 ```
 
 ``` http
-POST /type/1/type/2?access_token=ACCESS_TOKEN HTTP/1.1
+POST /type/ID/type/ID?access_token=ACCESS_TOKEN HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
@@ -1230,14 +1386,14 @@ Parameter | Description | Optional / Mandatory
 --------- | ----------- | --------------------
 id | unit of measurement ID in the system | optional
 dateCreated | date when the unit of measurement  was created | optional
-dateUpdated | date when the unit of measurement  was updated | optional
+lastUpdated | date when the unit of measurement  was updated | optional
 name | name of the unit of measurement  | mandatory
 description | description of the unit of measurement | optional
 symbol | symbol of the unit of measurement | optional
 
 ### Creating a Unit of Measurement
 
-You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name`, `description` and `symbol`, and it should be posted to `/type/unitofmeasurement` endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name` and it should be posted to `/type/unitofmeasurement` endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Unit of Measurement:
 
