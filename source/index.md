@@ -111,8 +111,6 @@ The Raw Data level provides a flexible substrate for users to import a varying r
 - Table Relationships
 - Data Record Relationships
 
-For example, if a user is importing their Facebook data, they may wish to create a separate “Table” for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”.
-
 ![Raw Data Structures](/images/dataStructures.jpg "Raw Data Structures")
 
 ## System Data Sources
@@ -243,14 +241,74 @@ The <code>source</code> field will not be modifiable by the API caller from the 
 Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
 </aside>
 
-### getDataSourcesApi
+### Listing Available Sources
+
+You might want to check what Sources have been already configured before configuring a new one. To list all available Sources, you should make a GET request to `/data/sources` endpoint. The response will contain a list of sources with names of data structures associated with them, their names, IDs and times when they were created as well as updated. 
+
+> Example of listing available Sources:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/data/sources?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /data/sources?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> Example response:
+
+``` shell
+[
+  {
+    "name": "My Static Data",
+    "source": "MyStaticRecords",
+    "lastUpdated": "2015-11-02T22:35:17Z",
+    "id": 16,
+    "dateCreated": "2015-11-02T22:35:17Z"
+  },
+  {
+    "name": "HyperDataBrowser",
+    "source": "HyperDataBrowser",
+    "lastUpdated": "2015-10-29T15:41:28Z",
+    "id": 100,
+    "dateCreated": "2015-10-29T15:41:28Z"
+  }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "name": "My Static Data",
+    "source": "MyStaticRecords",
+    "lastUpdated": "2015-11-02T22:35:17Z",
+    "id": 16,
+    "dateCreated": "2015-11-02T22:35:17Z"
+  },
+  {
+    "name": "HyperDataBrowser",
+    "source": "HyperDataBrowser",
+    "lastUpdated": "2015-10-29T15:41:28Z",
+    "id": 100,
+    "dateCreated": "2015-10-29T15:41:28Z"
+  }
+]
+```
 
 
 
 
 ## System Data Tables
 
-Data Tables define how sets of Data Records should be grouped together into the Data Table structures. 
+Data Tables define how sets of Data Fields and subTables should be grouped together into the Data Table structures.
 
 ### Data Table Structure
 
@@ -268,21 +326,272 @@ subTables | subtables that the table contains | optional
 
 ### Creating a new Data Table
 
-### getTableApi
+You should create a new `table` for every set of values you want to be added to a particular table. For example, if a user is importing their Facebook data, they may wish to create a separate Table for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”. To create a new `Table`, the API request body should contain a new Table `name` and `source` and it should be posted to `/data/table` endpoint. The new Table ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
-### findTableApi (kolkas nereikia)
+> Example of creating a new Table:
 
-TBD
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \ 
+  '{
+       "name": "kitchen",
+       "source": "fibaro"
+   }' \
+  http://example.hatdex.org/data/table?access_token=$ACCESS_TOKEN
+```
 
-### getTableValuesApi - includes data (istraukia struktura su vertem ir su pacia data)
+``` http
+POST /data/table?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
 
+{
+    "name": "kitchen",
+    "source": "fibaro"
+}
+```
+> Example of response:
 
+``` shell
+{
+  "name": "kitchen",
+  "source": "fibaro",
+  "lastUpdated": "2015-11-22T20:54:41Z",
+  "id": 13,
+  "dateCreated": "2015-11-22T20:54:41Z"
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "name": "kitchen",
+  "source": "fibaro",
+  "lastUpdated": "2015-11-22T20:54:41Z",
+  "id": 13,
+  "dateCreated": "2015-11-22T20:54:41Z"
+}
+```
+
+### Filtering Tables
+
+You might need to extract some information about a particular Table, e.g. a list of subTables it contains. You can retrieve information about that Table using a GET request and specifying ID of that Table. For example, to find the Table with ID = 13, include its ID in the URL, i.e. post it to `/data/table/13` endpoint.
+
+> Example of finding a particular Table by ID:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/data/table/13?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /data/table/13?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> Example response:
+
+``` shell
+{
+  "name": "kitchen",
+  "source": "fibaro",
+  "lastUpdated": "2015-11-22T20:54:41Z",
+  "subTables": [],
+  "id": 13,
+  "dateCreated": "2015-11-22T20:54:41Z",
+  "fields": []
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "name": "kitchen",
+  "source": "fibaro",
+  "lastUpdated": "2015-11-22T20:54:41Z",
+  "subTables": [],
+  "id": 13,
+  "dateCreated": "2015-11-22T20:54:41Z",
+  "fields": []
+}
+```
+
+### Extract Table Values
+
+Sometimes you might find it useful to extract Table Values. You can retrieve Table Values by specifying Table ID and making a GET request to `table/tableID/values`.
+
+> Example of extracting Table Values:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/data/table/1/values?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /data/table/1/values?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> Example response:
+
+``` shell
+[
+  {
+    "name": "profile0",
+    "lastUpdated": "2015-11-05T06:19:01Z",
+    "id": 34,
+    "dateCreated": "2015-11-05T06:19:01Z",
+    "tables": 
+    [
+      {
+        "name": "profile",
+        "source": "facebook",
+        "lastUpdated": "2015-11-04T22:43:13Z",
+        "subTables": 
+        [
+          {
+            "name": "hometown",
+            "source": "facebook",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "subTables": [],
+            "id": 2,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "fields": 
+            [
+              {
+                "name": "id",
+                "lastUpdated": "2015-11-04T22:43:13Z",
+                "id": 19,
+                "dateCreated": "2015-11-04T22:43:13Z",
+                "tableId": 2,
+                "values": 
+                [
+                  {
+                    "id": 356,
+                    "dateCreated": "2015-11-05T06:19:01Z",
+                    "lastUpdated": "2015-11-05T06:19:01Z",
+                    "value": "101877916520606"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "id": 1,
+        "dateCreated": "2015-11-04T22:43:13Z",
+        "fields": [
+          {
+            "name": "id",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "id": 1,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "tableId": 1,
+            "values": [
+              {
+                "id": 351,
+                "dateCreated": "2015-11-05T06:19:01Z",
+                "lastUpdated": "2015-11-05T06:19:01Z",
+                "value": "10207930600321182"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "name": "profile0",
+    "lastUpdated": "2015-11-05T06:19:01Z",
+    "id": 34,
+    "dateCreated": "2015-11-05T06:19:01Z",
+    "tables": 
+    [
+      {
+        "name": "profile",
+        "source": "facebook",
+        "lastUpdated": "2015-11-04T22:43:13Z",
+        "subTables": 
+        [
+          {
+            "name": "hometown",
+            "source": "facebook",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "subTables": [],
+            "id": 2,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "fields": 
+            [
+              {
+                "name": "id",
+                "lastUpdated": "2015-11-04T22:43:13Z",
+                "id": 19,
+                "dateCreated": "2015-11-04T22:43:13Z",
+                "tableId": 2,
+                "values": 
+                [
+                  {
+                    "id": 356,
+                    "dateCreated": "2015-11-05T06:19:01Z",
+                    "lastUpdated": "2015-11-05T06:19:01Z",
+                    "value": "101877916520606"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "id": 1,
+        "dateCreated": "2015-11-04T22:43:13Z",
+        "fields": 
+        [
+          {
+            "name": "id",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "id": 1,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "tableId": 1,
+            "values": 
+            [
+              {
+                "id": 351,
+                "dateCreated": "2015-11-05T06:19:01Z",
+                "lastUpdated": "2015-11-05T06:19:01Z",
+                "value": "10207930600321182"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+```
 
 ## System Data Records
 
-Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a table row of some structure.
+Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a Table row.
 
-### Data Record Structure
+### Record Structure
 
 All Record API calls contain all the information defined in Record Structure. If you want to create a new Record, you have to include all the mandatory information in the API request. Record structure is explained in the table below.
 
@@ -293,7 +602,7 @@ dateCreated | date when the record was created | optional
 lastUpdated | date when the record was updated | optional
 name | name of the record | mandatory
 
-### Creating a new Data Record
+### Creating a new Record
 
 You should create a new `record` for every set of values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new `Record`, the API request body should contain a new Record `name` and it should be posted to `/data/record` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
@@ -463,9 +772,9 @@ Content-Type: application/json
 ```
 > RECORDID must be replaced with the ID of the record you have just created with a `POST` to  `/data/record`
 
-### Creating a New Data Record and Filling its Data Structures
+### Creating a New Record and Filling its Data Structures
 
-If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new `Record` and fill its data structures with `Values` in one go. To do this, the API request body should contain a new Record `name` and a list of `values` and it should be posted to `/data/record/values` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.
+If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new `Record` and fill its data structures with `Values` in one go. To do this, the API request body should contain a new Record `name` and a list of `values` and it should be posted to `/data/record/values` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response. Note that you can create a list of new Records by simply defining a list of them in the API request body.
 
 <aside class="info">
 Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
@@ -478,29 +787,29 @@ curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
   -POST -d \ 
   '{
-       "record": 
-       {
-           "name": "kitchenElectricityRow"
-       },
+     "record": 
+     {
+       "name": "kitchenElectricityRow"
+     },
        "values": 
-       [
-           {
-               "value": "september2014",
-               "field": 
-               {
-                   "id": 10,
-                   "name": "month2014"
-               }
-           }, 
-           {
-               "value": "september2015",
-               "field": 
-               {
-                   "id": 11,
-                   "name": "month2015"
-               }
-           }
-       ]
+     [
+       {
+         "value": "september2014",
+         "field": 
+         {
+           "id": 10,
+           "name": "month2014"
+         }
+       }, 
+       {
+         "value": "september2015",
+         "field": 
+         {
+           "id": 11,
+           "name": "month2015"
+         }
+       }
+     ]
    }' \
   http://example.hatdex.org/data/record/values?access_token=$ACCESS_TOKEN
 ```
@@ -512,45 +821,127 @@ Host: example.hatdex.org
 Content-Type: application/json
 
 {
-    "record": 
+  "record": 
+  {
+    "id": 40,
+    "dateCreated": "2015-11-22T21:24:44Z",
+    "lastUpdated": "2015-11-22T21:24:44Z",
+    "name": "kitchenElectricityRow"
+  },
+  "values": 
+  [
     {
-        "name": "kitchenElectricityRow"
+      "field": 
+      {
+        "id": 10,
+        "tableId": 23,
+        "name": "month2014"
+      },
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "id": 390,
+      "dateCreated": "2015-11-22T21:24:44Z",
+      "value": "september2014"
     },
-     "values": 
-    [
-        {
-            "value": "september2014",
-            "field": 
-            {
-                "id": 10,
-                "name": "month2014"
-            }
-        }, 
-        {
-            "value": "september2015",
-            "field": 
-            {
-                "id": 11,
-                "name": "month2015"
-            }
-        }
-    ]
+    {
+      "field": 
+      {
+        "id": 11,
+        "tableId": 24,
+        "name": "month2015"
+      },
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "id": 391,
+      "dateCreated": "2015-11-22T21:24:44Z",
+      "value": "september2015"
+    }
+  ]
 }
 ```
-> Example response: TBD -----------------------------------------------------------------------------------------------
+> Example response:
 
 ``` shell
-
+{
+  "record": 
+  {
+    "id": 40,
+    "dateCreated": "2015-11-22T21:24:44Z",
+    "lastUpdated": "2015-11-22T21:24:44Z",
+    "name": "kitchenElectricityRow"
+  },
+  "values": 
+  [
+    {
+      "field": 
+      {
+        "id": 10,
+        "tableId": 23,
+        "name": "month2014"
+      },
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "id": 390,
+      "dateCreated": "2015-11-22T21:24:44Z",
+      "value": "september2014"
+    },
+    {
+      "field": 
+      {
+        "id": 11,
+        "tableId": 24,
+        "name": "month2015"
+      },
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "id": 391,
+      "dateCreated": "2015-11-22T21:24:44Z",
+      "value": "september2015"
+    }
+  ]
+}
 ```
 
 ``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
-```
 
+{
+  "record": 
+  {
+    "id": 40,
+    "dateCreated": "2015-11-22T21:24:44Z",
+    "lastUpdated": "2015-11-22T21:24:44Z",
+    "name": "kitchenElectricityRow"
+  },
+  "values": 
+  [
+    {
+      "field": 
+      {
+        "id": 10,
+        "tableId": 23,
+        "name": "month2014"
+      },
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "id": 390,
+      "dateCreated": "2015-11-22T21:24:44Z",
+      "value": "september2014"
+    },
+    {
+      "field": 
+      {
+        "id": 11,
+        "tableId": 24,
+        "name": "month2015"
+      },
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "id": 391,
+      "dateCreated": "2015-11-22T21:24:44Z",
+      "value": "september2015"
+    }
+  ]
+}
+```
 ## System Data Field
 
-### System Data Field Structure
+### Field Structure
 
 All Field API calls contain all the information defined in Field Structure. If you want to create a new Field, you have to include all the mandatory information in the API request. Field structure is explained in the table below.
 
@@ -565,7 +956,7 @@ values| data values that the field contains | optional
 
 ## System Data Value
 
-### System Data Value Structure
+### Value Structure
 
 All Value API calls contain all the information defined in Value Structure. If you want to create a new Value, you have to include all the mandatory information in the API request. Value structure is explained in the table below.
 
@@ -578,9 +969,95 @@ value | some string | mandatory
 field | field that the value belongs to | optional
 record | record that the value belongs to | optional
 
-### createValueApi - create a single value within a field and a record
+### Creating a Value within Field and Record
 
-### storeValueListApi - create a list of values
+To create a new `Value`, the API request body should contain a new Value `value` in a form of string and it should be posted to `/value` endpoint. Note that values should be related to particular Fields and Records, therefore you should include Field and Record `names` and `IDs` that you want to store the new Value. Note that you can create a list of new Values by simply defining a list of them in the API request body.
+
+> Example of creating a new Property:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+     "value": "testValue",
+     "field": 
+     { 
+       "id": 2,
+       "name": "tableTestField" 
+     },
+     "record": 
+     {
+       "id": 40,
+       "name": "kitchenElectricityRow"
+     }
+   }' \
+  "http://example.hatdex.org/property?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /value?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+  "value": "testValue",
+  "field": 
+  { 
+    "id": 2,
+    "name": "tableTestField" 
+  },
+  "record": 
+  {
+    "id": 40,
+    "name": "kitchenElectricityRow"
+  }
+}
+```
+
+> Example response:
+
+``` shell
+{
+  "field": 
+  {
+    "id": 2,
+    "name": "tableTestField"
+  },
+  "lastUpdated": "2015-11-22T21:45:22Z",
+  "id": 394,
+  "dateCreated": "2015-11-22T21:45:22Z",
+  "value": "testValue",
+  "record": 
+  {
+    "id": 40,
+    "name": "kitchenElectricityRow"
+  }
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "field": 
+  {
+    "id": 2,
+    "name": "tableTestField"
+  },
+  "lastUpdated": "2015-11-22T21:45:22Z",
+  "id": 394,
+  "dateCreated": "2015-11-22T21:45:22Z",
+  "value": "testValue",
+  "record": 
+  {
+    "id": 40,
+    "name": "kitchenElectricityRow"
+  }
+}
+```
 
 ## Retrieving Raw Data
 
@@ -951,7 +1428,7 @@ Content-Type: application/json
 }
 ```
 
-### Listing available Properties
+### Listing Available Properties
 
 You might want to check what Properties have been already created before defining a new one. To list all available Properties, you should make a GET request to `/property` endpoint. The response of each Property will contain some additional information, i.e. its ID and times when it was created as well as updated.   
 
@@ -1082,7 +1559,7 @@ Content-Type: application/json
 
 ### Filtering Properties
 
-You might need to extract some information about a particular Property, e.g. its ID in the system. To do this, you can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property named “height”, include the parameter `name=height` in the URL.
+You might need to extract some information about a particular Property, e.g. its ID in the system. You can retrieve information about that Property using a GET request and specifying name of that Property. For example, to find the Property named “height”, include the parameter `name=height` in the URL.
 
 > Example of finding a particular Property by name:
 
@@ -1271,7 +1748,7 @@ Content-Type: application/json
 }
 ```
 
-### Listing available Types
+### Listing Available Types
 
 You might want to check what Types have been already created before defining a new one. To list all available Types, you should make a GET request to `/type/type` endpoint. The response of each Type will contain some additional information, i.e. its ID and times when it was created as well as updated.                           
 > Example of listing all available Types:
@@ -1334,7 +1811,7 @@ Content-Type: application/json
 
 ### Filtering Types
 
-You might need to extract some information about a particular Type, e.g. its ID in the system. To do this, you can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type named “PostalAddress”, include the parameter `name=PostalAddress` in the URL.
+You might need to extract some information about a particular Type, e.g. its ID in the system. You can retrieve information about that Type using a GET request and specifying name of that Type. For example, to find the Type named “PostalAddress”, include the parameter `name=PostalAddress` in the URL.
 
 > Example of finding a particular Type by name:
 
@@ -1451,7 +1928,7 @@ Content-Type: application/json
 
 ```
 
-### Listing available Units of Measurement
+### Listing Available Units of Measurement
 
 You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to `/property/unitofmeasurement` endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
 
@@ -1519,7 +1996,7 @@ Content-Type: application/json
 
 ### Filtering Units of Measurement
 
-You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. To do this, you need to retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement named "meters", include the parameter `name=meters` in the URL.
+You might need to extract some information about a particular Unit of Measurement, e.g. its symbol. You can retrieve information about that Unit of Measurement using GET and specifying name of that Unit of Measurement. For example, to find the Unit of Measurement named "meters", include the parameter `name=meters` in the URL.
 
 > Example of finding a particular Unit of Measurement by name:
 
