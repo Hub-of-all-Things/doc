@@ -113,9 +113,62 @@ The Raw Data level provides a flexible substrate for users to import a varying r
 
 ![Raw Data Structures](/images/dataStructures.jpg "Raw Data Structures")
 
-## System Data Sources
+## Data Sources
+
+Raw Data can be collected from Sources that have an open API. Data Sources can include: internet-connected devices, databases, online calendars, Facebook, etc. Each Source with an open API, however, returns the Data in some structure. For example, application can fetch some basic Facebook user data in JSON in some structure (see example). Therefore, you have to configure each new Data Source you want to use.
+
+> Example of fetching Facebook user data in JSON:
+
+``` http
+GET /me?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: graph.facebook.com
+Content-Type: application/json
+```
+
+> Example response:
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{  
+    "id": "100001114785800",
+    "name": "Stella Jackson",  
+    "first_name": "Stella",   
+    "last_name": "Jackson",
+    "link": "http://www.facebook.com/profile.php?id=100001114785800",
+    "birthday": "04/16/1987",
+    "gender": "female",
+    "interested_in": [
+       "female"
+    ],
+    "timezone": 5.5,
+    "locale": "en_US",
+    "updated_time": "2010-10-08T13:26:10+0000"
+}
+```
 
 ### Configure a new Data Source
+
+When creating a new Data Source for the HAT, you have to define the structure of the data that you will be using to format your input data. We work with a _virtualized_ data structure, meaning that we can create any number of Tables, subTables and Fields within them that are necessary.
+
+The basic rules are:
+
+- if it is a simple value (a leaf of a JSON tree), it will be stored as a `Field`;
+- if it is a more complex object (JSON object with child nodes), it will be stored as a `Table`;
+- each `Table` (or `subTable`) can have 0 or more `Fields`;
+- if an object is part of another object or is the root object (node) of the JSON tree, it will be stored as a `Table`/`subTable`. Any objects that are part of it will be stored as `subTables`;
+- each Table and each Field has a `name`. The names are used when reconstructing stored data back into JSON as property names;
+- each Field currently has a mandatory source name to avoid name clashes between unrelated data sources.
+
+<aside class="info">
+The <code>source</code> field will not be modifiable by the API caller from the next release of the HAT and it will be used to control who owns the specific tables (the same user who has created them) and hence who can write into them.
+</aside>
+
+<aside class="warning">
+Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
+</aside>
 
 ``` shell
 
@@ -171,6 +224,8 @@ Content-Type: application/json
   ]
 }
 ```
+> Example response:
+
 ``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -222,28 +277,9 @@ Content-Type: application/json
 
 ```
 
-When creating a new data source for the HAT you have to define the structure of the data that you will be using to format your input data. We work with a _virtualized_ data structure, meaning that we can create any number of tables, subtables and fields within them that are necessary.
-
-The basic rules are:
-
-- If it is a simple value (a leaf of a JSON tree), it will be stored as a `field`
-- If it is a more complex object (JSON object with child nodes), it will be stored as a `table`
-- Each `table` (or `subTable`) can have 0 or more `fields`
-- If an object is part of another object or is the root object (node) of the JSON tree, it will be stored as a `table`/`subTable`. Any objects that are part of it will be stored as `subTables`
-- Each table and each field has a `name`. The names are used when reconstructing stored data back into JSON as property names
-- Each field currently has a mandatory source name to avoid name clashes between unrelated data sources
-
-<aside class="info">
-The <code>source</code> field will not be modifiable by the API caller from the next release of the HAT and it will be used to control who owns the specific tables (the same user who has created them) and hence who can write into them.
-</aside>
-
-<aside class="warning">
-Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
-</aside>
-
 ### Listing Available Sources
 
-You might want to check what Sources have been already configured before configuring a new one. To list all available Sources, you should make a GET request to `/data/sources` endpoint. The response will contain a list of sources with names of data structures associated with them, their names, IDs and times when they were created as well as updated. 
+You might want to check what Sources have been already configured before configuring a new one. To list all available Sources, you should make a GET request to `/data/sources` endpoint. The response will contain a list of Sources, where each `Source` contains a list of Data `Tables` that are not part of another Table (i.e. they are not subTables). In addition to this, the response will show IDs of the Sources and times when they were created as well as updated. 
 
 > Example of listing available Sources:
 
@@ -303,12 +339,9 @@ Content-Type: application/json
 ]
 ```
 
+## Data Tables
 
-
-
-## System Data Tables
-
-Data Tables define how sets of Data Fields and subTables should be grouped together into the Data Table structures.
+Data Tables are used for raw (incoming) Data. Data Tables define how sets of Data Fields and subTables should be grouped together into the Data Table structures. For example, a Data Table can contain Fields and subTables as showed in the diagram in Raw Data Input and Output introduction above.
 
 ### Data Table Structure
 
@@ -387,15 +420,17 @@ You might need to extract some information about a particular Table, e.g. a list
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
   -GET \
-  "http://example.hatdex.org/data/table/13?access_token=$ACCESS_TOKEN"
+  "http://example.hatdex.org/data/table/TABLE_ID?access_token=$ACCESS_TOKEN"
 ```
 
 ``` http
-GET /data/table/13?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /data/table/TABLE_ID?access_token=$ACCESS_TOKEN HTTP/1.1
 Accept: application/json
 Host: example.hatdex.org
 Content-Type: application/json
 ```
+> TABLE_ID must be replaced with the ID of the table you want
+
 > Example response:
 
 ``` shell
@@ -425,171 +460,9 @@ Content-Type: application/json
 }
 ```
 
-### Extract Table Values
+## Data Records
 
-Sometimes you might find it useful to extract Table Values. You can retrieve Table Values by specifying Table ID and making a GET request to `table/tableID/values`.
-
-> Example of extracting Table Values:
-
-``` shell
-curl -H "Content-Type: application/json" \
-  -H "Accept: application/json"  \
-  -GET \
-  "http://example.hatdex.org/data/table/1/values?access_token=$ACCESS_TOKEN"
-```
-
-``` http
-GET /data/table/1/values?access_token=$ACCESS_TOKEN HTTP/1.1
-Accept: application/json
-Host: example.hatdex.org
-Content-Type: application/json
-```
-> Example response:
-
-``` shell
-[
-  {
-    "name": "profile0",
-    "lastUpdated": "2015-11-05T06:19:01Z",
-    "id": 34,
-    "dateCreated": "2015-11-05T06:19:01Z",
-    "tables": 
-    [
-      {
-        "name": "profile",
-        "source": "facebook",
-        "lastUpdated": "2015-11-04T22:43:13Z",
-        "subTables": 
-        [
-          {
-            "name": "hometown",
-            "source": "facebook",
-            "lastUpdated": "2015-11-04T22:43:13Z",
-            "subTables": [],
-            "id": 2,
-            "dateCreated": "2015-11-04T22:43:13Z",
-            "fields": 
-            [
-              {
-                "name": "id",
-                "lastUpdated": "2015-11-04T22:43:13Z",
-                "id": 19,
-                "dateCreated": "2015-11-04T22:43:13Z",
-                "tableId": 2,
-                "values": 
-                [
-                  {
-                    "id": 356,
-                    "dateCreated": "2015-11-05T06:19:01Z",
-                    "lastUpdated": "2015-11-05T06:19:01Z",
-                    "value": "101877916520606"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "id": 1,
-        "dateCreated": "2015-11-04T22:43:13Z",
-        "fields": [
-          {
-            "name": "id",
-            "lastUpdated": "2015-11-04T22:43:13Z",
-            "id": 1,
-            "dateCreated": "2015-11-04T22:43:13Z",
-            "tableId": 1,
-            "values": [
-              {
-                "id": 351,
-                "dateCreated": "2015-11-05T06:19:01Z",
-                "lastUpdated": "2015-11-05T06:19:01Z",
-                "value": "10207930600321182"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-]
-```
-
-``` http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-[
-  {
-    "name": "profile0",
-    "lastUpdated": "2015-11-05T06:19:01Z",
-    "id": 34,
-    "dateCreated": "2015-11-05T06:19:01Z",
-    "tables": 
-    [
-      {
-        "name": "profile",
-        "source": "facebook",
-        "lastUpdated": "2015-11-04T22:43:13Z",
-        "subTables": 
-        [
-          {
-            "name": "hometown",
-            "source": "facebook",
-            "lastUpdated": "2015-11-04T22:43:13Z",
-            "subTables": [],
-            "id": 2,
-            "dateCreated": "2015-11-04T22:43:13Z",
-            "fields": 
-            [
-              {
-                "name": "id",
-                "lastUpdated": "2015-11-04T22:43:13Z",
-                "id": 19,
-                "dateCreated": "2015-11-04T22:43:13Z",
-                "tableId": 2,
-                "values": 
-                [
-                  {
-                    "id": 356,
-                    "dateCreated": "2015-11-05T06:19:01Z",
-                    "lastUpdated": "2015-11-05T06:19:01Z",
-                    "value": "101877916520606"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "id": 1,
-        "dateCreated": "2015-11-04T22:43:13Z",
-        "fields": 
-        [
-          {
-            "name": "id",
-            "lastUpdated": "2015-11-04T22:43:13Z",
-            "id": 1,
-            "dateCreated": "2015-11-04T22:43:13Z",
-            "tableId": 1,
-            "values": 
-            [
-              {
-                "id": 351,
-                "dateCreated": "2015-11-05T06:19:01Z",
-                "lastUpdated": "2015-11-05T06:19:01Z",
-                "value": "10207930600321182"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-]
-```
-
-## System Data Records
-
-Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a Table row.
+Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a Table row. For visual explanation of what Data Record is, see the diagram in Raw Data Input and Output introduction above.
 
 ### Record Structure
 
@@ -683,11 +556,11 @@ curl -H "Content-Type: application/json" \
            }
      }
    ]' \
-  http://example.hatdex.org/data/record/RECORDID/values?access_token=$ACCESS_TOKEN
+  http://example.hatdex.org/data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN
 ```
 
 ``` http
-POST /data/record/RECORDID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
 Accept: application/json
 Host: example.hatdex.org
 Content-Type: application/json
@@ -711,6 +584,8 @@ Content-Type: application/json
   }
 ]
 ```
+> RECORD_ID must be replaced with the ID of the record you want
+
 > Example response:
 
 ``` shell
@@ -770,11 +645,15 @@ Content-Type: application/json
 ]
 
 ```
-> RECORDID must be replaced with the ID of the record you have just created with a `POST` to  `/data/record`
+> RECORD_ID must be replaced with the ID of the record you have just created with a `POST` to `/data/record`
 
-### Creating a New Record and Filling its Data Structures
+### Creating a New Record and Filling its Data Structures Together
 
-If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new `Record` and fill its data structures with `Values` in one go. To do this, the API request body should contain a new Record `name` and a list of `values` and it should be posted to `/data/record/values` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response. Note that you can create a list of new Records by simply defining a list of them in the API request body.
+If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new `Record` and fill its data structures with `Values` in one go. To do this, the API request body should contain a new `Record` `name` and a list of `values` and it should be posted to `/data/record/values` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response. Note that you can create a list of new Records by simply defining a list of them in the API request body.
+
+<aside class="notice">
+The API accepts a list of pairs of Records with values.
+</aside>
 
 <aside class="info">
 Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
@@ -939,7 +818,9 @@ Content-Type: application/json
   ]
 }
 ```
-## System Data Field
+## Data Field
+
+As showed in the diagram in Raw Data Input and Output introduction above, Data Field is equivalent to Table column. Data Field belongs to a Table and corresponds to JSON Property which holds a Value. 
 
 ### Field Structure
 
@@ -954,7 +835,9 @@ tableId | ID of the table that the field belongs to | optional
 name | name of the field | mandatory
 values| data values that the field contains | optional
 
-## System Data Value
+## Data Value
+
+JSON Values, that are simple string values, are stored in Fields. See the diagram in Raw Data Input and Output introduction above for visual explanation where a Value sits within Field, Record and Table structure.
 
 ### Value Structure
 
@@ -1061,100 +944,91 @@ Content-Type: application/json
 
 ## Retrieving Raw Data
 
+Sometimes you might find it useful to extract Data Values. You can get all `Data` that has been stored in a specific `Table` (including its `Fields` and `subTables`), listed by associated `Record` ID (one Record per list item), and the full nested structure of Fields and subTables. Similarly, you can query the Data by Field (individual JSON Property) to get a list of all items that are stored in that Field. You can also get all values associated with a Record ID, in the form of the full, nested structure of Tables, subTables, Fields and Values. You can retrieve Data Values by specifying Table, Field or Record ID and making a GET request to `table/table_ID/values`, `field/field_ID/values` or `record/record_ID/values` respectively.
+
 <aside class="info">
 Raw data retrieval is only available for the <em>Owner</em> user for the use by the personal HAT User Interface. It may, however, be useful in development to better understand how the HAT works as well as to help you structure your data.
 </aside>
 
-### By Table
+> Example of extracting Table Values:
 
-``` http
-GET /data/table/TABLE_ID/values?username=bob@example.com&password=bobIsSafe HTTP/1.1
-User-Agent: MyClient/1.0.0
-Accept: application/json
-Host: example.hatdex.org
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN"
 ```
 
 ``` http
-HTTP/1.1 200 OK
+GET /data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
 Content-Type: application/json
+```
+> TABLE_ID must be replaced with the ID of the table you want
 
+> Example response:
+
+``` shell
 [
   {
-    "id": 44,
-    "name": "testRecord 1",
-    "dateCreated": "2015-10-13T18:10:42+01:00",
-    "lastUpdated": "2015-10-13T18:10:42+01:00",    
-    "tables": [
+    "name": "profile0",
+    "lastUpdated": "2015-11-05T06:19:01Z",
+    "id": 34,
+    "dateCreated": "2015-11-05T06:19:01Z",
+    "tables": 
+    [
       {
-        "id": 118,
-        "name": "kitchen",
-        "source": "fibaro",
-        "dateCreated": "2015-10-13T17:56:36+01:00",
-        "lastUpdated": "2015-10-13T17:56:36+01:00",
-        "fields": [
+        "name": "profile",
+        "source": "facebook",
+        "lastUpdated": "2015-11-04T22:43:13Z",
+        "subTables": 
+        [
           {
-            "id": 239,
-            "name": "tableTestField",
-            "dateCreated": "2015-10-13T17:56:36+01:00",
-            "lastUpdated": "2015-10-13T17:56:36+01:00",
-            "tableId": 118
-          },
-          {
-            "id": 240,
-            "name": "tableTestField2",
-            "dateCreated": "2015-10-13T17:56:36+01:00",
-            "lastUpdated": "2015-10-13T17:56:36+01:00",            
-            "tableId": 118,
-            "values": [
+            "name": "hometown",
+            "source": "facebook",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "subTables": [],
+            "id": 2,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "fields": 
+            [
               {
-                "id": 361,
-                "dateCreated": "2015-10-13T18:18:08+01:00",
-                "lastUpdated": "2015-10-13T18:18:08+01:00",
-                "value": "testValue2-1"
+                "name": "id",
+                "lastUpdated": "2015-11-04T22:43:13Z",
+                "id": 19,
+                "dateCreated": "2015-11-04T22:43:13Z",
+                "tableId": 2,
+                "values": 
+                [
+                  {
+                    "id": 356,
+                    "dateCreated": "2015-11-05T06:19:01Z",
+                    "lastUpdated": "2015-11-05T06:19:01Z",
+                    "value": "101877916520606"
+                  }
+                ]
               }
             ]
           }
         ],
-        "subTables": [
+        "id": 1,
+        "dateCreated": "2015-11-04T22:43:13Z",
+        "fields": [
           {
-            "id": 119,
-            "name": "kitchenElectricity",
-            "source": "fibaro",
-            "dateCreated": "2015-10-13T17:56:36+01:00",
-            "lastUpdated": "2015-10-13T17:56:36+01:00",            
-            "fields": [
+            "name": "id",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "id": 1,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "tableId": 1,
+            "values": [
               {
-                "id": 241,
-                "name": "tableTestField3",
-                "dateCreated": "2015-10-13T17:56:36+01:00",
-                "lastUpdated": "2015-10-13T17:56:36+01:00",                
-                "tableId": 119,
-                "values": [
-                  {
-                    "id": 362,
-                    "dateCreated": "2015-10-13T18:18:08+01:00",
-                    "lastUpdated": "2015-10-13T18:18:08+01:00",
-                    "value": "testValue2-2"
-                  }
-                ]
-              },
-              {
-                "id": 242,
-                "name": "tableTestField4",
-                "dateCreated": "2015-10-13T17:56:36+01:00",
-                "lastUpdated": "2015-10-13T17:56:36+01:00",                
-                "tableId": 119,
-                "values": [
-                  {
-                    "id": 363,
-                    "dateCreated": "2015-10-13T18:18:08+01:00",
-                    "lastUpdated": "2015-10-13T18:18:08+01:00",
-                    "value": "testValue2-3"
-                  }
-                ]
+                "id": 351,
+                "dateCreated": "2015-11-05T06:19:01Z",
+                "lastUpdated": "2015-11-05T06:19:01Z",
+                "value": "10207930600321182"
               }
-            ],
-            "subTables": []
+            ]
           }
         ]
       }
@@ -1163,145 +1037,78 @@ Content-Type: application/json
 ]
 ```
 
-> TABLE_ID must be replaced with the id of the table you want
-
-You can get all data that has been stored in a specific table (including its fields and subtables), listed by associated record ID (one record per list item), and the full nested structure of fields and subtables.
-
-### By Field
-
-``` http
-GET /data/field/FIELD_ID/values?username=bob@example.com&password=bobIsSafe HTTP/1.1
-User-Agent: MyClient/1.0.0
-Accept: application/json
-Host: example.hatdex.org
-```
-
 ``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{
-  "name": "tableTestField2",
-  "lastUpdated": "2015-10-13T17:56:36+01:00",
-  "id": 240,
-  "dateCreated": "2015-10-13T17:56:36+01:00",
-  "tableId": 118,
-  "values": [
-    {
-      "id": 361,
-      "dateCreated": "2015-10-13T18:18:08+01:00",
-      "lastUpdated": "2015-10-13T18:18:08+01:00",
-      "value": "testValue2-1"
-    }
-  ]
-}
-
+[
+  {
+    "name": "profile0",
+    "lastUpdated": "2015-11-05T06:19:01Z",
+    "id": 34,
+    "dateCreated": "2015-11-05T06:19:01Z",
+    "tables": 
+    [
+      {
+        "name": "profile",
+        "source": "facebook",
+        "lastUpdated": "2015-11-04T22:43:13Z",
+        "subTables": 
+        [
+          {
+            "name": "hometown",
+            "source": "facebook",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "subTables": [],
+            "id": 2,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "fields": 
+            [
+              {
+                "name": "id",
+                "lastUpdated": "2015-11-04T22:43:13Z",
+                "id": 19,
+                "dateCreated": "2015-11-04T22:43:13Z",
+                "tableId": 2,
+                "values": 
+                [
+                  {
+                    "id": 356,
+                    "dateCreated": "2015-11-05T06:19:01Z",
+                    "lastUpdated": "2015-11-05T06:19:01Z",
+                    "value": "101877916520606"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "id": 1,
+        "dateCreated": "2015-11-04T22:43:13Z",
+        "fields": 
+        [
+          {
+            "name": "id",
+            "lastUpdated": "2015-11-04T22:43:13Z",
+            "id": 1,
+            "dateCreated": "2015-11-04T22:43:13Z",
+            "tableId": 1,
+            "values": 
+            [
+              {
+                "id": 351,
+                "dateCreated": "2015-11-05T06:19:01Z",
+                "lastUpdated": "2015-11-05T06:19:01Z",
+                "value": "10207930600321182"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
 ```
-
-> FIELD_ID must be replaced with the id of the field you want
-
-You can query the data by field (individual property) to get a list of all items that are stored in that field
-
-### By Record
-
-``` http
-GET /data/record/RECORD_ID/values?username=bob@example.com&password=bobIsSafe HTTP/1.1
-User-Agent: MyClient/1.0.0
-Accept: application/json
-Host: example.hatdex.org
-```
-
-``` http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "id": 44,
-  "name": "testRecord 1",
-  "dateCreated": "2015-10-13T18:10:42+01:00",
-  "lastUpdated": "2015-10-13T18:10:42+01:00",    
-  "tables": [
-    {
-      "id": 118,
-      "name": "kitchen",
-      "source": "fibaro",
-      "dateCreated": "2015-10-13T17:56:36+01:00",
-      "lastUpdated": "2015-10-13T17:56:36+01:00",
-      "fields": [
-        {
-          "id": 239,
-          "name": "tableTestField",
-          "dateCreated": "2015-10-13T17:56:36+01:00",
-          "lastUpdated": "2015-10-13T17:56:36+01:00",
-          "tableId": 118
-        },
-        {
-          "id": 240,
-          "name": "tableTestField2",
-          "dateCreated": "2015-10-13T17:56:36+01:00",
-          "lastUpdated": "2015-10-13T17:56:36+01:00",            
-          "tableId": 118,
-          "values": [
-            {
-              "id": 361,
-              "dateCreated": "2015-10-13T18:18:08+01:00",
-              "lastUpdated": "2015-10-13T18:18:08+01:00",
-              "value": "testValue2-1"
-            }
-          ]
-        }
-      ],
-      "subTables": [
-        {
-          "id": 119,
-          "name": "kitchenElectricity",
-          "source": "fibaro",
-          "dateCreated": "2015-10-13T17:56:36+01:00",
-          "lastUpdated": "2015-10-13T17:56:36+01:00",            
-          "fields": [
-            {
-              "id": 241,
-              "name": "tableTestField3",
-              "dateCreated": "2015-10-13T17:56:36+01:00",
-              "lastUpdated": "2015-10-13T17:56:36+01:00",                
-              "tableId": 119,
-              "values": [
-                {
-                  "id": 362,
-                  "dateCreated": "2015-10-13T18:18:08+01:00",
-                  "lastUpdated": "2015-10-13T18:18:08+01:00",
-                  "value": "testValue2-2"
-                }
-              ]
-            },
-            {
-              "id": 242,
-              "name": "tableTestField4",
-              "dateCreated": "2015-10-13T17:56:36+01:00",
-              "lastUpdated": "2015-10-13T17:56:36+01:00",                
-              "tableId": 119,
-              "values": [
-                {
-                  "id": 363,
-                  "dateCreated": "2015-10-13T18:18:08+01:00",
-                  "lastUpdated": "2015-10-13T18:18:08+01:00",
-                  "value": "testValue2-3"
-                }
-              ]
-            }
-          ],
-          "subTables": []
-        }
-      ]
-    }
-  ]
-}
-```
-
-> RECORD_ID must be replaced with the id of the record you want
-
-You can get all values associated with a record ID, in the form of the full, nested structure of tables, subtables, fields and values
-
 
 # Contextualisation
 
@@ -1717,11 +1524,11 @@ curl -H "Content-Type: application/json" \
   '{
       "relationshipType": "subtype"
    }' \
-  "http://example.hatdex.org/type/ID/type/ID?access_token=$ACCESS_TOKEN"
+  "http://example.hatdex.org/type/ID_1/type/ID_2?access_token=$ACCESS_TOKEN"
 ```
 
 ``` http
-POST /type/ID/type/ID?access_token=ACCESS_TOKEN HTTP/1.1
+POST /type/ID_1/type/ID_2?access_token=ACCESS_TOKEN HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
 Host: example.hatdex.org
@@ -1730,6 +1537,8 @@ Host: example.hatdex.org
     "relationshipType": "subtype"
 }
 ```
+
+> ID_1 and ID_2 must be replaced with the IDs of the types you want
 
 > Example response:
 
