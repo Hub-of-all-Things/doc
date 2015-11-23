@@ -153,9 +153,64 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 
 <p><img title="Raw Data Structures" alt="Raw Data Structures" src="images/dataStructures.jpg" /></p>
 
-<h2 id="system-data-sources">System Data Sources</h2>
+<h2 id="data-sources">Data Sources</h2>
+
+<p>Raw Data can be collected from Sources that have an open API. Data Sources can include: internet-connected devices, databases, online calendars, Facebook, etc. Each Source with an open API, however, returns the Data in some structure. For example, application can fetch some basic Facebook user data in JSON in some structure (see example). Therefore, you have to configure each new Data Source you want to use.</p>
+
+<blockquote>
+<p>Example of fetching Facebook user data in JSON:</p>
+</blockquote>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/me?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">graph.facebook.com</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">  
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100001114785800"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stella Jackson"</span><span class="p">,</span><span class="w">  
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stella"</span><span class="p">,</span><span class="w">   
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jackson"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.facebook.com/profile.php?id=100001114785800"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"04/16/1987"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"interested_in"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+       </span><span class="s2">"female"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.5</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2010-10-08T13:26:10+0000"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
 <h3 id="configure-a-new-data-source">Configure a new Data Source</h3>
+
+<p>When creating a new Data Source for the HAT, you have to define the structure of the data that you will be using to format your input data. We work with a <em>virtualized</em> data structure, meaning that we can create any number of Tables, subTables and Fields within them that are necessary.</p>
+
+<p>The basic rules are:</p>
+
+<ul>
+<li>if it is a simple value (a leaf of a JSON tree), it will be stored as a <code class="prettyprint">Field</code>;</li>
+<li>if it is a more complex object (JSON object with child nodes), it will be stored as a <code class="prettyprint">Table</code>;</li>
+<li>each <code class="prettyprint">Table</code> (or <code class="prettyprint">subTable</code>) can have 0 or more <code class="prettyprint">Fields</code>;</li>
+<li>if an object is part of another object or is the root object (node) of the JSON tree, it will be stored as a <code class="prettyprint">Table</code>/<code class="prettyprint">subTable</code>. Any objects that are part of it will be stored as <code class="prettyprint">subTables</code>;</li>
+<li>each Table and each Field has a <code class="prettyprint">name</code>. The names are used when reconstructing stored data back into JSON as property names;</li>
+<li>each Field currently has a mandatory source name to avoid name clashes between unrelated data sources.</li>
+</ul>
+
+<aside class="info">
+The <code>source</code> field will not be modifiable by the API caller from the next release of the HAT and it will be used to control who owns the specific tables (the same user who has created them) and hence who can write into them.
+</aside>
+
+<aside class="warning">
+Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
+</aside>
 <pre class="highlight shell"><code>
 curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
@@ -207,6 +262,10 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
@@ -257,30 +316,9 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 
 </span></code></pre>
 
-<p>When creating a new data source for the HAT you have to define the structure of the data that you will be using to format your input data. We work with a <em>virtualized</em> data structure, meaning that we can create any number of tables, subtables and fields within them that are necessary.</p>
-
-<p>The basic rules are:</p>
-
-<ul>
-<li>If it is a simple value (a leaf of a JSON tree), it will be stored as a <code class="prettyprint">field</code></li>
-<li>If it is a more complex object (JSON object with child nodes), it will be stored as a <code class="prettyprint">table</code></li>
-<li>Each <code class="prettyprint">table</code> (or <code class="prettyprint">subTable</code>) can have 0 or more <code class="prettyprint">fields</code></li>
-<li>If an object is part of another object or is the root object (node) of the JSON tree, it will be stored as a <code class="prettyprint">table</code>/<code class="prettyprint">subTable</code>. Any objects that are part of it will be stored as <code class="prettyprint">subTables</code></li>
-<li>Each table and each field has a <code class="prettyprint">name</code>. The names are used when reconstructing stored data back into JSON as property names</li>
-<li>Each field currently has a mandatory source name to avoid name clashes between unrelated data sources</li>
-</ul>
-
-<aside class="info">
-The <code>source</code> field will not be modifiable by the API caller from the next release of the HAT and it will be used to control who owns the specific tables (the same user who has created them) and hence who can write into them.
-</aside>
-
-<aside class="warning">
-Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
-</aside>
-
 <h3 id="listing-available-sources">Listing Available Sources</h3>
 
-<p>You might want to check what Sources have been already configured before configuring a new one. To list all available Sources, you should make a GET request to <code class="prettyprint">/data/sources</code> endpoint. The response will contain a list of sources with names of data structures associated with them, their names, IDs and times when they were created as well as updated. </p>
+<p>You might want to check what Sources have been already configured before configuring a new one. To list all available Sources, you should make a GET request to <code class="prettyprint">/data/sources</code> endpoint. The response will contain a list of Sources, where each <code class="prettyprint">Source</code> contains a list of Data <code class="prettyprint">Tables</code> that are not part of another Table (i.e. they are not subTables). In addition to this, the response will show IDs of the Sources and times when they were created as well as updated. </p>
 
 <blockquote>
 <p>Example of listing available Sources:</p>
@@ -337,9 +375,9 @@ Make sure to save the structure for yourself for each user you are storing the d
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
-<h2 id="system-data-tables">System Data Tables</h2>
+<h2 id="data-tables">Data Tables</h2>
 
-<p>Data Tables define how sets of Data Fields and subTables should be grouped together into the Data Table structures.</p>
+<p>Data Tables are used for raw (incoming) Data. Data Tables define how sets of Data Fields and subTables should be grouped together into the Data Table structures. For example, a Data Table can contain Fields and subTables as showed in the diagram in Raw Data Input and Output introduction above.</p>
 
 <h3 id="data-table-structure">Data Table Structure</h3>
 
@@ -449,15 +487,17 @@ Make sure to save the structure for yourself for each user you are storing the d
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/data/table/13?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/data/table/TABLE_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/13?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
 <blockquote>
+<p>TABLE_ID must be replaced with the ID of the table you want</p>
+
 <p>Example response:</p>
 </blockquote>
 <pre class="highlight shell"><code><span class="o">{</span>
@@ -484,168 +524,9 @@ Make sure to save the structure for yourself for each user you are storing the d
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<h3 id="extract-table-values">Extract Table Values</h3>
+<h2 id="data-records">Data Records</h2>
 
-<p>Sometimes you might find it useful to extract Table Values. You can retrieve Table Values by specifying Table ID and making a GET request to <code class="prettyprint">table/tableID/values</code>.</p>
-
-<blockquote>
-<p>Example of extracting Table Values:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
-  -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/data/table/1/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
-</code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/1/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-</code></pre>
-
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="o">[</span>
-  <span class="o">{</span>
-    <span class="s2">"name"</span>: <span class="s2">"profile0"</span>,
-    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
-    <span class="s2">"id"</span>: 34,
-    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
-    <span class="s2">"tables"</span>: 
-    <span class="o">[</span>
-      <span class="o">{</span>
-        <span class="s2">"name"</span>: <span class="s2">"profile"</span>,
-        <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
-        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-        <span class="s2">"subTables"</span>: 
-        <span class="o">[</span>
-          <span class="o">{</span>
-            <span class="s2">"name"</span>: <span class="s2">"hometown"</span>,
-            <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
-            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-            <span class="s2">"subTables"</span>: <span class="o">[]</span>,
-            <span class="s2">"id"</span>: 2,
-            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-            <span class="s2">"fields"</span>: 
-            <span class="o">[</span>
-              <span class="o">{</span>
-                <span class="s2">"name"</span>: <span class="s2">"id"</span>,
-                <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-                <span class="s2">"id"</span>: 19,
-                <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-                <span class="s2">"tableId"</span>: 2,
-                <span class="s2">"values"</span>: 
-                <span class="o">[</span>
-                  <span class="o">{</span>
-                    <span class="s2">"id"</span>: 356,
-                    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
-                    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
-                    <span class="s2">"value"</span>: <span class="s2">"101877916520606"</span>
-                  <span class="o">}</span>
-                <span class="o">]</span>
-              <span class="o">}</span>
-            <span class="o">]</span>
-          <span class="o">}</span>
-        <span class="o">]</span>,
-        <span class="s2">"id"</span>: 1,
-        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-        <span class="s2">"fields"</span>: <span class="o">[</span>
-          <span class="o">{</span>
-            <span class="s2">"name"</span>: <span class="s2">"id"</span>,
-            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-            <span class="s2">"id"</span>: 1,
-            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
-            <span class="s2">"tableId"</span>: 1,
-            <span class="s2">"values"</span>: <span class="o">[</span>
-              <span class="o">{</span>
-                <span class="s2">"id"</span>: 351,
-                <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
-                <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
-                <span class="s2">"value"</span>: <span class="s2">"10207930600321182"</span>
-              <span class="o">}</span>
-            <span class="o">]</span>
-          <span class="o">}</span>
-        <span class="o">]</span>
-      <span class="o">}</span>
-    <span class="o">]</span>
-  <span class="o">}</span>
-<span class="o">]</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-
-<span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile0"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> 
-    </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> 
-        </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hometown"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
-            </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
-                </span><span class="p">[</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">356</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101877916520606"</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">]</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
-        </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
-            </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">351</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10207930600321182"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-
-<h2 id="system-data-records">System Data Records</h2>
-
-<p>Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a Table row.</p>
+<p>Data Records define how sets of Data Values should be grouped together into the Data Table structures, i.e. each Record is equivalent of a Table row. For visual explanation of what Data Record is, see the diagram in Raw Data Input and Output introduction above.</p>
 
 <h3 id="record-structure">Record Structure</h3>
 
@@ -758,9 +639,9 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
            }
      }
    ]'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/record/RECORDID/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  http://example.hatdex.org/data/record/RECORD_ID/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/RECORDID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
@@ -786,6 +667,8 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </span></code></pre>
 
 <blockquote>
+<p>RECORD_ID must be replaced with the ID of the record you want</p>
+
 <p>Example response:</p>
 </blockquote>
 <pre class="highlight shell"><code><span class="o">[</span>
@@ -844,12 +727,16 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </span></code></pre>
 
 <blockquote>
-<p>RECORDID must be replaced with the ID of the record you have just created with a <code class="prettyprint">POST</code> to  <code class="prettyprint">/data/record</code></p>
+<p>RECORD_ID must be replaced with the ID of the record you have just created with a <code class="prettyprint">POST</code> to <code class="prettyprint">/data/record</code></p>
 </blockquote>
 
-<h3 id="creating-a-new-record-and-filling-its-data-structures">Creating a New Record and Filling its Data Structures</h3>
+<h3 id="creating-a-new-record-and-filling-its-data-structures-together">Creating a New Record and Filling its Data Structures Together</h3>
 
-<p>If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new <code class="prettyprint">Record</code> and fill its data structures with <code class="prettyprint">Values</code> in one go. To do this, the API request body should contain a new Record <code class="prettyprint">name</code> and a list of <code class="prettyprint">values</code> and it should be posted to <code class="prettyprint">/data/record/values</code> endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response. Note that you can create a list of new Records by simply defining a list of them in the API request body.</p>
+<p>If data structure Values are known before a new Record needs to be created, it tends to be useful to create a new <code class="prettyprint">Record</code> and fill its data structures with <code class="prettyprint">Values</code> in one go. To do this, the API request body should contain a new <code class="prettyprint">Record</code> <code class="prettyprint">name</code> and a list of <code class="prettyprint">values</code> and it should be posted to <code class="prettyprint">/data/record/values</code> endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response. Note that you can create a list of new Records by simply defining a list of them in the API request body.</p>
+
+<aside class="notice">
+The API accepts a list of pairs of Records with values.
+</aside>
 
 <aside class="info">
 Because multiple Data Fields can have the same name but different IDs, ID is mandatory to disambiguate where exactly data should be inserted.
@@ -1012,7 +899,9 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<h2 id="system-data-field">System Data Field</h2>
+<h2 id="data-field">Data Field</h2>
+
+<p>As showed in the diagram in Raw Data Input and Output introduction above, Data Field is equivalent to Table column. Data Field belongs to a Table and corresponds to JSON Property which holds a Value. </p>
 
 <h3 id="field-structure">Field Structure</h3>
 
@@ -1057,7 +946,9 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </tr>
 </tbody></table>
 
-<h2 id="system-data-value">System Data Value</h2>
+<h2 id="data-value">Data Value</h2>
+
+<p>JSON Values, that are simple string values, are stored in Fields. See the diagram in Raw Data Input and Output introduction above for visual explanation where a Value sits within Field, Record and Table structure.</p>
 
 <h3 id="value-structure">Value Structure</h3>
 
@@ -1190,96 +1081,161 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 
 <h2 id="retrieving-raw-data">Retrieving Raw Data</h2>
 
+<p>Sometimes you might find it useful to extract Data Values. You can get all <code class="prettyprint">Data</code> that has been stored in a specific <code class="prettyprint">Table</code> (including its <code class="prettyprint">Fields</code> and <code class="prettyprint">subTables</code>), listed by associated <code class="prettyprint">Record</code> ID (one Record per list item), and the full nested structure of Fields and subTables. Similarly, you can query the Data by Field (individual JSON Property) to get a list of all items that are stored in that Field. You can also get all values associated with a Record ID, in the form of the full, nested structure of Tables, subTables, Fields and Values. You can retrieve Data Values by specifying Table, Field or Record ID and making a GET request to <code class="prettyprint">table/table_ID/values</code>, <code class="prettyprint">field/field_ID/values</code> or <code class="prettyprint">record/record_ID/values</code> respectively.</p>
+
 <aside class="info">
 Raw data retrieval is only available for the <em>Owner</em> user for the use by the personal HAT User Interface. It may, however, be useful in development to better understand how the HAT works as well as to help you structure your data.
 </aside>
 
-<h3 id="by-table">By Table</h3>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID/values?username=bob@example.com&amp;password=bobIsSafe</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<blockquote>
+<p>Example of extracting Table Values:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/data/table/TABLE_ID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+</code></pre>
+
+<blockquote>
+<p>TABLE_ID must be replaced with the ID of the table you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"profile0"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+    <span class="s2">"id"</span>: 34,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+    <span class="s2">"tables"</span>: 
+    <span class="o">[</span>
+      <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"profile"</span>,
+        <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+        <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+        <span class="s2">"subTables"</span>: 
+        <span class="o">[</span>
+          <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"hometown"</span>,
+            <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"subTables"</span>: <span class="o">[]</span>,
+            <span class="s2">"id"</span>: 2,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"fields"</span>: 
+            <span class="o">[</span>
+              <span class="o">{</span>
+                <span class="s2">"name"</span>: <span class="s2">"id"</span>,
+                <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+                <span class="s2">"id"</span>: 19,
+                <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+                <span class="s2">"tableId"</span>: 2,
+                <span class="s2">"values"</span>: 
+                <span class="o">[</span>
+                  <span class="o">{</span>
+                    <span class="s2">"id"</span>: 356,
+                    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                    <span class="s2">"value"</span>: <span class="s2">"101877916520606"</span>
+                  <span class="o">}</span>
+                <span class="o">]</span>
+              <span class="o">}</span>
+            <span class="o">]</span>
+          <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"id"</span>: 1,
+        <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+        <span class="s2">"fields"</span>: <span class="o">[</span>
+          <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"id"</span>,
+            <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"id"</span>: 1,
+            <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-04T22:43:13Z"</span>,
+            <span class="s2">"tableId"</span>: 1,
+            <span class="s2">"values"</span>: <span class="o">[</span>
+              <span class="o">{</span>
+                <span class="s2">"id"</span>: 351,
+                <span class="s2">"dateCreated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-11-05T06:19:01Z"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"10207930600321182"</span>
+              <span class="o">}</span>
+            <span class="o">]</span>
+          <span class="o">}</span>
+        <span class="o">]</span>
+      <span class="o">}</span>
+    <span class="o">]</span>
+  <span class="o">}</span>
+<span class="o">]</span>
 </code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testRecord 1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:10:42+01:00"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:10:42+01:00"</span><span class="p">,</span><span class="w">    
-    </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile0"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">[</span><span class="w">
           </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">239</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">            
-            </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hometown"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+            </span><span class="p">[</span><span class="w">
               </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">361</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="w">
+                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">356</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101877916520606"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
               </span><span class="p">}</span><span class="w">
             </span><span class="p">]</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">[</span><span class="w">
           </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricity"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">            
-            </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T22:43:13Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> 
+            </span><span class="p">[</span><span class="w">
               </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">                
-                </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">362</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">]</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">242</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">                
-                </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">363</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-3"</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">]</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">351</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-05T06:19:01Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10207930600321182"</span><span class="w">
               </span><span class="p">}</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+            </span><span class="p">]</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -1287,143 +1243,6 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
-
-<blockquote>
-<p>TABLE_ID must be replaced with the id of the table you want</p>
-</blockquote>
-
-<p>You can get all data that has been stored in a specific table (including its fields and subtables), listed by associated record ID (one record per list item), and the full nested structure of fields and subtables.</p>
-
-<h3 id="by-field">By Field</h3>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/field/FIELD_ID/values?username=bob@example.com&amp;password=bobIsSafe</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-
-<span class="p">{</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField2"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">361</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-
-</span></code></pre>
-
-<blockquote>
-<p>FIELD_ID must be replaced with the id of the field you want</p>
-</blockquote>
-
-<p>You can query the data by field (individual property) to get a list of all items that are stored in that field</p>
-
-<h3 id="by-record">By Record</h3>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/record/RECORD_ID/values?username=bob@example.com&amp;password=bobIsSafe</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-
-<span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testRecord 1"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:10:42+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:10:42+01:00"</span><span class="p">,</span><span class="w">    
-  </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">239</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField2"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">            
-          </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-              </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">361</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-1"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchenElectricity"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">            
-          </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-              </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField3"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">                
-              </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">362</span><span class="p">,</span><span class="w">
-                  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-2"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">]</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-              </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">242</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tableTestField4"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T17:56:36+01:00"</span><span class="p">,</span><span class="w">                
-              </span><span class="nt">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">363</span><span class="p">,</span><span class="w">
-                  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-13T18:18:08+01:00"</span><span class="p">,</span><span class="w">
-                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testValue2-3"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">]</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">],</span><span class="w">
-          </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<blockquote>
-<p>RECORD_ID must be replaced with the id of the record you want</p>
-</blockquote>
-
-<p>You can get all values associated with a record ID, in the form of the full, nested structure of tables, subtables, fields and values</p>
 
 <h1 id="contextualisation">Contextualisation</h1>
 
@@ -1886,9 +1705,9 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
   <span class="s1">'{
       "relationshipType": "subtype"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/ID/type/ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/type/ID_1/type/ID_2?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/ID/type/ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/ID_1/type/ID_2?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
@@ -1899,6 +1718,8 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </code></pre>
 
 <blockquote>
+<p>ID_1 and ID_2 must be replaced with the IDs of the types you want</p>
+
 <p>Example response:</p>
 </blockquote>
 <pre class="highlight shell"><code><span class="o">{</span>
