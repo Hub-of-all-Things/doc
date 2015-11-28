@@ -115,12 +115,19 @@ The Raw Data level provides a flexible substrate for users to import a varying r
 
 ## Data Sources
 
-Raw Data can be collected from Sources that have an open API. Data Sources can include: internet-connected devices, databases, online calendars, Facebook, etc. Each Source with an open API, however, returns the Data in some structure. For example, application can fetch some basic Facebook user data in JSON in some structure (see example). Therefore, you have to configure each new Data Source you want to use.
+Raw Data can be collected from Sources that have an open API. Data Sources can include: internet-connected devices, databases, online calendars, Facebook, etc. Each Source with an open API, however, returns the Data in some structure. For example, application can fetch Facebook events data in some structure (see example). Therefore, you have to configure each new Data Source you want to use.
 
-> Example of fetching Facebook user data in JSON:
+> Example of fetching Facebook event data:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/me/events?access_token=$ACCESS_TOKEN"
+```
 
 ``` http
-GET /me?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /me/events?access_token=$ACCESS_TOKEN HTTP/1.1
 Accept: application/json
 Host: graph.facebook.com
 Content-Type: application/json
@@ -128,24 +135,100 @@ Content-Type: application/json
 
 > Example response:
 
+``` shell
+{
+    "name": "events",
+    "source": "facebook",
+    "fields": 
+    [
+      { "name": "id" },
+      { "name": "name" },
+      { "name": "description" },
+      { "name": "start_time" },
+      { "name": "end_time" },
+      { "name": "rsvp_status" }
+    ],
+    "subTables": 
+    [
+      {
+        "name": "place",
+        "source": "facebook",
+        "fields": 
+        [
+          { "name": "id" },
+          { "name": "name" }
+        ],
+        "subTables": 
+        [
+          {
+            "name": "location",
+            "source": "facebook",
+            "fields": 
+            [
+              { "name": "city" },
+              { "name": "country" },
+              { "name": "latitude" },
+              { "name": "longitude" },
+              { "name": "located_in" },
+              { "name": "name" },
+              { "name": "state" },
+              { "name": "street" },
+              { "name": "zip" }
+            ]
+          }
+        ]
+      }
+    ]
+}
+```
+
 ``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{  
-    "id": "100001114785800",
-    "name": "Stella Jackson",  
-    "first_name": "Stella",   
-    "last_name": "Jackson",
-    "link": "http://www.facebook.com/profile.php?id=100001114785800",
-    "birthday": "04/16/1987",
-    "gender": "female",
-    "interested_in": [
-       "female"
+{
+    "name": "events",
+    "source": "facebook",
+    "fields": 
+    [
+      { "name": "id" },
+      { "name": "name" },
+      { "name": "description" },
+      { "name": "start_time" },
+      { "name": "end_time" },
+      { "name": "rsvp_status" }
     ],
-    "timezone": 5.5,
-    "locale": "en_US",
-    "updated_time": "2010-10-08T13:26:10+0000"
+    "subTables": 
+    [
+      {
+        "name": "place",
+        "source": "facebook",
+        "fields": 
+        [
+          { "name": "id" },
+          { "name": "name" }
+        ],
+        "subTables": 
+        [
+          {
+            "name": "location",
+            "source": "facebook",
+            "fields": 
+            [
+              { "name": "city" },
+              { "name": "country" },
+              { "name": "latitude" },
+              { "name": "longitude" },
+              { "name": "located_in" },
+              { "name": "name" },
+              { "name": "state" },
+              { "name": "street" },
+              { "name": "zip" }
+            ]
+          }
+        ]
+      }
+    ]
 }
 ```
 
@@ -169,6 +252,8 @@ The <code>source</code> field will not be modifiable by the API caller from the 
 <aside class="warning">
 Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
 </aside>
+
+> Example of configuring a new data source:
 
 ``` shell
 
@@ -359,7 +444,7 @@ subTables | subtables that the table contains | optional
 
 ### Creating a new Data Table
 
-You should create a new `table` for every set of values you want to be added to a particular table. For example, if a user is importing their Facebook data, they may wish to create a separate Table for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”. To create a new `Table`, the API request body should contain a new Table `name` and `source` and it should be posted to `/data/table` endpoint. The new Table ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new `table` for every set of Values you want to be added to a particular table. For example, if a user is importing their Facebook data, they may wish to create a separate Table for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”. To create a new `Table`, the API request body should contain a new Table `name` and `source` and it should be posted to `/data/table` endpoint. The new Table ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Table:
 
@@ -429,7 +514,7 @@ Accept: application/json
 Host: example.hatdex.org
 Content-Type: application/json
 ```
-> TABLE_ID must be replaced with the ID of the table you want
+> TABLE_ID must be replaced with the ID of the Table you want
 
 > Example response:
 
@@ -477,7 +562,7 @@ name | name of the record | mandatory
 
 ### Creating a new Record
 
-You should create a new `record` for every set of values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new `Record`, the API request body should contain a new Record `name` and it should be posted to `/data/record` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new `record` for every set of Values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new `Record`, the API request body should contain a new Record `name` and it should be posted to `/data/record` endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Record:
 
@@ -584,7 +669,7 @@ Content-Type: application/json
   }
 ]
 ```
-> RECORD_ID must be replaced with the ID of the record you want
+> RECORD_ID must be replaced with the ID of the Record you want
 
 > Example response:
 
@@ -965,7 +1050,7 @@ Accept: application/json
 Host: example.hatdex.org
 Content-Type: application/json
 ```
-> TABLE_ID must be replaced with the ID of the table you want
+> TABLE_ID must be replaced with the ID of the Table you want
 
 > Example response:
 
@@ -1112,11 +1197,531 @@ Content-Type: application/json
 
 # Contextualisation
 
-Each user will be able to “contextualise” their data through a set of five tables. These are: People, Organisations, Locations, Events and Things, where “Things” represents both virtual and physical objects. A connected home where a sensor measures when a door is opened or closed could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” table, in where objects (real or conceptual) that are not People, Organisations, Locations or Events are captured. The five tables interconnect through a series of cross-reference tables, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.
+Each user will be able to "contextualise" their Data in a way it makes sense to them through a complete set of APIs into the 5 categories (Data Tables):
 
-The five contextualised tables link to the Raw Data itself through a series of Properties. The schema will host a number of user-defined Properties that may link to several records of the five tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person record (through a cross reference table) would point to separate Values stored within the Raw Data structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.
+- People - yourself and the people you interact with;
+- Things - what you use or interact with, especially those IoT devices; Things represent both virtual and physical objects;
+- Events - what happens to you or what you do in time;
+- Locations - where is the stuff around you happening;
+- Organisations - what organisations or institutions activities relate to.
 
-Details TBD
+A connected home, for example, where a sensor measures when a door is opened or closed, could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” Table, in where objects (real or conceptual), that are not People, Organisations, Locations or Events, are captured. The 5 Tables interconnect through a series of `cross-reference Tables`, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.
+
+The 5 contextualised `Tables` link to the `Raw Data` itself through a series of `Properties`. The schema will host a number of user-defined Properties that may link to several `Records` of the 5 Tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person Record (through a cross-reference Table) would point to separate `Values` stored within the `Raw Data` structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.
+
+<aside class="notice">
+Contextualisation APIs - all Data, Entities (People, Things, Events, Locations and Organisations) and each of their Properties should be tagged with Types and Units of Measurement when applicable.
+</aside>
+
+## Entities
+
+The HAT enables to transform previously collected data into 5 Entities: Person  (Who), Thing (What), Event  (When),  Location  (Where),  and  Organisation  (Where/with Whom),  so  that  users  can  describe  how  they  live  –  When  and  Where  an  Event  took  place,  What  things  and  Data  are  involved  with  Who  (and  potentially Why).
+
+### Entity Structure
+
+All Entities (People, Things, Events, Locations and Organisations) contain all the information defined in Entity Structure. If you want to create a new Entity, you have to include mandatory information in the API request. Entity structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | entity ID in the system | optional
+name | name of the entity | mandatory
+staticProperties | list of properties that are linked with the entity statically | optional
+dynamicProperties | list of properties that are linked with the entity dynamically | optional
+events | list of events that are linked with the entity | optional
+locations | list of locations that are linked with the entity | optional
+people | list of people that are linked with the entity | optional
+things | list of things that are linked with the entity | optional
+organisations | list of organisations that are linked with the entity | optional
+
+### Creating an Entity
+
+You should create a new Entity, implemented in each endpoint, separately for every set of Values you want to be treated as a specific Entity record. For example, you might want to create an Entity as an Event or as a Person. To create a new `Entity` as an Event, the API request body should contain a new Entity `name` and it should be posted to `/event` endpoint. Similarly, you can create new Entities as a `Person`, `Thing`, `Location` or `Organisation` by posting your API request to a relevant endpoint. The new Entity ID will be recorded automatically and included in the response.
+
+> Example of creating a new entity as an event:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+     "name": "birthdayParty"
+   }' \
+  "http://example.hatdex.org/event?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /event?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+  "name": "birthdayParty"
+}
+```
+
+> Example response:
+
+``` shell
+{
+  "id": 1,
+  "name": "birthdayParty"
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "birthdayParty"
+}
+```
+
+### Listing Available Entities
+
+You might want to check what Entities have been already created for a specific category (e.g. Person) before defining a new one. To list all available Entities for a specific category, you should make a GET request to `/entity` endpoint, where Entity can be a `Person`, `Thing`, `Event`, `Location` or `Organisation` . The response of each Entity will contain minimal structure, i.e. it will not contain information about linked Entities and Properties.
+
+> Example of listing all available person entities:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/person?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /person?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+```
+> Example response:
+
+``` shell
+[
+  {
+    "id": 1,
+    "name": "Me",
+    "personId": "demo.hat.org"
+  },
+  {
+    "id": 4,
+    "name": "Spouse",
+    "personId": "spouse.hat.org"
+  }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "id": 1,
+    "name": "Me",
+    "personId": "demo.hat.org"
+  },
+  {
+    "id": 4,
+    "name": "Spouse",
+    "personId": "spouse.hat.org"
+  }
+]
+
+```
+
+### Filtering Entities
+
+You might need to extract some information about a particular Entity, e.g. it's ID. You can retrieve information about that Entity using a GET request and specifying ID of that Entity. For example, to find the Event with ID = 1, include its ID in the URL and post it to `/event/1` endpoint. Similarly, you can retrieve information about `Person`, `Thing`, `Location` or `Organisation` Entities by posting your API request to a relevant endpoint and specifying ID of the Entity of interest. 
+
+> Example of finding a particular event entity by ID:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/event/EVENT_ID?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /event/EVENT_ID?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> EVENT_ID must be replaced with the ID of the Event you want
+
+> Example response:
+
+``` shell
+{
+  "id": 1,
+  "name": "birthdayParty"
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "birthdayParty"
+}
+```
+
+### Retrieving Complete Entity Structure
+
+Sometimes you might want to extract all information in Entity structure. You can retrieve a full Entity Structure (including linked Properties and Entities) by specifying `Person`, `Thing`, `Event`, `Location` or `Organisation` Entity ID and making a GET request to a relevant endpoint. For instance, to extract information about a Thing with ID = 3, you need to make a GET request to `thing/3/values`.
+
+> Example of extracting a particular entity information:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/thing/THING_ID/values?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /thing/THING_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> THING_ID must be replaced with the ID of the Thing you want
+
+> Example response:
+
+``` shell
+[
+  {
+    "id": 3,
+    "name": "Phone",
+    "people": 
+    [
+      {
+        "relationshipType": "owns",
+        "person": 
+        {
+          "id": 1,
+          "name": "Me",
+          "personId": "demo.hat.org"
+        }
+      }
+    ]
+  }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "id": 3,
+    "name": "Phone",
+    "people": 
+    [
+      {
+        "relationshipType": "owns",
+        "person": 
+        {
+          "id": 1,
+          "name": "Me",
+          "personId": "demo.hat.org"
+        }
+      }
+    ]
+  }
+]
+```
+
+### Creating links between Entities
+
+It is useful to link various Entities. For example, you might want to link the Event "birthdayParty" with ID = 1 to the `Person` "Spouse" with ID = 4. This can be done by creating an API request body containing your defined `relationship Type` name (e.g. "attends") and typing `/event/1/person/4` in the POST request to link `Event` with ID = 1 to `Person` with ID = 4. Similarly, different Entity categories can be linked. In general, you need to post your API request to `/entity/ENTITY_ID/entity/ENTITY_ID` to link Entities from `Person`, `Thing`, `Event`, `Location`, `Organisation` categories. However, it is important to note that not all the Entities can be linked. From the table below we can see that, for example, Event can be linked to Person, but Person cannot be linked to Event. In other words, you can have `/event/EVENT_ID/person/PERSON_ID`, but you `cannot` have `/person/PERSON_ID/event/EVENT_ID`. The new Relationship ID will be recorded automatically and included in the response.
+
+Entity | Can be linked to Entities
+------ | -------------------------
+person | person, location, organisation
+thing | thing, person
+event | event, location, organisation, person, thing
+location | location, thing
+organisation | organisation, location
+
+> Example of linking Event to Person:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+     "relationshipType": "attends"
+   }' \
+  "http://example.hatdex.org/event/EVENT_ID/person/PERSON_ID?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /event/EVENT_ID/person/PERSON_ID?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+  "relationshipType": "attends"
+}
+```
+
+> EVENT_ID and PERSON_ID must be replaced with the IDs of Entities you want
+
+> Example response:
+
+``` shell
+{
+  "id": 1
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 1
+}
+```
+
+### Adding Type to Existing Entity
+
+Sometimes you might need to add a `Type` to an existing `Entity`. For example, you might want your `Event` Entity "birthdayParty" (ID = 1) contain Type "Date" (ID = 2). To add the `Type` to the existing Entity, the API request body should contain `relationship Type` name (e.g. "date") and it should be posted to `/event/1/type/2` endpoint. In general, you need to post your API request to `/entity/ENTITY_ID/type/TYPE_ID/` to add Types to any of the Entities from `Person`, `Thing`, `Event`, `Location`, `Organisation` categories. The new Relationship ID will be recorded automatically and included in the response.
+
+> Example of adding Type to Event Entity:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+     "relationshipType": "date"
+   }' \
+  "http://example.hatdex.org/event/EVENT_ID/type/TYPE_ID?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /event/EVENT_ID/type/TYPE_ID?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+  "relationshipType": "date"
+}
+```
+> EVENT_ID and TYPE_ID must be replaced with the IDs of Entity and Type you want
+
+> Example response:
+
+``` shell
+{
+  "id": 1
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 1
+}
+```
+
+### Linking Entities to Properties Statically
+
+In order to link `Entity` to `Property` statically, you need to specify a single Field and Record ID to which the Entity should be linked to. This means that Entity linked to Property statically is linked to particular Data Value. For example, to link the `Person` "Me" (ID = 1) to the `Record` "Day 1" (ID = 8), which is in the `Field` "Weight" (ID = 50), which is associated to the `Property` "bodyWeight" (ID = 1), you need to create an API request body containing Property, its Type and Unit of Measurement, Field and Record `names` and `IDs`, and type `/person/1/property/static/1` in the POST request. Similarly, all the different Entity categories can be linked to particular Properties. In general, you need to post your API request to `/entity/ENTITY_ID/property/static/PROPERTY_ID` to link any of the Entities from `Person`, `Thing`, `Event`, `Location`, `Organisation` categories to particular Properties. The new Static Relationship ID will be recorded automatically and included in the response.
+
+> Example of linking Person Entity to Property statically:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+     "property": 
+     {
+       "id": 1,
+       "name": "bodyWeight",
+       "propertyType": 
+       {
+         "name": "weight",
+         "id": 19
+       },
+       "unitOfMeasurement": 
+       {
+         "name": "kilograms",
+         "id": 1
+       }
+     },
+     "relationshipType": "weight",
+     "field": 
+     {
+       "id": 50,
+       "name": "Weight"
+     },
+     "record": 
+     {
+       "id": 8,
+       "name": "Day 1"
+     }
+   }' \
+  "http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+  "property": 
+  {
+    "id": 1,
+    "name": "bodyWeight",
+    "propertyType": 
+    {
+      "name": "weight",
+      "id": 19
+    },
+    "unitOfMeasurement": 
+    {
+      "name": "kilograms",
+      "id": 1
+    }
+  },
+  "relationshipType": "weight",
+  "field": 
+  {
+    "id": 50,
+    "name": "Weight"
+  },
+  "record": 
+  {
+    "id": 8,
+    "name": "Day 1"
+  }
+}
+```
+
+> PERSON_ID and PROPERTY_ID must be replaced with the IDs of Entity and Property you want
+
+> Example response:
+
+``` shell
+{
+  "id": 1
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 1
+}
+```
+
+### Linking Entities to Properties Dynamically
+
+In contrast to linking Entities to Properties statically, to link them dynamically you do not need to specify Record ID. This means that Entity linked to Property dynamically is not linked to particular Data Value and is linked to the whole Field instead. For example, to link the `Person` "Me" (ID = 1) to the `Field` "Weight" (ID = 50), which is associated to the `Property` "bodyWeight" (ID = 1), you need to create an API request body containing Property, its Type and Unit of Measurement, and Field `names` and `IDs`, and type `/person/1/property/dynamic/1` in the POST request. Similarly, all the different Entity categories can be linked to particular Properties. In general, you need to post your API request to `/entity/ENTITY_ID/property/dynamic/PROPERTY_ID` to link any of the Entities from `Person`, `Thing`, `Event`, `Location`, `Organisation` categories to particular Properties. The new Dynamic Relationship ID will be recorded automatically and included in the response.
+
+> Example of linking Person Entity to Property dynamically:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+     "property": 
+     {
+       "id": 1,
+       "name": "bodyWeight",
+       "propertyType": 
+       {
+         "name": "weight",
+         "id": 19
+       },
+       "unitOfMeasurement": 
+       {
+         "name": "kilograms",
+         "id": 1
+       }
+     },
+     "relationshipType": "weight",
+     "field": 
+     {
+       "id": 50,
+       "name": "Weight"
+     }
+   }' \
+  "http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+  "property": 
+  {
+    "id": 1,
+    "name": "bodyWeight",
+    "propertyType": 
+    {
+      "name": "weight",
+      "id": 19
+    },
+    "unitOfMeasurement": 
+    {
+      "name": "kilograms",
+      "id": 1
+    }
+  },
+  "relationshipType": "weight",
+  "field": 
+  {
+    "id": 50,
+    "name": "Weight"
+  }
+}
+```
+
+> PERSON_ID and PROPERTY_ID must be replaced with the IDs of Entity and Property you want
+
+> Example response:
+
+``` shell
+{
+  "id": 9
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 9
+}
+```
 
 # Data Type Annotations
 
@@ -1140,7 +1745,7 @@ unitOfMeasurement | unit of measurement of the property | mandatory
 
 ### Creating a Property
 
-You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties "First Name" and "Last Name", or you might want to create a property "Full Name". It is important to note that a `Property` can have a `Type` and `Unit of Measurement` associated with it. For example, a property "bodyWeight" would be of Type "weight" and would have Unit of Measurement "kilograms". To create a new `Property`, the API request body should contain a new Property `name`, its `Type` and `Unit of Measurement`, and it should be posted to `/property` endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new Property for every set of Values you want to be treated as a specific Property record. For example, you might want to have properties "First Name" and "Last Name", or you might want to create a property "Full Name". It is important to note that a `Property` can have a `Type` and `Unit of Measurement` associated with it. For example, a property "bodyWeight" would be of Type "weight" and would have Unit of Measurement "kilograms". To create a new `Property`, the API request body should contain a new Property `name`, its `Type` and `Unit of Measurement`, and it should be posted to `/property` endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Property:
 
@@ -1460,7 +2065,7 @@ description | description of the type | optional
 
 ### Creating a Type
 
-You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and it should be posted to `/type/type` endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new Type for every set of Values you want to be treated as a specific Type record. For example, you might want to have a Type "Country" to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new `Type`, the API request body should contain a new Type `name` and it should be posted to `/type/type` endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Data Type:
 
@@ -1513,7 +2118,7 @@ Content-Type: application/json
 ```
 ### Creating links between Types
 
-It is useful to link various Types. For example, you might have types "address" (ID 1), "place" (ID 2) and "PostalAddress" (ID 3), where you want "place" and "PostalAddress" to be treated as `subTypes` of type "address". To create such Type hierarchy, you need to link "address" to "place" and "address" to "PostalAddress" by defining a `relationship Type`. This can be done by creating an API request body containing `relationshipType` name (e.g. "subtype") and typing `/type/1/type/2` and `/type/1/type/3` in the POST request to link "address" to "place" and "address" to "PostalAddress" respectively. Relationship IDs will be created automatically.
+It is useful to link various Types. For example, you might have types "address" (ID = 1), "place" (ID = 2) and "PostalAddress" (ID = 3), where you want "place" and "PostalAddress" to be treated as `subTypes` of type "address". To create such Type hierarchy, you need to link "address" to "place" and "address" to "PostalAddress" by defining a `relationship Type`. This can be done by creating an API request body containing `relationshipType` name (e.g. "subtype") and typing `/type/1/type/2` and `/type/1/type/3` in the POST request to link "address" to "place" and "address" to "PostalAddress" respectively. Relationship IDs will be created automatically.
 
 > Example of creating a link between two Types:
 
@@ -1538,7 +2143,7 @@ Host: example.hatdex.org
 }
 ```
 
-> ID_1 and ID_2 must be replaced with the IDs of the types you want
+> ID_1 and ID_2 must be replaced with the IDs of Types you want
 
 > Example response:
 
@@ -1681,7 +2286,7 @@ symbol | symbol of the unit of measurement | optional
 
 ### Creating a Unit of Measurement
 
-You should create a new `Unit of Measurement` for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name` and it should be posted to `/type/unitofmeasurement` endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
+You should create a new `Unit of Measurement` for every set of Values you want to be associated with that Unit of Measurement. For example, you might want to have "kilograms" and "grams" for weight Units of Measurement. To create a new `Unit of Measurement`, the API request body should contain its `name` and it should be posted to `/type/unitofmeasurement` endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.
 
 > Example of creating a new Unit of Measurement:
 
@@ -1739,7 +2344,7 @@ Content-Type: application/json
 
 ### Listing Available Units of Measurement
 
-You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to `/property/unitofmeasurement` endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
+You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to `/type/unitofmeasurement` endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   
 
 > Example of listing all available Units of Measurement:
 
