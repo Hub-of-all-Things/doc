@@ -155,12 +155,17 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 
 <h2 id="data-sources">Data Sources</h2>
 
-<p>Raw Data can be collected from Sources that have an open API. Data Sources can include: internet-connected devices, databases, online calendars, Facebook, etc. Each Source with an open API, however, returns the Data in some structure. For example, application can fetch some basic Facebook user data in JSON in some structure (see example). Therefore, you have to configure each new Data Source you want to use.</p>
+<p>Raw Data can be collected from Sources that have an open API. Data Sources can include: internet-connected devices, databases, online calendars, Facebook, etc. Each Source with an open API, however, returns the Data in some structure. For example, application can fetch Facebook events data in some structure (see example). Therefore, you have to configure each new Data Source you want to use.</p>
 
 <blockquote>
-<p>Example of fetching Facebook user data in JSON:</p>
+<p>Example of fetching Facebook event data:</p>
 </blockquote>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/me?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/me/events?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/me/events?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">graph.facebook.com</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
@@ -169,23 +174,97 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 <blockquote>
 <p>Example response:</p>
 </blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"events"</span>,
+    <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+    <span class="s2">"fields"</span>: 
+    <span class="o">[</span>
+      <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"id"</span> <span class="o">}</span>,
+      <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"name"</span> <span class="o">}</span>,
+      <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"description"</span> <span class="o">}</span>,
+      <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"start_time"</span> <span class="o">}</span>,
+      <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"end_time"</span> <span class="o">}</span>,
+      <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"rsvp_status"</span> <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"subTables"</span>: 
+    <span class="o">[</span>
+      <span class="o">{</span>
+        <span class="s2">"name"</span>: <span class="s2">"place"</span>,
+        <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+        <span class="s2">"fields"</span>: 
+        <span class="o">[</span>
+          <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"id"</span> <span class="o">}</span>,
+          <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"name"</span> <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"subTables"</span>: 
+        <span class="o">[</span>
+          <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"location"</span>,
+            <span class="s2">"source"</span>: <span class="s2">"facebook"</span>,
+            <span class="s2">"fields"</span>: 
+            <span class="o">[</span>
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"city"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"country"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"latitude"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"longitude"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"located_in"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"name"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"state"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"street"</span> <span class="o">}</span>,
+              <span class="o">{</span> <span class="s2">"name"</span>: <span class="s2">"zip"</span> <span class="o">}</span>
+            <span class="o">]</span>
+          <span class="o">}</span>
+        <span class="o">]</span>
+      <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
-<span class="p">{</span><span class="w">  
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100001114785800"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stella Jackson"</span><span class="p">,</span><span class="w">  
-    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stella"</span><span class="p">,</span><span class="w">   
-    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jackson"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.facebook.com/profile.php?id=100001114785800"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"04/16/1987"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"interested_in"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-       </span><span class="s2">"female"</span><span class="w">
+<span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"events"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"description"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"start_time"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"end_time"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rsvp_status"</span><span class="w"> </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"updated_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2010-10-08T13:26:10+0000"</span><span class="w">
+    </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"place"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="w"> </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="w"> </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"subTables"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"location"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> 
+            </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"city"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"latitude"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"longitude"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"located_in"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"state"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"street"</span><span class="w"> </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zip"</span><span class="w"> </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -211,6 +290,10 @@ The <code>source</code> field will not be modifiable by the API caller from the 
 <aside class="warning">
 Make sure to save the structure for yourself for each user you are storing the data for as you will need field IDs to define which fields to write your data values into.
 </aside>
+
+<blockquote>
+<p>Example of configuring a new data source:</p>
+</blockquote>
 <pre class="highlight shell"><code>
 curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
@@ -429,7 +512,7 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 
 <h3 id="creating-a-new-data-table">Creating a new Data Table</h3>
 
-<p>You should create a new <code class="prettyprint">table</code> for every set of values you want to be added to a particular table. For example, if a user is importing their Facebook data, they may wish to create a separate Table for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”. To create a new <code class="prettyprint">Table</code>, the API request body should contain a new Table <code class="prettyprint">name</code> and <code class="prettyprint">source</code> and it should be posted to <code class="prettyprint">/data/table</code> endpoint. The new Table ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new <code class="prettyprint">table</code> for every set of Values you want to be added to a particular table. For example, if a user is importing their Facebook data, they may wish to create a separate Table for the schools they have attended, and a separate Table for the Facebook Pages that they “Like”. To create a new <code class="prettyprint">Table</code>, the API request body should contain a new Table <code class="prettyprint">name</code> and <code class="prettyprint">source</code> and it should be posted to <code class="prettyprint">/data/table</code> endpoint. The new Table ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Table:</p>
@@ -496,7 +579,7 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 </code></pre>
 
 <blockquote>
-<p>TABLE_ID must be replaced with the ID of the table you want</p>
+<p>TABLE_ID must be replaced with the ID of the Table you want</p>
 
 <p>Example response:</p>
 </blockquote>
@@ -563,7 +646,7 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 
 <h3 id="creating-a-new-record">Creating a new Record</h3>
 
-<p>You should create a new <code class="prettyprint">record</code> for every set of values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new <code class="prettyprint">Record</code>, the API request body should contain a new Record <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/data/record</code> endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new <code class="prettyprint">record</code> for every set of Values you want to be treated as a single record. For example, each GPS reading with separate longitude and latitude Values can be put in a Record that contains both longitude and latitude, together with additional properties such as the timestamp of the Record. To create a new <code class="prettyprint">Record</code>, the API request body should contain a new Record <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/data/record</code> endpoint. The new Record ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Record:</p>
@@ -667,7 +750,7 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </span></code></pre>
 
 <blockquote>
-<p>RECORD_ID must be replaced with the ID of the record you want</p>
+<p>RECORD_ID must be replaced with the ID of the Record you want</p>
 
 <p>Example response:</p>
 </blockquote>
@@ -1102,7 +1185,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </code></pre>
 
 <blockquote>
-<p>TABLE_ID must be replaced with the ID of the table you want</p>
+<p>TABLE_ID must be replaced with the ID of the Table you want</p>
 
 <p>Example response:</p>
 </blockquote>
@@ -1246,11 +1329,567 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h1 id="contextualisation">Contextualisation</h1>
 
-<p>Each user will be able to “contextualise” their data through a set of five tables. These are: People, Organisations, Locations, Events and Things, where “Things” represents both virtual and physical objects. A connected home where a sensor measures when a door is opened or closed could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” table, in where objects (real or conceptual) that are not People, Organisations, Locations or Events are captured. The five tables interconnect through a series of cross-reference tables, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.</p>
+<p>Each user will be able to &ldquo;contextualise&rdquo; their Data in a way it makes sense to them through a complete set of APIs into the 5 categories (Data Tables):</p>
 
-<p>The five contextualised tables link to the Raw Data itself through a series of Properties. The schema will host a number of user-defined Properties that may link to several records of the five tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person record (through a cross reference table) would point to separate Values stored within the Raw Data structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.</p>
+<ul>
+<li>People - yourself and the people you interact with;</li>
+<li>Things - what you use or interact with, especially those IoT devices; Things represent both virtual and physical objects;</li>
+<li>Events - what happens to you or what you do in time;</li>
+<li>Locations - where is the stuff around you happening;</li>
+<li>Organisations - what organisations or institutions activities relate to.</li>
+</ul>
 
-<p>Details TBD</p>
+<p>A connected home, for example, where a sensor measures when a door is opened or closed, could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” Table, in where objects (real or conceptual), that are not People, Organisations, Locations or Events, are captured. The 5 Tables interconnect through a series of <code class="prettyprint">cross-reference Tables</code>, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.</p>
+
+<p>The 5 contextualised <code class="prettyprint">Tables</code> link to the <code class="prettyprint">Raw Data</code> itself through a series of <code class="prettyprint">Properties</code>. The schema will host a number of user-defined Properties that may link to several <code class="prettyprint">Records</code> of the 5 Tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person Record (through a cross-reference Table) would point to separate <code class="prettyprint">Values</code> stored within the <code class="prettyprint">Raw Data</code> structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.</p>
+
+<aside class="notice">
+Contextualisation APIs - all Data, Entities (People, Things, Events, Locations and Organisations) and each of their Properties should be tagged with Types and Units of Measurement when applicable.
+</aside>
+
+<h2 id="entities">Entities</h2>
+
+<p>The HAT enables to transform previously collected data into 5 Entities: Person  (Who), Thing (What), Event  (When),  Location  (Where),  and  Organisation  (Where/with Whom),  so  that  users  can  describe  how  they  live  –  When  and  Where  an  Event  took  place,  What  things  and  Data  are  involved  with  Who  (and  potentially Why).</p>
+
+<h3 id="entity-structure">Entity Structure</h3>
+
+<p>All Entities (People, Things, Events, Locations and Organisations) contain all the information defined in Entity Structure. If you want to create a new Entity, you have to include mandatory information in the API request. Entity structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>entity ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the entity</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>staticProperties</td>
+<td>list of properties that are linked with the entity statically</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>dynamicProperties</td>
+<td>list of properties that are linked with the entity dynamically</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>events</td>
+<td>list of events that are linked with the entity</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>locations</td>
+<td>list of locations that are linked with the entity</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>people</td>
+<td>list of people that are linked with the entity</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>things</td>
+<td>list of things that are linked with the entity</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>organisations</td>
+<td>list of organisations that are linked with the entity</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-an-entity">Creating an Entity</h3>
+
+<p>You should create a new Entity, implemented in each endpoint, separately for every set of Values you want to be treated as a specific Entity record. For example, you might want to create an Entity as an Event or as a Person. To create a new <code class="prettyprint">Entity</code> as an Event, the API request body should contain a new Entity <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/event</code> endpoint. Similarly, you can create new Entities as a <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Location</code> or <code class="prettyprint">Organisation</code> by posting your API request to a relevant endpoint. The new Entity ID will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of creating a new entity as an event:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+     "name": "birthdayParty"
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/event?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+  "name": "birthdayParty"
+}
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 1,
+  <span class="s2">"name"</span>: <span class="s2">"birthdayParty"</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"birthdayParty"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="listing-available-entities">Listing Available Entities</h3>
+
+<p>You might want to check what Entities have been already created for a specific category (e.g. Person) before defining a new one. To list all available Entities for a specific category, you should make a GET request to <code class="prettyprint">/entity</code> endpoint, where Entity can be a <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code> or <code class="prettyprint">Organisation</code> . The response of each Entity will contain minimal structure, i.e. it will not contain information about linked Entities and Properties.</p>
+
+<blockquote>
+<p>Example of listing all available person entities:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/person?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/person?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 1,
+    <span class="s2">"name"</span>: <span class="s2">"Me"</span>,
+    <span class="s2">"personId"</span>: <span class="s2">"demo.hat.org"</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 4,
+    <span class="s2">"name"</span>: <span class="s2">"Spouse"</span>,
+    <span class="s2">"personId"</span>: <span class="s2">"spouse.hat.org"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Me"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"personId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo.hat.org"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Spouse"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"personId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"spouse.hat.org"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+
+</span></code></pre>
+
+<h3 id="filtering-entities">Filtering Entities</h3>
+
+<p>You might need to extract some information about a particular Entity, e.g. it&rsquo;s ID. You can retrieve information about that Entity using a GET request and specifying ID of that Entity. For example, to find the Event with ID = 1, include its ID in the URL and post it to <code class="prettyprint">/event/1</code> endpoint. Similarly, you can retrieve information about <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Location</code> or <code class="prettyprint">Organisation</code> Entities by posting your API request to a relevant endpoint and specifying ID of the Entity of interest. </p>
+
+<blockquote>
+<p>Example of finding a particular event entity by ID:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/event/EVENT_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/event/EVENT_ID?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+</code></pre>
+
+<blockquote>
+<p>EVENT_ID must be replaced with the ID of the Event you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 1,
+  <span class="s2">"name"</span>: <span class="s2">"birthdayParty"</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"birthdayParty"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="retrieving-complete-entity-structure">Retrieving Complete Entity Structure</h3>
+
+<p>Sometimes you might want to extract all information in Entity structure. You can retrieve a full Entity Structure (including linked Properties and Entities) by specifying <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code> or <code class="prettyprint">Organisation</code> Entity ID and making a GET request to a relevant endpoint. For instance, to extract information about a Thing with ID = 3, you need to make a GET request to <code class="prettyprint">thing/3/values</code>.</p>
+
+<blockquote>
+<p>Example of extracting a particular entity information:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/thing/THING_ID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/thing/THING_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+</code></pre>
+
+<blockquote>
+<p>THING_ID must be replaced with the ID of the Thing you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 3,
+    <span class="s2">"name"</span>: <span class="s2">"Phone"</span>,
+    <span class="s2">"people"</span>: 
+    <span class="o">[</span>
+      <span class="o">{</span>
+        <span class="s2">"relationshipType"</span>: <span class="s2">"owns"</span>,
+        <span class="s2">"person"</span>: 
+        <span class="o">{</span>
+          <span class="s2">"id"</span>: 1,
+          <span class="s2">"name"</span>: <span class="s2">"Me"</span>,
+          <span class="s2">"personId"</span>: <span class="s2">"demo.hat.org"</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">]</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Phone"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"people"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"relationshipType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"owns"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Me"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"personId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo.hat.org"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="creating-links-between-entities">Creating links between Entities</h3>
+
+<p>It is useful to link various Entities. For example, you might want to link the Event &ldquo;birthdayParty&rdquo; with ID = 1 to the <code class="prettyprint">Person</code> &ldquo;Spouse&rdquo; with ID = 4. This can be done by creating an API request body containing your defined <code class="prettyprint">relationship Type</code> name (e.g. &ldquo;attends&rdquo;) and typing <code class="prettyprint">/event/1/person/4</code> in the POST request to link <code class="prettyprint">Event</code> with ID = 1 to <code class="prettyprint">Person</code> with ID = 4. Similarly, different Entity categories can be linked. In general, you need to post your API request to <code class="prettyprint">/entity/ENTITY_ID/entity/ENTITY_ID</code> to link Entities from <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code>, <code class="prettyprint">Organisation</code> categories. However, it is important to note that not all the Entities can be linked. From the table below we can see that, for example, Event can be linked to Person, but Person cannot be linked to Event. In other words, you can have <code class="prettyprint">/event/EVENT_ID/person/PERSON_ID</code>, but you <code class="prettyprint">cannot</code> have <code class="prettyprint">/person/PERSON_ID/event/EVENT_ID</code>. The new Relationship ID will be recorded automatically and included in the response.</p>
+
+<table><thead>
+<tr>
+<th>Entity</th>
+<th>Can be linked to Entities</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>person</td>
+<td>person, location, organisation</td>
+</tr>
+<tr>
+<td>thing</td>
+<td>thing, person</td>
+</tr>
+<tr>
+<td>event</td>
+<td>event, location, organisation, person, thing</td>
+</tr>
+<tr>
+<td>location</td>
+<td>location, thing</td>
+</tr>
+<tr>
+<td>organisation</td>
+<td>organisation, location</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Example of linking Event to Person:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+     "relationshipType": "attends"
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/event/EVENT_ID/person/PERSON_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event/EVENT_ID/person/PERSON_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+  "relationshipType": "attends"
+}
+</code></pre>
+
+<blockquote>
+<p>EVENT_ID and PERSON_ID must be replaced with the IDs of Entities you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 1
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="adding-type-to-existing-entity">Adding Type to Existing Entity</h3>
+
+<p>Sometimes you might need to add a <code class="prettyprint">Type</code> to an existing <code class="prettyprint">Entity</code>. For example, you might want your <code class="prettyprint">Event</code> Entity &ldquo;birthdayParty&rdquo; (ID = 1) contain Type &ldquo;Date&rdquo; (ID = 2). To add the <code class="prettyprint">Type</code> to the existing Entity, the API request body should contain <code class="prettyprint">relationship Type</code> name (e.g. &ldquo;date&rdquo;) and it should be posted to <code class="prettyprint">/event/1/type/2</code> endpoint. In general, you need to post your API request to <code class="prettyprint">/entity/ENTITY_ID/type/TYPE_ID/</code> to add Types to any of the Entities from <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code>, <code class="prettyprint">Organisation</code> categories. The new Relationship ID will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of adding Type to Event Entity:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+     "relationshipType": "date"
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/event/EVENT_ID/type/TYPE_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event/EVENT_ID/type/TYPE_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+  "relationshipType": "date"
+}
+</code></pre>
+
+<blockquote>
+<p>EVENT_ID and TYPE_ID must be replaced with the IDs of Entity and Type you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 1
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="linking-entities-to-properties-statically">Linking Entities to Properties Statically</h3>
+
+<p>In order to link <code class="prettyprint">Entity</code> to <code class="prettyprint">Property</code> statically, you need to specify a single Field and Record ID to which the Entity should be linked to. This means that Entity linked to Property statically is linked to particular Data Value. For example, to link the <code class="prettyprint">Person</code> &ldquo;Me&rdquo; (ID = 1) to the <code class="prettyprint">Record</code> &ldquo;Day 1&rdquo; (ID = 8), which is in the <code class="prettyprint">Field</code> &ldquo;Weight&rdquo; (ID = 50), which is associated to the <code class="prettyprint">Property</code> &ldquo;bodyWeight&rdquo; (ID = 1), you need to create an API request body containing Property, its Type and Unit of Measurement, Field and Record <code class="prettyprint">names</code> and <code class="prettyprint">IDs</code>, and type <code class="prettyprint">/person/1/property/static/1</code> in the POST request. Similarly, all the different Entity categories can be linked to particular Properties. In general, you need to post your API request to <code class="prettyprint">/entity/ENTITY_ID/property/static/PROPERTY_ID</code> to link any of the Entities from <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code>, <code class="prettyprint">Organisation</code> categories to particular Properties. The new Static Relationship ID will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of linking Person Entity to Property statically:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+     "property": 
+     {
+       "id": 1,
+       "name": "bodyWeight",
+       "propertyType": 
+       {
+         "name": "weight",
+         "id": 19
+       },
+       "unitOfMeasurement": 
+       {
+         "name": "kilograms",
+         "id": 1
+       }
+     },
+     "relationshipType": "weight",
+     "field": 
+     {
+       "id": 50,
+       "name": "Weight"
+     },
+     "record": 
+     {
+       "id": 8,
+       "name": "Day 1"
+     }
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+  "property": 
+  {
+    "id": 1,
+    "name": "bodyWeight",
+    "propertyType": 
+    {
+      "name": "weight",
+      "id": 19
+    },
+    "unitOfMeasurement": 
+    {
+      "name": "kilograms",
+      "id": 1
+    }
+  },
+  "relationshipType": "weight",
+  "field": 
+  {
+    "id": 50,
+    "name": "Weight"
+  },
+  "record": 
+  {
+    "id": 8,
+    "name": "Day 1"
+  }
+}
+</code></pre>
+
+<blockquote>
+<p>PERSON_ID and PROPERTY_ID must be replaced with the IDs of Entity and Property you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 1
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="linking-entities-to-properties-dynamically">Linking Entities to Properties Dynamically</h3>
+
+<p>In contrast to linking Entities to Properties statically, to link them dynamically you do not need to specify Record ID. This means that Entity linked to Property dynamically is not linked to particular Data Value and is linked to the whole Field instead. For example, to link the <code class="prettyprint">Person</code> &ldquo;Me&rdquo; (ID = 1) to the <code class="prettyprint">Field</code> &ldquo;Weight&rdquo; (ID = 50), which is associated to the <code class="prettyprint">Property</code> &ldquo;bodyWeight&rdquo; (ID = 1), you need to create an API request body containing Property, its Type and Unit of Measurement, and Field <code class="prettyprint">names</code> and <code class="prettyprint">IDs</code>, and type <code class="prettyprint">/person/1/property/dynamic/1</code> in the POST request. Similarly, all the different Entity categories can be linked to particular Properties. In general, you need to post your API request to <code class="prettyprint">/entity/ENTITY_ID/property/dynamic/PROPERTY_ID</code> to link any of the Entities from <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code>, <code class="prettyprint">Organisation</code> categories to particular Properties. The new Dynamic Relationship ID will be recorded automatically and included in the response.</p>
+
+<blockquote>
+<p>Example of linking Person Entity to Property dynamically:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+     "property": 
+     {
+       "id": 1,
+       "name": "bodyWeight",
+       "propertyType": 
+       {
+         "name": "weight",
+         "id": 19
+       },
+       "unitOfMeasurement": 
+       {
+         "name": "kilograms",
+         "id": 1
+       }
+     },
+     "relationshipType": "weight",
+     "field": 
+     {
+       "id": 50,
+       "name": "Weight"
+     }
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+  "property": 
+  {
+    "id": 1,
+    "name": "bodyWeight",
+    "propertyType": 
+    {
+      "name": "weight",
+      "id": 19
+    },
+    "unitOfMeasurement": 
+    {
+      "name": "kilograms",
+      "id": 1
+    }
+  },
+  "relationshipType": "weight",
+  "field": 
+  {
+    "id": 50,
+    "name": "Weight"
+  }
+}
+</code></pre>
+
+<blockquote>
+<p>PERSON_ID and PROPERTY_ID must be replaced with the IDs of Entity and Property you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 9
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
 <h1 id="data-type-annotations">Data Type Annotations</h1>
 
@@ -1308,7 +1947,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-a-property">Creating a Property</h3>
 
-<p>You should create a new Property for every set of values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, its <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code>, and it should be posted to <code class="prettyprint">/property</code> endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new Property for every set of Values you want to be treated as a specific Property record. For example, you might want to have properties &ldquo;First Name&rdquo; and &ldquo;Last Name&rdquo;, or you might want to create a property &ldquo;Full Name&rdquo;. It is important to note that a <code class="prettyprint">Property</code> can have a <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code> associated with it. For example, a property &ldquo;bodyWeight&rdquo; would be of Type &ldquo;weight&rdquo; and would have Unit of Measurement &ldquo;kilograms&rdquo;. To create a new <code class="prettyprint">Property</code>, the API request body should contain a new Property <code class="prettyprint">name</code>, its <code class="prettyprint">Type</code> and <code class="prettyprint">Unit of Measurement</code>, and it should be posted to <code class="prettyprint">/property</code> endpoint. Note that in order to relate a particular Type and Unit of Measurement to a new Property, their names, descriptions and IDs should be included in the API request body. The new Property ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Property:</p>
@@ -1644,7 +2283,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-a-type">Creating a Type</h3>
 
-<p>You should create a new Type for every set of values you want to be treated as a specific Type record. For example, you might want to have a Type &ldquo;Country&rdquo; to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new <code class="prettyprint">Type</code>, the API request body should contain a new Type <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/type/type</code> endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new Type for every set of Values you want to be treated as a specific Type record. For example, you might want to have a Type &ldquo;Country&rdquo; to annotate your country of birth, or you might want it to annotate all the countries you have ever lived in. To create a new <code class="prettyprint">Type</code>, the API request body should contain a new Type <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/type/type</code> endpoint. The new Type ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Data Type:</p>
@@ -1694,7 +2333,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-links-between-types">Creating links between Types</h3>
 
-<p>It is useful to link various Types. For example, you might have types &ldquo;address&rdquo; (ID 1), &ldquo;place&rdquo; (ID 2) and &ldquo;PostalAddress&rdquo; (ID 3), where you want &ldquo;place&rdquo; and &ldquo;PostalAddress&rdquo; to be treated as <code class="prettyprint">subTypes</code> of type &ldquo;address&rdquo;. To create such Type hierarchy, you need to link &ldquo;address&rdquo; to &ldquo;place&rdquo; and &ldquo;address&rdquo; to &ldquo;PostalAddress&rdquo; by defining a <code class="prettyprint">relationship Type</code>. This can be done by creating an API request body containing <code class="prettyprint">relationshipType</code> name (e.g. &ldquo;subtype&rdquo;) and typing <code class="prettyprint">/type/1/type/2</code> and <code class="prettyprint">/type/1/type/3</code> in the POST request to link &ldquo;address&rdquo; to &ldquo;place&rdquo; and &ldquo;address&rdquo; to &ldquo;PostalAddress&rdquo; respectively. Relationship IDs will be created automatically.</p>
+<p>It is useful to link various Types. For example, you might have types &ldquo;address&rdquo; (ID = 1), &ldquo;place&rdquo; (ID = 2) and &ldquo;PostalAddress&rdquo; (ID = 3), where you want &ldquo;place&rdquo; and &ldquo;PostalAddress&rdquo; to be treated as <code class="prettyprint">subTypes</code> of type &ldquo;address&rdquo;. To create such Type hierarchy, you need to link &ldquo;address&rdquo; to &ldquo;place&rdquo; and &ldquo;address&rdquo; to &ldquo;PostalAddress&rdquo; by defining a <code class="prettyprint">relationship Type</code>. This can be done by creating an API request body containing <code class="prettyprint">relationshipType</code> name (e.g. &ldquo;subtype&rdquo;) and typing <code class="prettyprint">/type/1/type/2</code> and <code class="prettyprint">/type/1/type/3</code> in the POST request to link &ldquo;address&rdquo; to &ldquo;place&rdquo; and &ldquo;address&rdquo; to &ldquo;PostalAddress&rdquo; respectively. Relationship IDs will be created automatically.</p>
 
 <blockquote>
 <p>Example of creating a link between two Types:</p>
@@ -1718,7 +2357,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </code></pre>
 
 <blockquote>
-<p>ID_1 and ID_2 must be replaced with the IDs of the types you want</p>
+<p>ID_1 and ID_2 must be replaced with the IDs of Types you want</p>
 
 <p>Example response:</p>
 </blockquote>
@@ -1883,7 +2522,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="creating-a-unit-of-measurement">Creating a Unit of Measurement</h3>
 
-<p>You should create a new <code class="prettyprint">Unit of Measurement</code> for every set of values you want to be associated with that Unit of Measurement. For example, you might want to have &ldquo;kilograms&rdquo; and &ldquo;grams&rdquo; for weight Units of Measurement. To create a new <code class="prettyprint">Unit of Measurement</code>, the API request body should contain its <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/type/unitofmeasurement</code> endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
+<p>You should create a new <code class="prettyprint">Unit of Measurement</code> for every set of Values you want to be associated with that Unit of Measurement. For example, you might want to have &ldquo;kilograms&rdquo; and &ldquo;grams&rdquo; for weight Units of Measurement. To create a new <code class="prettyprint">Unit of Measurement</code>, the API request body should contain its <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/type/unitofmeasurement</code> endpoint. The new Unit of Measurement ID and times when it was created as well as updated will be recorded automatically and included in the response.</p>
 
 <blockquote>
 <p>Example of creating a new Unit of Measurement:</p>
@@ -1938,7 +2577,7 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 
 <h3 id="listing-available-units-of-measurement">Listing Available Units of Measurement</h3>
 
-<p>You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to <code class="prettyprint">/property/unitofmeasurement</code> endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   </p>
+<p>You might want to check what Units of Measurement have been already created before defining a new one. To list all available Units of Measurement, you should make a GET request to <code class="prettyprint">/type/unitofmeasurement</code> endpoint. The response of each Unit of Measurement will contain some additional information, i.e. its ID and times when it was created as well as updated.                                                                                                                                                                                                   </p>
 
 <blockquote>
 <p>Example of listing all available Units of Measurement:</p>
