@@ -37,8 +37,22 @@ The HAT and its personal data ecosystem is designed to allow individual HAT User
 
 The APIs detailed in this document detail how this functionality is achieved.
 
+# User Management
 
-# Authentication
+The HAT and its personal data ecosystem are designed to allow individual HAT Users to collect, contextualise and exchange our personal Data. The enabling technology for the HAT sits within the HAT Personal Data Platform (HATPDP, mostly referred to as "HAT"). With their Data, individuals can buy apps to analyse, view, create scenarios, trade or make important decisions based on our own Data for a smarter and more effective life. HAT is therefore a fully scalable platform that allows firms to offer individuals services for our personal data, and yet enables us as individuals to personalise that data to our own needs. Therefore, there are 4 Account Systems defined within the HAT: 
+
+- Owner - a User that has access to everything within the HAT;
+- Direct Data Credit can create/record, but cannot read the Raw Data;
+- Direct Data Debit can read the Data that Owner enabled for sharing and exchange;
+- Platform can create Data Credit and Debit accounts.
+
+A HAT can be described as being analogous to an email account. As an individual HAT User,  we  can  choose  our  HAT  provider  (also  known  as  HPP  in  the  HAT  ecosystem)  just  like  we  choose  our  email  account  provider,  and  we  can  switch  HPPs  as  there  may  be  many  such providers. Or, if you want to host your own HAT, your Personal HAT can be configured to sit  on  your  private  server.
+
+A HAT can be described as being analogous to an email account. As an individual HAT User, we can choose our HAT provider (also known as HPP in the HAT ecosystem) just like we choose our email account provider, and we can switch HPPs as there may be many such providers. Or, if you want to host your own HAT, your Personal HAT can be configured to sit on your private server. By signing up for a HAT with a HPP, you become Owner of your HAT and you are provided with a Universally Unique Identifier (UUID) to serve as the identification for your HAT. UUID, an identifier standard used in software construction, is simply a 128-bit value, where the meaning of each bit is defined by any of several variants. A UUID in a HAT may take a DNS (domain name service) type approach; for example, Alice's HAT may be certified as alice.user.hubofallthings.com.
+
+## Authentication
+
+For both the Data import and export, the virtualised database will required permissions to ensure that a User has authorised certain API consumers to add or read the data from the various Tables within the database. For this, separate “Apps” that represent API User accounts will be present within each User’s PDS. Each App will own several permission sets within the database, which will determine which Tables the API consumers are able to access, in addition to the permissions the API consumers have on those Tables.
 
 > To authorize, use this code:
 
@@ -49,7 +63,6 @@ curl -H "Content-Type: application/json" \
   -GET \
   http://example.hatdex.org/$API_ENDPOINT?access_token=$ACCESS_TOKEN
 ```
-
 ``` http
 
 GET API_ENDPOINT?access_token=$ACCESS_TOKEN HTTP/1.1
@@ -59,9 +72,11 @@ Host: example.hatdex.org
 
 ```
 
-> Make sure to replace `ACCESS_TOKEN` with your API access token, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with
+> Make sure to replace `ACCESS_TOKEN` with your API access token, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with.
 
-> You can also use username and password on behalf of the _owner_ user or the _platform_ user who have special privileges (covered later). Password-based authentication is disabled for other users
+> You can also use username and password on behalf of the _owner_ user or the _platform_ user who have special privileges (covered later). Password-based authentication is disabled for other users.
+
+> Response:
 
 ``` shell
 
@@ -71,7 +86,6 @@ curl -H "Content-Type: application/json" \
   http://example.hatdex.org/$API_ENDPOINT?username=bob@example.com&password=bobIsSafe
 
 ```
-
 ``` http
 
 GET API_ENDPOINT?username=bob@example.com&password=bobIsSafe HTTP/1.1
@@ -80,8 +94,6 @@ Accept: application/json
 Host: example.hatdex.org
 
 ```
-
-For both the data import and export, the virtualised database will required permissions to ensure that a user has authorised certain API consumers to add or read the data from the various Tables within the database. For this, separate “Apps” that represent API user accounts will be present within each user’s PDS. Each App will own several permission sets within the database, which will determine which Tables the API consumers are able to access, in addition to the permissions the API consumers have on those Tables.
 
 ### HTTP Request
 
@@ -98,6 +110,100 @@ pass | password used for authentication together with username, instead of acces
 <aside class="notice">
 You must replace <code>ACCESS_TOKEN</code> with your application's API access token.
 </aside>
+
+## Direct Credit and Debit Accounts
+
+Data Credit Account can create/record a Raw Data, whilst Data Debit Account can read the Data that Owner decided to share and exchange. For more detailed information about how the Direct Data Debit (D3) System works, see section "Sharing and Direct Data Debits" at the end of this document.
+
+### Creating Accounts
+        
+To create a new `User`, the API request body should contain a new User `ID`, `email`, `pass`, which is bcrypt salted hash of simplepass, `name` and `role`. Role can be defined as `owner`, `dataDebit`, `dataCredit` or `platform`. The API request should then be posted to `/users/user` endpoint. Note that in order to create a new Account, you have to have an `access_token`, which you can create following instructions above in "Authentication" subsection.
+ 
+> Example of creating a new Direct Debit Account:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \ 
+  '{
+     "userId": "5974832d-2dc1-4f49-adf1-c6d8bc790275",
+     "email": "apiClient@platform.com",
+     "pass": "$2a$10$6YoHtQqSdit9zzVSzrkK7.E.JQuioFNAggTY7vZRL4RSeY.sUbUIu",
+     "name": "apiclient.platform.com",
+     "role": "dataDebit"
+   }' \
+  http://example.hatdex.org/users/user?access_token=$ACCESS_TOKEN
+```
+
+``` http
+POST /users/user?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+
+{
+  "userId": "5974832d-2dc1-4f49-adf1-c6d8bc790275",
+  "email": "apiClient@platform.com",
+  "pass": "$2a$10$6YoHtQqSdit9zzVSzrkK7.E.JQuioFNAggTY7vZRL4RSeY.sUbUIu",
+  "name": "apiclient.platform.com",
+  "role": "dataDebit"
+}
+```
+> Note that pass is bcrypt salted hash of simplepass.
+
+> Example of response:
+
+``` shell
+{
+  "userId": "5974832d-2dc1-4f49-adf1-c6d8bc790275",
+  "email": "apiClient@platform.com",
+  "name": "apiclient.platform.com",
+  "role": "dataDebit"
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "userId": "5974832d-2dc1-4f49-adf1-c6d8bc790275",
+  "email": "apiClient@platform.com",
+  "name": "apiclient.platform.com",
+  "role": "dataDebit"
+}
+```
+
+### Enabling/Disabling Accounts
+
+You can enable or disable any Direct Debit Account. To do this, you should make an API request using PUT to `/users/user/JavaUUID/enable` or `/users/user/JavaUUID/disable` endpoint to enable or disable the account respectively. Note that the API request body should be left empty and that JavaUUID is a `userId`. 
+
+> Example of enabling an Account:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -PUT \
+  "http://example.hatdex.org/users/user/JavaUUID/enable?access_token=$ACCESS_TOKEN"
+```
+``` http
+PUT /users/user/JavaUUID/enable?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> Example response:
+
+``` shell
+OK
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+OK
+```
 
 # Raw Data Input and Output
 
@@ -1029,7 +1135,7 @@ Content-Type: application/json
 
 ## Retrieving Raw Data
 
-Sometimes you might find it useful to extract Data Values. You can get all `Data` that has been stored in a specific `Table` (including its `Fields` and `subTables`), listed by associated `Record` ID (one Record per list item), and the full nested structure of Fields and subTables. Similarly, you can query the Data by Field (individual JSON Property) to get a list of all items that are stored in that Field. You can also get all values associated with a Record ID, in the form of the full, nested structure of Tables, subTables, Fields and Values. You can retrieve Data Values by specifying Table, Field or Record ID and making a GET request to `table/table_ID/values`, `field/field_ID/values` or `record/record_ID/values` respectively.
+Sometimes you might find it useful to extract Data Values. You can get all `Data` that has been stored in a specific `Table` (including its `Fields` and `subTables`), listed by associated `Record` ID (one Record per list item), and the full nested structure of Fields and subTables. Similarly, you can query the Data by Field (individual JSON Property) to get a list of all items that are stored in that Field. You can also get all values associated with a Record ID, in the form of the full, nested structure of Tables, subTables, Fields and Values. You can retrieve Data Values by specifying Table, Field or Record ID and making a GET request to `/table/table_ID/values`, `/field/field_ID/values` or `/record/record_ID/values` respectively.
 
 <aside class="info">
 Raw data retrieval is only available for the <em>Owner</em> user for the use by the personal HAT User Interface. It may, however, be useful in development to better understand how the HAT works as well as to help you structure your data.
@@ -2462,6 +2568,148 @@ Details TBD
 
 # Sharing and Direct Data Debits
 
-The virtualised database (or “Raw Data”) also allows users to export the data, where (potentially) separate Tables are created to match the expected data format that an API consuming service expects. For example, if a user has cross-referenced the films they have “Liked” on Facebook to their viewing history on Netflix, then a service which wants to consume this data may expect a Table containing films that the user has Liked with a total number of times they have watched the film. To simplify this for the first phase, it is assumed that a service consuming the PDS API will be able to read the data held within the contextualised tables, and format the data appropriately within the virtualised database.
+The virtualised database (or “Raw Data”) allows users to export the Data, where (potentially) separate Tables are created to match the expected Data format that an API consuming service expects. For example, if a user has cross-referenced the films they have “Liked” on Facebook to their viewing history on Netflix, then a service which wants to consume this data may expect a Table containing films that the user has Liked with a total number of times they have watched the film. To simplify this for the first phase, it is assumed that a service consuming the PDS API will be able to read the data held within the contextualised tables, and format the data appropriately within the virtualised database.
 
-Details TBD
+The HAT's Direct Data Debit (D3) System work like a direct debit in a bank: we can decide exactly what Data to share, for how long, to whom such data may be exchanged, and what return may be offered in the exchange. In this way, other individuals and applications can exchange their Data/Services with us, but only if we have agreed to do so, i.e. if we enabled their Accounts. For more details about enabling/disabling Data Debit Accounts, see section "User Management" at the beginning for this document. Any Data that belongs to the User can be bundled and chared from any Collection or directly from Source Data (e.g. Facebook), either at the level of individual Properties or entire Collections of Data.
+
+### Direct Debit Structure
+
+All Direct Debit API calls contain all the information defined in Direct Debit Structure. If you want to propose a new Direct Debit, you have to include the mandatory information in the API request. Direct Debit structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+key | universally unique identifier (UUID)/userId | optional
+dateCreated | date when the direct debit was created | optional
+lastUpdated | date when the direct debit was updated | optional
+name | name of the direct debit | mandatory
+startDate | local date and time when the direct debit starts | mandatory
+startDate | local date and time when the direct debit ends | mandatory
+rolling | boolean value: true or false | mandatory
+sell | boolean value: true or false | mandatory
+price | float value | mandatory
+kind | contextless or contextual | mandatory
+bundleContextless | string value: contextless bundles to be shared via direct debit | mandatory if kind is contextless
+bundleContextual | string value: contextual bundles to be shared via direct debit | mandatory if kind is contextual
+
+### Proposing Direct Data Debit
+
+To propose a new `Direct Debit`, the API request body should contain all the mandatory information explained in the table above. The API request should then be posted to `/dataDebit/propose` endpoint. 
+ 
+> Example of proposing a new Direct Debit:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \ 
+  '{
+     "name": "DD Kitchen electricity on weekend parties",
+     "startDate": "2015-09-30T10:00:00Z",
+     "endDate": "2015-10-30T10:00:00Z",
+     "rolling": false,
+     "sell": true,
+     "price": 100.0,
+     "kind": "contextless",
+     "bundleContextless": 
+     {
+       "id": 3,
+       "name": "Kitchen electricity on weekend parties"
+     }
+   }' \
+  http://example.hatdex.org/users/user?access_token=$ACCESS_TOKEN
+```
+
+``` http
+POST /dataDebit/propose?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+
+{
+  "name": "DD Kitchen electricity on weekend parties",
+  "startDate": "2015-09-30T10:00:00Z",
+  "endDate": "2015-10-30T10:00:00Z",
+  "rolling": false,
+  "sell": true,
+  "price": 100.0,
+  "kind": "contextless",
+  "bundleContextless": 
+  {
+    "id": 3,
+    "name": "Kitchen electricity on weekend parties"
+  }
+}
+```
+
+> Example of response:
+
+``` shell
+TBD
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+TBD
+```
+
+### Enabling/Disabling Direct Debit Requests
+
+Consider a situation where you, owner of the HAT, receive a request from Direct Debit to read some of your Data. You can either enable or disable that request. To do this, you should make an API request using PUT to `/directDebit/JavaUUID/enable` or `/directDebit/JavaUUID/disable` endpoint to enable or disable the request respectively. Note that the API request body should be left empty and that JavaUUID is a Direct Debit `key` (see Direct Debit Structure table above). 
+
+> Example of enabling an Account:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -PUT \
+  "http://example.hatdex.org/dataDebit/JavaUUID/enable?access_token=$ACCESS_TOKEN"
+```
+``` http
+PUT /dataDebit/JavaUUID/enable?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> Example response:
+
+``` shell
+TBD
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+TBD
+```
+
+### Retrieving Data Debit Values
+
+If a User enables a Data Debit (see "Enabling/Disabling Direct Debit Requests" above), then individuals or applications that proposed that Data Debit to you gain access to get your Data. Alternatively, if you proposed a Direct Debit and an individual enabled it, you can retrieve the Data yourself. To do this, you need to make a GET request to `/dataDebit/JavaUUID/values` endpoint.
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/dataDebit/JavaUUID/values?access_token=$ACCESS_TOKEN"
+```
+``` http
+GET /dataDebit/JavaUUID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+```
+> Example response:
+
+``` shell
+TBD
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+TBD
+```
+
