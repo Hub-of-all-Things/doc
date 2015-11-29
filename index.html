@@ -257,7 +257,7 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 <li>Data Record Relationships</li>
 </ul>
 
-<p><img title="Raw Data Structures" alt="Raw Data Structures" src="images/dataStructures.jpg" /></p>
+<p><img title="Raw Data Structures" alt="Raw Data Structures" src="images/dataStructures.png" /></p>
 
 <h2 id="data-sources">Data Sources</h2>
 
@@ -1446,6 +1446,8 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </ul>
 
 <p>A connected home, for example, where a sensor measures when a door is opened or closed, could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” Table, in where objects (real or conceptual), that are not People, Organisations, Locations or Events, are captured. The 5 Tables interconnect through a series of <code class="prettyprint">cross-reference Tables</code>, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.</p>
+
+<p><img title="Contextualisation" alt="Contextualisation" src="images/contextualisation.png" /></p>
 
 <p>The 5 contextualised <code class="prettyprint">Tables</code> link to the <code class="prettyprint">Raw Data</code> itself through a series of <code class="prettyprint">Properties</code>. The schema will host a number of user-defined Properties that may link to several <code class="prettyprint">Records</code> of the 5 Tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person Record (through a cross-reference Table) would point to separate <code class="prettyprint">Values</code> stored within the <code class="prettyprint">Raw Data</code> structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.</p>
 
@@ -2792,6 +2794,8 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 <p>Explanation TBD </p>
 
 <p>Details TBD</p>
+
+<p><img title="Bundling" alt="Bundling" src="images/bundling.png" /></p>
 
 <h1 id="sharing-and-direct-data-debits">Sharing and Direct Data Debits</h1>
 
