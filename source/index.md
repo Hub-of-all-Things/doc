@@ -217,7 +217,7 @@ The Raw Data level provides a flexible substrate for users to import a varying r
 - Table Relationships
 - Data Record Relationships
 
-![Raw Data Structures](/images/dataStructures.jpg "Raw Data Structures")
+![Raw Data Structures](/images/dataStructures.png "Raw Data Structures")
 
 ## Data Sources
 
@@ -1312,6 +1312,8 @@ Each user will be able to "contextualise" their Data in a way it makes sense to 
 - Organisations - what organisations or institutions activities relate to.
 
 A connected home, for example, where a sensor measures when a door is opened or closed, could be modelled as a Thing, as well as someone’s Google Calendar with several Events linked to them. Essentially, Things are a “catch all” Table, in where objects (real or conceptual), that are not People, Organisations, Locations or Events, are captured. The 5 Tables interconnect through a series of `cross-reference Tables`, where an Event can link to several People, Organisations, Locations, and Things and a Person can link to several Events, Organisations, Locations, and Things, and so on. This is flexible system that will allow users to fully model their existing data sets. For example, someone could model a meeting they had in Meeting Space 2 as a connection between an Event with a start time and an end time, the individuals involved as People, and Meeting Space 2 itself as a Location.
+
+![Contextualisation](/images/contextualisation.png "Contextualisation")
 
 The 5 contextualised `Tables` link to the `Raw Data` itself through a series of `Properties`. The schema will host a number of user-defined Properties that may link to several `Records` of the 5 Tables. For example, a user may have “First Name” and “Last Name” as Properties within the schema, that when linked through a Person Record (through a cross-reference Table) would point to separate `Values` stored within the `Raw Data` structure. To emphasise flexibility, Properties can point to any of: Values, Fields, Records or Tables. For example, a user may wish to model their heart rate as a set of all Records within a Table (by establishing a relationship between the “Heart Rate” Property and a Table”), but may also wish to model their heart rate as a set of all Fields within a Table (by establishing the relationship with a Field) if they import generic health data as a single Table.
 
@@ -2565,6 +2567,8 @@ Content-Type: application/json
 Explanation TBD 
 
 Details TBD
+
+![Bundling](/images/bundling.png "Bundling")
 
 # Sharing and Direct Data Debits
 
