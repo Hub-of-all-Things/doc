@@ -2678,6 +2678,8 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <h1 id="data-bundling">Data Bundling</h1>
 
+<p><img title="Bundling" alt="Bundling" src="images/bundling.png" /></p>
+
 <p>Bundles of <em>contextual</em> data are sets of entities (people, things, events, locations and organisations) and their properties that a HAT owner has chosen to combine together for potentially sharing with others.</p>
 
 <p>As such, a <em>contextual bundle</em> consists of a number of <em>selectors</em> that help people and application developers specify such sets of data with varying degrees of flexibility.</p>
@@ -2806,8 +2808,6 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-
-<p><img title="Bundling" alt="Bundling" src="images/bundling.png" /></p>
 
 <h1 id="sharing-and-direct-data-debits">Sharing and Direct Data Debits</h1>
 
@@ -3014,11 +3014,11 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>Bad Request &ndash; Your request has an error or tries to use the system in a way it is not supposed to</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>Unauthorized &ndash; Your access_token or username/password is wrong or you are not permitted to access the resource</td>
 </tr>
 <tr>
 <td>403</td>
