@@ -4,8 +4,8 @@ The HAT API uses the standard HTTP error codes:
 
 Error Code | Meaning
 ---------- | -------
-400 | Bad Request -- Your request sucks
-401 | Unauthorized -- Your API key is wrong
+400 | Bad Request -- Your request has an error or tries to use the system in a way it is not supposed to
+401 | Unauthorized -- Your access_token or username/password is wrong or you are not permitted to access the resource
 403 | Forbidden -- The action you requested is not allowed for you: it belongs to somebody else or is too private
 404 | Not Found -- The specified data could not be found
 406 | Not Acceptable -- You requested a format that isn't json

@@ -2447,6 +2447,8 @@ Content-Type: application/json
 
 # Data Bundling
 
+![Bundling](/images/bundling.png "Bundling")
+
 Bundles of _contextual_ data are sets of entities (people, things, events, locations and organisations) and their properties that a HAT owner has chosen to combine together for potentially sharing with others.
 
 As such, a _contextual bundle_ consists of a number of _selectors_ that help people and application developers specify such sets of data with varying degrees of flexibility.
@@ -2539,8 +2541,6 @@ Content-Type: application/json
   ]
 }
 ```
-
-![Bundling](/images/bundling.png "Bundling")
 
 # Sharing and Direct Data Debits
 
