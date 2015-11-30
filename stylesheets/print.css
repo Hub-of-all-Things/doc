@@ -5,7 +5,7 @@
  * 2. Prevent iOS text size adjust after orientation change, without disabling
  *    user zoom.
  */
-/* line 10, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 10, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 html {
   font-family: sans-serif;
   /* 1 */
@@ -17,7 +17,7 @@ html {
 /**
  * Remove default margin.
  */
-/* line 20, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 20, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 body {
   margin: 0; }
 
@@ -29,7 +29,7 @@ body {
  * and Firefox.
  * Correct `block` display not defined for `main` in IE 11.
  */
-/* line 34, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 34, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 article,
 aside,
 details,
@@ -49,7 +49,7 @@ summary {
  * 1. Correct `inline-block` display not defined in IE 8/9.
  * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
  */
-/* line 55, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 55, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 audio,
 canvas,
 progress,
@@ -63,7 +63,7 @@ video {
  * Prevent modern browsers from displaying `audio` without controls.
  * Remove excess height in iOS 5 devices.
  */
-/* line 68, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 68, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 audio:not([controls]) {
   display: none;
   height: 0; }
@@ -72,7 +72,7 @@ audio:not([controls]) {
  * Address `[hidden]` styling not present in IE 8/9/10.
  * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
  */
-/* line 78, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 78, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 [hidden],
 template {
   display: none; }
@@ -82,14 +82,14 @@ template {
 /**
  * Remove the gray background color from active links in IE 10.
  */
-/* line 90, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 90, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 a {
   background-color: transparent; }
 
 /**
  * Improve readability when focused and also mouse hovered in all browsers.
  */
-/* line 98, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 98, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 a:active,
 a:hover {
   outline: 0; }
@@ -99,14 +99,14 @@ a:hover {
 /**
  * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
  */
-/* line 110, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 110, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 abbr[title] {
   border-bottom: 1px dotted; }
 
 /**
  * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
  */
-/* line 118, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 118, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 b,
 strong {
   font-weight: bold; }
@@ -114,7 +114,7 @@ strong {
 /**
  * Address styling not present in Safari and Chrome.
  */
-/* line 127, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 127, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 dfn {
   font-style: italic; }
 
@@ -122,7 +122,7 @@ dfn {
  * Address variable `h1` font-size and margin within `section` and `article`
  * contexts in Firefox 4+, Safari, and Chrome.
  */
-/* line 136, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 136, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 h1 {
   font-size: 2em;
   margin: 0.67em 0; }
@@ -130,7 +130,7 @@ h1 {
 /**
  * Address styling not present in IE 8/9.
  */
-/* line 145, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 145, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 mark {
   background: #ff0;
   color: #000; }
@@ -138,14 +138,14 @@ mark {
 /**
  * Address inconsistent and variable font size in all browsers.
  */
-/* line 154, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 154, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 small {
   font-size: 80%; }
 
 /**
  * Prevent `sub` and `sup` affecting `line-height` in all browsers.
  */
-/* line 162, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 162, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 sub,
 sup {
   font-size: 75%;
@@ -153,11 +153,11 @@ sup {
   position: relative;
   vertical-align: baseline; }
 
-/* line 170, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 170, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 sup {
   top: -0.5em; }
 
-/* line 174, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 174, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 sub {
   bottom: -0.25em; }
 
@@ -166,14 +166,14 @@ sub {
 /**
  * Remove border when inside `a` element in IE 8/9/10.
  */
-/* line 185, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 185, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 img {
   border: 0; }
 
 /**
  * Correct overflow not hidden in IE 9/10/11.
  */
-/* line 193, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 193, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 svg:not(:root) {
   overflow: hidden; }
 
@@ -182,14 +182,14 @@ svg:not(:root) {
 /**
  * Address margin not present in IE 8/9 and Safari.
  */
-/* line 204, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 204, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 figure {
   margin: 1em 40px; }
 
 /**
  * Address differences between Firefox and other browsers.
  */
-/* line 212, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 212, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 hr {
   box-sizing: content-box;
   height: 0; }
@@ -197,14 +197,14 @@ hr {
 /**
  * Contain overflow in all browsers.
  */
-/* line 222, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 222, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 pre {
   overflow: auto; }
 
 /**
  * Address odd `em`-unit font size rendering in all browsers.
  */
-/* line 230, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 230, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 code,
 kbd,
 pre,
@@ -224,7 +224,7 @@ samp {
  * 2. Correct font properties not being inherited.
  * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
  */
-/* line 253, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 253, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button,
 input,
 optgroup,
@@ -240,7 +240,7 @@ textarea {
 /**
  * Address `overflow` set to `hidden` in IE 8/9/10/11.
  */
-/* line 267, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 267, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button {
   overflow: visible; }
 
@@ -250,7 +250,7 @@ button {
  * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
  * Correct `select` style inheritance in Firefox.
  */
-/* line 278, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 278, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button,
 select {
   text-transform: none; }
@@ -262,7 +262,7 @@ select {
  * 3. Improve usability and consistency of cursor style between image-type
  *    `input` and others.
  */
-/* line 291, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 291, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -275,7 +275,7 @@ input[type="submit"] {
 /**
  * Re-set default cursor for disabled elements.
  */
-/* line 303, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 303, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button[disabled],
 html input[disabled] {
   cursor: default; }
@@ -283,7 +283,7 @@ html input[disabled] {
 /**
  * Remove inner padding and border in Firefox 4+.
  */
-/* line 312, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 312, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -293,7 +293,7 @@ input::-moz-focus-inner {
  * Address Firefox 4+ setting `line-height` on `input` using `!important` in
  * the UA stylesheet.
  */
-/* line 323, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 323, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input {
   line-height: normal; }
 
@@ -304,7 +304,7 @@ input {
  * 1. Address box sizing set to `content-box` in IE 8/9/10.
  * 2. Remove excess padding in IE 8/9/10.
  */
-/* line 335, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 335, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
@@ -317,7 +317,7 @@ input[type="radio"] {
  * `font-size` values of the `input`, it causes the cursor style of the
  * decrement button to change from `default` to `text`.
  */
-/* line 347, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 347, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   height: auto; }
@@ -327,7 +327,7 @@ input[type="number"]::-webkit-outer-spin-button {
  * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
  *    (include `-moz` to future-proof).
  */
-/* line 358, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 358, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
@@ -339,7 +339,7 @@ input[type="search"] {
  * Safari (but not Chrome) clips the cancel button when the search input has
  * padding (and `textfield` appearance).
  */
-/* line 371, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 371, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none; }
@@ -347,7 +347,7 @@ input[type="search"]::-webkit-search-decoration {
 /**
  * Define consistent border, margin, and padding.
  */
-/* line 380, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 380, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
@@ -357,7 +357,7 @@ fieldset {
  * 1. Correct `color` not being inherited in IE 8/9/10/11.
  * 2. Remove padding so people aren't caught out if they zero out fieldsets.
  */
-/* line 391, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 391, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 legend {
   border: 0;
   /* 1 */
@@ -367,7 +367,7 @@ legend {
 /**
  * Remove default vertical scrollbar in IE 8/9/10/11.
  */
-/* line 400, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 400, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 textarea {
   overflow: auto; }
 
@@ -375,7 +375,7 @@ textarea {
  * Don't inherit the `font-weight` (applied by a rule above).
  * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
  */
-/* line 409, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 409, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 optgroup {
   font-weight: bold; }
 
@@ -384,12 +384,12 @@ optgroup {
 /**
  * Remove most spacing between table cells.
  */
-/* line 420, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 420, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-/* line 425, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 425, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 td,
 th {
   padding: 0; }
@@ -409,22 +409,22 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 */
-/* line 70, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 70, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content h1, .content h2, .content h3, .content h4, body {
   font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei","微软雅黑", STXihei, "华文细黑", sans-serif;
   font-size: 13px; }
 
-/* line 75, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 75, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content h1, .content h2, .content h3, .content h4 {
   font-weight: bold; }
 
-/* line 80, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 80, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content pre, .content code {
   font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
   font-size: 12px;
   line-height: 1.5; }
 
-/* line 102, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 102, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content pre, .content code {
   word-break: break-all;
   /* Non standard for webkit */
@@ -440,7 +440,7 @@ under the License.
   src: url("../fonts/slate.eot?#iefix-syv14m") format("embedded-opentype"), url("../fonts/slate.woff2?-syv14m") format("woff2"), url("../fonts/slate.woff?-syv14m") format("woff"), url("../fonts/slate.ttf?-syv14m") format("truetype"), url("../fonts/slate.svg?-syv14m#slate") format("svg");
   font-weight: normal;
   font-style: normal; }
-/* line 13, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 13, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.warning:before, .content aside.notice:before, .content aside.success:before {
   font-family: 'slate';
   speak: none;
@@ -450,15 +450,15 @@ under the License.
   text-transform: none;
   line-height: 1; }
 
-/* line 23, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 23, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.warning:before {
   content: "\e600"; }
 
-/* line 27, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 27, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.notice:before {
   content: "\e602"; }
 
-/* line 31, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 31, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.success:before {
   content: "\e606"; }
 
@@ -477,46 +477,46 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 */
-/* line 31, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+/* line 31, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
 .tocify, .toc-footer, .lang-selector, .search, #nav-button {
   display: none; }
 
-/* line 35, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+/* line 35, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
 .tocify-wrapper > img {
   margin: 0 auto;
   display: block; }
 
-/* line 40, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+/* line 40, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
 .content {
   font-size: 12px; }
-  /* line 43, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 43, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content pre, .content code {
     border: 1px solid #999;
     border-radius: 5px;
     font-size: 0.8em; }
-  /* line 51, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 51, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content pre {
     padding: 1.3em; }
-  /* line 55, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 55, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content code {
     padding: 0.2em; }
-  /* line 59, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 59, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content table {
     border: 1px solid #999; }
-    /* line 61, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+    /* line 61, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
     .content table tr {
       border-bottom: 1px solid #999; }
-    /* line 64, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+    /* line 64, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
     .content table td, .content table th {
       padding: 0.7em; }
-  /* line 69, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 69, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content p {
     line-height: 1.5; }
-  /* line 73, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 73, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content a {
     text-decoration: none;
     color: #000; }
-  /* line 78, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 78, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content h1 {
     font-size: 2.5em;
     padding-top: 0.5em;
@@ -526,27 +526,27 @@ under the License.
     border: 2px solid #ccc;
     border-width: 2px 0;
     text-align: center; }
-  /* line 90, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 90, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content h2 {
     font-size: 1.8em;
     margin-top: 2em;
     border-top: 2px solid #ccc;
     padding-top: 0.8em; }
-  /* line 98, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 98, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content h1 + h2, .content h1 + div + h2 {
     border-top: none;
     padding-top: 0;
     margin-top: 0; }
-  /* line 104, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 104, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content h3, .content h4 {
     font-size: 0.8em;
     margin-top: 1.5em;
     margin-bottom: 0.8em;
     text-transform: uppercase; }
-  /* line 112, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 112, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content h5, .content h6 {
     text-transform: uppercase; }
-  /* line 116, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 116, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content aside {
     padding: 1em;
     border: 1px solid #ccc;
@@ -554,7 +554,7 @@ under the License.
     margin-top: 1.5em;
     margin-bottom: 1.5em;
     line-height: 1.6; }
-  /* line 125, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/print.css.scss */
+  /* line 125, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/print.css.scss */
   .content aside:before {
     vertical-align: middle;
     padding-right: 0.5em;

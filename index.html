@@ -69,16 +69,14 @@
 
 <h1 id="user-management">User Management</h1>
 
-<p>The HAT and its personal data ecosystem are designed to allow individual HAT Users to collect, contextualise and exchange our personal Data. The enabling technology for the HAT sits within the HAT Personal Data Platform (HATPDP, mostly referred to as &ldquo;HAT&rdquo;). With their Data, individuals can buy apps to analyse, view, create scenarios, trade or make important decisions based on our own Data for a smarter and more effective life. HAT is therefore a fully scalable platform that allows firms to offer individuals services for our personal data, and yet enables us as individuals to personalise that data to our own needs. Therefore, there are 4 Account Systems defined within the HAT: </p>
+<p>The HAT and its personal data ecosystem are designed to allow individual HAT Users to collect, contextualise and exchange our personal Data. The enabling technology for the HAT sits within the HAT Personal Data Platform (HATPDP, mostly referred to as &ldquo;HAT&rdquo;). With their Data, individuals can buy apps to analyse, view, create scenarios, trade or make important decisions based on our own Data for a smarter and more effective life. HAT is therefore a fully scalable platform that allows firms to offer individuals services for our personal data, and yet enables us as individuals to personalise that data to our own needs. Therefore, there are 4 Account <em>roles</em> defined within the HAT: </p>
 
 <ul>
-<li>Owner - a User that has access to everything within the HAT;</li>
-<li>Direct Data Credit can create/record, but cannot read the Raw Data;</li>
-<li>Direct Data Debit can read the Data that Owner enabled for sharing and exchange;</li>
-<li>Platform can create Data Credit and Debit accounts.</li>
+<li>Owner - a User who has access to everything within the HAT and who <em>owns</em> it</li>
+<li>Direct Data Credit (<code class="prettyprint">dataCredit</code>) can create/record data, but cannot read it Raw Data, unless accessit it via a user-approved Direct Debit</li>
+<li>Direct Data Debit (<code class="prettyprint">dataDebit</code>) can read the Data that Owner enabled for sharing and exchange through Direct Data Debits</li>
+<li>Platform (<code class="prettyprint">platform</code>), that manages Data Credit and Debit accounts, e.g. creates then when an application developer wants an account on a user&rsquo;s HAT</li>
 </ul>
-
-<p>A HAT can be described as being analogous to an email account. As an individual HAT User,  we  can  choose  our  HAT  provider  (also  known  as  HPP  in  the  HAT  ecosystem)  just  like  we  choose  our  email  account  provider,  and  we  can  switch  HPPs  as  there  may  be  many  such providers. Or, if you want to host your own HAT, your Personal HAT can be configured to sit  on  your  private  server.</p>
 
 <p>A HAT can be described as being analogous to an email account. As an individual HAT User, we can choose our HAT provider (also known as HPP in the HAT ecosystem) just like we choose our email account provider, and we can switch HPPs as there may be many such providers. Or, if you want to host your own HAT, your Personal HAT can be configured to sit on your private server. By signing up for a HAT with a HPP, you become Owner of your HAT and you are provided with a Universally Unique Identifier (UUID) to serve as the identification for your HAT. UUID, an identifier standard used in software construction, is simply a 128-bit value, where the meaning of each bit is defined by any of several variants. A UUID in a HAT may take a DNS (domain name service) type approach; for example, Alice&rsquo;s HAT may be certified as alice.user.hubofallthings.com.</p>
 
@@ -161,7 +159,7 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 
 <h3 id="creating-accounts">Creating Accounts</h3>
 
-<p>To create a new <code class="prettyprint">User</code>, the API request body should contain a new User <code class="prettyprint">ID</code>, <code class="prettyprint">email</code>, <code class="prettyprint">pass</code>, which is bcrypt salted hash of simplepass, <code class="prettyprint">name</code> and <code class="prettyprint">role</code>. Role can be defined as <code class="prettyprint">owner</code>, <code class="prettyprint">dataDebit</code>, <code class="prettyprint">dataCredit</code> or <code class="prettyprint">platform</code>. The API request should then be posted to <code class="prettyprint">/users/user</code> endpoint. Note that in order to create a new Account, you have to have an <code class="prettyprint">access_token</code>, which you can create following instructions above in &ldquo;Authentication&rdquo; subsection.</p>
+<p>To create a new <code class="prettyprint">User</code>, the API request body should contain a new User <code class="prettyprint">ID</code>, <code class="prettyprint">email</code>, <code class="prettyprint">pass</code> (which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) <code class="prettyprint">name</code> and <code class="prettyprint">role</code>. Role can be defined as <code class="prettyprint">dataDebit</code> or <code class="prettyprint">dataCredit</code>. The special <code class="prettyprint">owner</code> and <code class="prettyprint">platform</code> accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to <code class="prettyprint">/users/user</code> endpoint. Note that in order to create a new Account.</p>
 
 <blockquote>
 <p>Example of creating a new Direct Debit Account:</p>
@@ -217,7 +215,7 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 
 <h3 id="enabling-disabling-accounts">Enabling/Disabling Accounts</h3>
 
-<p>You can enable or disable any Direct Debit Account. To do this, you should make an API request using PUT to <code class="prettyprint">/users/user/JavaUUID/enable</code> or <code class="prettyprint">/users/user/JavaUUID/disable</code> endpoint to enable or disable the account respectively. Note that the API request body should be left empty and that JavaUUID is a <code class="prettyprint">userId</code>. </p>
+<p>The <code class="prettyprint">owner</code> enable or disable any Direct Debit Account. To do this, they should make an API request using PUT to <code class="prettyprint">/users/user/UUID/enable</code> or <code class="prettyprint">/users/user/UUID/disable</code> endpoint to enable or disable the account respectively. Note that the API request body should be left empty and that UUID is a Universally Unique Identifier used for <code class="prettyprint">userId</code>. </p>
 
 <blockquote>
 <p>Example of enabling an Account:</p>
@@ -225,9 +223,9 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -PUT <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/users/user/JavaUUID/enable?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/users/user/UUID/enable?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/users/user/JavaUUID/enable?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/users/user/UUID/enable?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
@@ -2680,9 +2678,134 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <h1 id="data-bundling">Data Bundling</h1>
 
-<p>Explanation TBD </p>
+<p>Bundles of <em>contextual</em> data are sets of entities (people, things, events, locations and organisations) and their properties that a HAT owner has chosen to combine together for potentially sharing with others.</p>
 
-<p>Details TBD</p>
+<p>As such, a <em>contextual bundle</em> consists of a number of <em>selectors</em> that help people and application developers specify such sets of data with varying degrees of flexibility.</p>
+
+<p>An <em>entity selector</em> finds all entities according to three parameters:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>entityId</td>
+<td>specific ID of the entity, no other entities will be included</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>entityName</td>
+<td>name of all entities to be included</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>entityKind</td>
+<td>kind of all entities to be included</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<p>The most general <em>entity selector</em> therefore only specifies <code class="prettyprint">entityKind</code>, such as <code class="prettyprint">person</code>, returning all people in the database. However, the privacy-conscious HAT owner is very unlikely to share all of this data with an application developer.</p>
+
+<p>Inside each <em>entity selector</em> there may also be a list of <em>property selectors</em> which specify which properties to include for the bundled entity. If <em>property selectors</em> are not specified, all properties are included.</p>
+
+<p>A <em>property selector</em> can similarly have a number of parameters:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>propertyRelationshipKind</td>
+<td>kind of property (<code class="prettyprint">static</code>/<code class="prettyprint">dynamic</code>) to include (any if not specified)</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>propertyName</td>
+<td>name of the property (e.g. <code class="prettyprint">Body Weight</code>)</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>propertyType</td>
+<td>type of a property, such as <code class="prettyprint">text</code>, <code class="prettyprint">quantitative value</code> or a more specific <code class="prettyprint">weight</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td>propertyUnitofmeasurement</td>
+<td>name of the unit of measurement of interest</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">
+You can use `/bundles/context/` set of API endpoints to manage and view bundles, however they are only authorized for the `owner`! If you are an application developer, you should use the Direct Data Debits set of APIs and include your Bundle configuration directly in your D3 proposal.
+</aside>
+
+<p>The set of available API endpoints for managing bundles is:
+- <code class="prettyprint">POST</code> to <code class="prettyprint">bundles/context</code> creates a new bundle
+- <code class="prettyprint">GET</code> from <code class="prettyprint">bundle/context/BUNDLE_ID</code> retrieves the bundle structure
+- <code class="prettyprint">GET</code> from <code class="prettyprint">bundle/context/BUNDLE_ID/values</code> retrieves the bundled entities with their properties and values
+- <code class="prettyprint">POST</code> to <code class="prettyprint">bundles/context/BUNDLE_ID/entitySelection</code> adds a new entity selection to an already existing bundle
+- <code class="prettyprint">POST</code> to <code class="prettyprint">bundles/context/BUNDLE_ID/entitySelection/SELECTION_ID/propertySelection</code> adds a new property selection to an already existing entity selection within a bundle</p>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'{
+    "name": "emptyBundleTest5-1",
+    "entities": [
+     {
+       "entityKind": "person",
+       "properties": [
+         {
+           "propertyRelationshipKind": "dynamic",
+           "propertyName": "BodyWeight"
+         },
+         {
+           "propertyRelationshipKind": "dynamic",
+           "propertyType": "QuantitativeValue"
+         }
+       ]
+     },
+     {
+       "entityName": "sunrise"
+     }
+    ]
+  }'</span><span class="se">\</span>
+  http://example.hatdex.org
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/bundles/context?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emptyBundleTest5-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"entities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+   </span><span class="p">{</span><span class="w">
+     </span><span class="nt">"entityKind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+     </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+       </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"propertyRelationshipKind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dynamic"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"propertyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BodyWeight"</span><span class="w">
+       </span><span class="p">},</span><span class="w">
+       </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"propertyRelationshipKind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dynamic"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"propertyType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QuantitativeValue"</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">]</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="p">{</span><span class="w">
+     </span><span class="nt">"entityName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sunrise"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
 <p><img title="Bundling" alt="Bundling" src="images/bundling.png" /></p>
 
@@ -2690,7 +2813,7 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <p>The virtualised database (or “Raw Data”) allows users to export the Data, where (potentially) separate Tables are created to match the expected Data format that an API consuming service expects. For example, if a user has cross-referenced the films they have “Liked” on Facebook to their viewing history on Netflix, then a service which wants to consume this data may expect a Table containing films that the user has Liked with a total number of times they have watched the film. To simplify this for the first phase, it is assumed that a service consuming the PDS API will be able to read the data held within the contextualised tables, and format the data appropriately within the virtualised database.</p>
 
-<p>The HAT&rsquo;s Direct Data Debit (D3) System work like a direct debit in a bank: we can decide exactly what Data to share, for how long, to whom such data may be exchanged, and what return may be offered in the exchange. In this way, other individuals and applications can exchange their Data/Services with us, but only if we have agreed to do so, i.e. if we enabled their Accounts. For more details about enabling/disabling Data Debit Accounts, see section &ldquo;User Management&rdquo; at the beginning for this document. Any Data that belongs to the User can be bundled and chared from any Collection or directly from Source Data (e.g. Facebook), either at the level of individual Properties or entire Collections of Data.</p>
+<p>The HAT&rsquo;s Direct Data Debit (D3) System work like a direct debit in a bank: we can decide exactly what Data to share, for how long, to whom such data may be exchanged, and what return may be offered in the exchange. In this way, other individuals and applications can exchange their Data/Services with us, but only if we have agreed to do so, i.e. if we enabled their Accounts. For more details about enabling/disabling Data Debit Accounts, see section &ldquo;User Management&rdquo; at the beginning for this document. Any Data that belongs to the User can be bundled and shared from any Collection or directly from Source Data (e.g. Facebook), either at the level of individual Properties or entire Collections of Data.</p>
 
 <h3 id="direct-debit-structure">Direct Debit Structure</h3>
 
@@ -2767,6 +2890,8 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <h3 id="proposing-direct-data-debit">Proposing Direct Data Debit</h3>
 
+<p>For a Direct Data Debit to be created, it first needs to be proposed to the user, who can then choose whether or not they would like to enable it.</p>
+
 <p>To propose a new <code class="prettyprint">Direct Debit</code>, the API request body should contain all the mandatory information explained in the table above. The API request should then be posted to <code class="prettyprint">/dataDebit/propose</code> endpoint. </p>
 
 <blockquote>
@@ -2825,17 +2950,17 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <h3 id="enabling-disabling-direct-debit-requests">Enabling/Disabling Direct Debit Requests</h3>
 
-<p>Consider a situation where you, owner of the HAT, receive a request from Direct Debit to read some of your Data. You can either enable or disable that request. To do this, you should make an API request using PUT to <code class="prettyprint">/directDebit/JavaUUID/enable</code> or <code class="prettyprint">/directDebit/JavaUUID/disable</code> endpoint to enable or disable the request respectively. Note that the API request body should be left empty and that JavaUUID is a Direct Debit <code class="prettyprint">key</code> (see Direct Debit Structure table above). </p>
+<p>Consider a situation where you, owner of the HAT, receive a request from Direct Debit to read some of your Data. You can either enable or disable that request. To do this, you should make an API request using PUT to <code class="prettyprint">/directDebit/UUID/enable</code> or <code class="prettyprint">/directDebit/UUID/disable</code> endpoint to enable or disable the request respectively. Note that the API request body should be left empty and that UUID is a Direct Debit <code class="prettyprint">key</code> (see Direct Debit Structure table above). </p>
 
 <blockquote>
-<p>Example of enabling an Account:</p>
+<p>Example of enabling an Data Debit:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -PUT <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/dataDebit/JavaUUID/enable?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/dataDebit/UUID/enable?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/dataDebit/JavaUUID/enable?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/dataDebit/UUID/enable?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
@@ -2844,23 +2969,23 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 <blockquote>
 <p>Example response:</p>
 </blockquote>
-<pre class="highlight shell"><code>TBD
+<pre class="highlight shell"><code>OK
 </code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
-<span class="err">TBD</span><span class="w">
+<span class="err">OK</span><span class="w">
 </span></code></pre>
 
 <h3 id="retrieving-data-debit-values">Retrieving Data Debit Values</h3>
 
-<p>If a User enables a Data Debit (see &ldquo;Enabling/Disabling Direct Debit Requests&rdquo; above), then individuals or applications that proposed that Data Debit to you gain access to get your Data. Alternatively, if you proposed a Direct Debit and an individual enabled it, you can retrieve the Data yourself. To do this, you need to make a GET request to <code class="prettyprint">/dataDebit/JavaUUID/values</code> endpoint.</p>
+<p>If a User enables a Data Debit (see &ldquo;Enabling/Disabling Direct Debit Requests&rdquo; above), then individuals or applications that proposed that Data Debit to you gain access to get your Data. Alternatively, if you proposed a Direct Debit and an individual enabled it, you can retrieve the Data yourself. To do this, you need to make a GET request to <code class="prettyprint">/dataDebit/UUID/values</code> endpoint.</p>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/dataDebit/JavaUUID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://example.hatdex.org/dataDebit/UUID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/dataDebit/JavaUUID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/dataDebit/UUID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
