@@ -1437,6 +1437,8 @@ Content-Type: application/json
 
 It is useful to link various Entities. For example, you might want to link the Event "birthdayParty" with ID = 1 to the `Person` "Spouse" with ID = 4. This can be done by creating an API request body containing your defined `relationship Type` name (e.g. "attends") and typing `/event/1/person/4` in the POST request to link `Event` with ID = 1 to `Person` with ID = 4. Similarly, different Entity categories can be linked. In general, you need to post your API request to `/entity/ENTITY_ID/entity/ENTITY_ID` to link Entities from `Person`, `Thing`, `Event`, `Location`, `Organisation` categories. However, it is important to note that not all the Entities can be linked. From the table below we can see that, for example, Event can be linked to Person, but Person cannot be linked to Event. In other words, you can have `/event/EVENT_ID/person/PERSON_ID`, but you `cannot` have `/person/PERSON_ID/event/EVENT_ID`. The new Relationship ID will be recorded automatically and included in the response.
 
+It is important to note that linking `Person` to `Person` is slightly different. In this case, `relationship Type` has to be created before linking and in addition to its name, its ID should be included in the POST request. For details how to create and list all available `Person Relationship Types` see the following two section.  
+
 Entity | Can be linked to Entities
 ------ | -------------------------
 person | person, location, organisation
@@ -1485,6 +1487,116 @@ Content-Type: application/json
 {
   "id": 1
 }
+```
+
+### Creating Person Relationship Types
+
+All Person Relationship Type API calls contain all the information defined in its Structure. If you want to create a new Person Relationship Type, you have to include all the mandatory information in the API request. Person Relationship Type structure is explained in the table below.
+
+Parameter | Description | Optional / Mandatory
+--------- | ----------- | --------------------
+id | person relationship type ID in the system | optional
+name | name of the relationship type | mandatory
+description | description of the relationship type | optional
+
+Therefore, to create a new `Person Relationship Type`, the API request body should contain a new Person Relationship Type `name` and it should be posted to `/person/relationshipType` endpoint. The new Person Relationship Type ID will be recorded automatically and included in the response. 
+ 
+> Example of creating a Person Relationship Type:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \
+  '{
+       "name":"friend"
+   }' \
+  "http://example.hatdex.org/person/relationshipType?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /person/relationshipType?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+
+{
+    "name":"friend"
+}
+```
+
+> EVENT_ID and PERSON_ID must be replaced with the IDs of Entities you want
+
+> Example response:
+
+``` shell
+{
+  "id": 6,
+  "name": "friend"
+}
+```
+
+``` http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 6,
+  "name": "friend"
+}
+```
+
+### Listing Available Person Relationship Types
+
+You might want to check what Person Relationship Types have been already created before defining a new one. To list all available Person Relationship Types, you should make a GET request to `/person/relationshipType` endpoint. The response will contain a list of Person Relationship Types with their IDs.  
+
+> Example of listing all available Person Relationship Types:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -GET \
+  "http://example.hatdex.org/person/relationshipType?access_token=$ACCESS_TOKEN"
+```
+
+``` http
+GET /person/relationshipType?access_token=ACCESS_TOKEN HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: example.hatdex.org
+```
+> Example response:
+
+``` shell
+[
+  {
+    "id": 3,
+    "name": "coach",
+    "description": "A person that acts in a coaching role for a sports team."
+  },
+  {
+    "id": 4,
+    "name": "colleague",
+    "description": "A colleague of the person"
+  }
+]
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "id": 3,
+    "name": "coach",
+    "description": "A person that acts in a coaching role for a sports team."
+  },
+  {
+    "id": 4,
+    "name": "colleague",
+    "description": "A colleague of the person"
+  }
+]
 ```
 
 ### Adding Type to Existing Entity
