@@ -1604,6 +1604,8 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <p>It is useful to link various Entities. For example, you might want to link the Event &ldquo;birthdayParty&rdquo; with ID = 1 to the <code class="prettyprint">Person</code> &ldquo;Spouse&rdquo; with ID = 4. This can be done by creating an API request body containing your defined <code class="prettyprint">relationship Type</code> name (e.g. &ldquo;attends&rdquo;) and typing <code class="prettyprint">/event/1/person/4</code> in the POST request to link <code class="prettyprint">Event</code> with ID = 1 to <code class="prettyprint">Person</code> with ID = 4. Similarly, different Entity categories can be linked. In general, you need to post your API request to <code class="prettyprint">/entity/ENTITY_ID/entity/ENTITY_ID</code> to link Entities from <code class="prettyprint">Person</code>, <code class="prettyprint">Thing</code>, <code class="prettyprint">Event</code>, <code class="prettyprint">Location</code>, <code class="prettyprint">Organisation</code> categories. However, it is important to note that not all the Entities can be linked. From the table below we can see that, for example, Event can be linked to Person, but Person cannot be linked to Event. In other words, you can have <code class="prettyprint">/event/EVENT_ID/person/PERSON_ID</code>, but you <code class="prettyprint">cannot</code> have <code class="prettyprint">/person/PERSON_ID/event/EVENT_ID</code>. The new Relationship ID will be recorded automatically and included in the response.</p>
 
+<p>It is important to note that linking <code class="prettyprint">Person</code> to <code class="prettyprint">Person</code> is slightly different. In this case, <code class="prettyprint">relationship Type</code> has to be created before linking and in addition to its name, its ID should be included in the POST request. For details how to create and list all available <code class="prettyprint">Person Relationship Types</code> see the following two section.  </p>
+
 <table><thead>
 <tr>
 <th>Entity</th>
@@ -1668,6 +1670,127 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 <span class="p">{</span><span class="w">
   </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="creating-person-relationship-types">Creating Person Relationship Types</h3>
+
+<p>All Person Relationship Type API calls contain all the information defined in its Structure. If you want to create a new Person Relationship Type, you have to include all the mandatory information in the API request. Person Relationship Type structure is explained in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Optional / Mandatory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>person relationship type ID in the system</td>
+<td>optional</td>
+</tr>
+<tr>
+<td>name</td>
+<td>name of the relationship type</td>
+<td>mandatory</td>
+</tr>
+<tr>
+<td>description</td>
+<td>description of the relationship type</td>
+<td>optional</td>
+</tr>
+</tbody></table>
+
+<p>Therefore, to create a new <code class="prettyprint">Person Relationship Type</code>, the API request body should contain a new Person Relationship Type <code class="prettyprint">name</code> and it should be posted to <code class="prettyprint">/person/relationshipType</code> endpoint. The new Person Relationship Type ID will be recorded automatically and included in the response. </p>
+
+<blockquote>
+<p>Example of creating a Person Relationship Type:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\</span>
+  <span class="s1">'{
+       "name":"friend"
+   }'</span> <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/person/relationshipType?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/relationshipType?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+
+{
+    "name":"friend"
+}
+</code></pre>
+
+<blockquote>
+<p>EVENT_ID and PERSON_ID must be replaced with the IDs of Entities you want</p>
+
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 6,
+  <span class="s2">"name"</span>: <span class="s2">"friend"</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"friend"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="listing-available-person-relationship-types">Listing Available Person Relationship Types</h3>
+
+<p>You might want to check what Person Relationship Types have been already created before defining a new one. To list all available Person Relationship Types, you should make a GET request to <code class="prettyprint">/person/relationshipType</code> endpoint. The response will contain a list of Person Relationship Types with their IDs.  </p>
+
+<blockquote>
+<p>Example of listing all available Person Relationship Types:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -GET <span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/person/relationshipType?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/person/relationshipType?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 3,
+    <span class="s2">"name"</span>: <span class="s2">"coach"</span>,
+    <span class="s2">"description"</span>: <span class="s2">"A person that acts in a coaching role for a sports team."</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 4,
+    <span class="s2">"name"</span>: <span class="s2">"colleague"</span>,
+    <span class="s2">"description"</span>: <span class="s2">"A colleague of the person"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"coach"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A person that acts in a coaching role for a sports team."</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"colleague"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A colleague of the person"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
 </span></code></pre>
 
 <h3 id="adding-type-to-existing-entity">Adding Type to Existing Entity</h3>
