@@ -2878,15 +2878,21 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 - <code class="prettyprint">GET</code> from <code class="prettyprint">bundle/context/BUNDLE_ID/values</code> retrieves the bundled entities with their properties and values
 - <code class="prettyprint">POST</code> to <code class="prettyprint">bundles/context/BUNDLE_ID/entitySelection</code> adds a new entity selection to an already existing bundle
 - <code class="prettyprint">POST</code> to <code class="prettyprint">bundles/context/BUNDLE_ID/entitySelection/SELECTION_ID/propertySelection</code> adds a new property selection to an already existing entity selection within a bundle</p>
+
+<blockquote>
+<p>Example of creating a new Bundle:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
     "name": "emptyBundleTest5-1",
-    "entities": [
+    "entities": 
+    [
      {
        "entityKind": "person",
-       "properties": [
+       "properties": 
+       [
          {
            "propertyRelationshipKind": "dynamic",
            "propertyName": "BodyWeight"
@@ -2911,10 +2917,12 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 
 <span class="p">{</span><span class="w">
   </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emptyBundleTest5-1"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"entities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nt">"entities"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">[</span><span class="w">
    </span><span class="p">{</span><span class="w">
      </span><span class="nt">"entityKind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-     </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+     </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> 
+     </span><span class="p">[</span><span class="w">
        </span><span class="p">{</span><span class="w">
          </span><span class="nt">"propertyRelationshipKind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dynamic"</span><span class="p">,</span><span class="w">
          </span><span class="nt">"propertyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BodyWeight"</span><span class="w">
@@ -3033,8 +3041,13 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
      "kind": "contextless",
      "bundleContextless": 
      {
-       "id": 3,
-       "name": "Kitchen electricity on weekend parties"
+       "name": "Everything kitchen",
+       "table": 
+       {
+         "id": 2,
+         "name": "kitchen",
+         "source": "fibaro"
+       }
      }
    }'</span> <span class="se">\</span>
   http://example.hatdex.org/users/user?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
@@ -3054,8 +3067,13 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
   </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextless"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"bundleContextless"</span><span class="p">:</span><span class="w"> 
   </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kitchen electricity on weekend parties"</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Everything kitchen"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> 
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -3063,12 +3081,48 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 <blockquote>
 <p>Example of response:</p>
 </blockquote>
-<pre class="highlight shell"><code>TBD
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"rolling"</span>: <span class="nb">false</span>,
+  <span class="s2">"name"</span>: <span class="s2">"DD Kitchen electricity on weekend parties"</span>,
+  <span class="s2">"endDate"</span>: <span class="s2">"2015-10-30T10:00:00Z"</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-12-04T17:24:13Z"</span>,
+  <span class="s2">"price"</span>: 100,
+  <span class="s2">"key"</span>: <span class="s2">"cf0bce2e-8ff1-41b9-bb47-90c42c35eecb"</span>,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-12-04T17:24:13Z"</span>,
+  <span class="s2">"bundleContextless"</span>: 
+  <span class="o">{</span>
+    <span class="s2">"id"</span>: 3,
+    <span class="s2">"dateCreated"</span>: <span class="s2">"2015-12-04T17:24:13Z"</span>,
+    <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-12-04T17:24:13Z"</span>,
+    <span class="s2">"name"</span>: <span class="s2">"Everything kitchen"</span>
+  <span class="o">}</span>,
+  <span class="s2">"kind"</span>: <span class="s2">"contextless"</span>,
+  <span class="s2">"startDate"</span>: <span class="s2">"2015-09-30T10:00:00Z"</span>,
+  <span class="s2">"sell"</span>: <span class="nb">true</span>
+<span class="o">}</span>
 </code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
-<span class="err">TBD</span><span class="w">
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"rolling"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DD Kitchen electricity on weekend parties"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-30T10:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T17:24:13Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cf0bce2e-8ff1-41b9-bb47-90c42c35eecb"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T17:24:13Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"bundleContextless"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T17:24:13Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T17:24:13Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Everything kitchen"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextless"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-30T10:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"sell"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <h3 id="enabling-disabling-direct-debit-requests">Enabling/Disabling Direct Debit Requests</h3>
@@ -3076,7 +3130,7 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 <p>Consider a situation where you, owner of the HAT, receive a request from Direct Debit to read some of your Data. You can either enable or disable that request. To do this, you should make an API request using PUT to <code class="prettyprint">/directDebit/UUID/enable</code> or <code class="prettyprint">/directDebit/UUID/disable</code> endpoint to enable or disable the request respectively. Note that the API request body should be left empty and that UUID is a Direct Debit <code class="prettyprint">key</code> (see Direct Debit Structure table above). </p>
 
 <blockquote>
-<p>Example of enabling an Data Debit:</p>
+<p>Example of enabling Data Debit:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
@@ -3103,6 +3157,10 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 <h3 id="retrieving-data-debit-values">Retrieving Data Debit Values</h3>
 
 <p>If a User enables a Data Debit (see &ldquo;Enabling/Disabling Direct Debit Requests&rdquo; above), then individuals or applications that proposed that Data Debit to you gain access to get your Data. Alternatively, if you proposed a Direct Debit and an individual enabled it, you can retrieve the Data yourself. To do this, you need to make a GET request to <code class="prettyprint">/dataDebit/UUID/values</code> endpoint.</p>
+
+<blockquote>
+<p>Example of retrieving Data Debit Values:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
@@ -3117,12 +3175,34 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 <blockquote>
 <p>Example response:</p>
 </blockquote>
-<pre class="highlight shell"><code>TBD
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"rolling"</span>: <span class="nb">false</span>,
+  <span class="s2">"name"</span>: <span class="s2">"DD Kitchen electricity on weekend parties"</span>,
+  <span class="s2">"endDate"</span>: <span class="s2">"2015-10-30T10:00:00Z"</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-12-04T17:28:45Z"</span>,
+  <span class="s2">"price"</span>: 100,
+  <span class="s2">"key"</span>: <span class="s2">"cf0bce2e-8ff1-41b9-bb47-90c42c35eecb"</span>,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-12-04T17:24:13Z"</span>,
+  <span class="s2">"kind"</span>: <span class="s2">"contextless"</span>,
+  <span class="s2">"startDate"</span>: <span class="s2">"2015-09-30T10:00:00Z"</span>,
+  <span class="s2">"sell"</span>: <span class="nb">true</span>
+<span class="o">}</span>
 </code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
-<span class="err">TBD</span><span class="w">
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"rolling"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DD Kitchen electricity on weekend parties"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-10-30T10:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T17:28:45Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cf0bce2e-8ff1-41b9-bb47-90c42c35eecb"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T17:24:13Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextless"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-30T10:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"sell"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
           <h1 id="errors">Errors</h1>
