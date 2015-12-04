@@ -2801,7 +2801,9 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 
 <h1 id="data-bundling">Data Bundling</h1>
 
-<p><img title="Bundling" alt="Bundling" src="images/bundling.png" /></p>
+<h2 id="contextual-bundling">Contextual Bundling</h2>
+
+<p><img title="Contextual Bundling" alt="Contextual Bundling" src="images/contextualBundles.png" /></p>
 
 <p>Bundles of <em>contextual</em> data are sets of entities (people, things, events, locations and organisations) and their properties that a HAT owner has chosen to combine together for potentially sharing with others.</p>
 
@@ -2880,7 +2882,7 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 - <code class="prettyprint">POST</code> to <code class="prettyprint">bundles/context/BUNDLE_ID/entitySelection/SELECTION_ID/propertySelection</code> adds a new property selection to an already existing entity selection within a bundle</p>
 
 <blockquote>
-<p>Example of creating a new Bundle:</p>
+<p>Example of creating a new Contextual Bundle:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
@@ -2937,6 +2939,76 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
      </span><span class="nt">"entityName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sunrise"</span><span class="w">
    </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="contextless-bundling">Contextless Bundling</h2>
+
+<p><img title="Contextless Bundling" alt="Contextless Bundling" src="images/contextlessBundles.png" /></p>
+
+<blockquote>
+<p>Example of creating a new Contextless Bundle:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -POST -d <span class="se">\ </span>
+  <span class="s1">'{
+     "name": "emptyBundle",
+     "bundleTable": 
+     [
+       {
+         "name": "Everything kitchen",
+         "table": 
+         {
+           "id": 2,
+           "name": "kitchen",
+           "source": "fibaro"
+         }
+       }
+     ]
+   }'</span><span class="se">\</span>
+  <span class="s2">"http://example.hatdex.org/bundles/contextless?name=meters&amp;access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+</code></pre>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/bundles/contextless?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emptyBundle"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"bundleTable"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Everything kitchen"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> 
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fibaro"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: 4,
+  <span class="s2">"dateCreated"</span>: <span class="s2">"2015-12-04T21:18:23Z"</span>,
+  <span class="s2">"lastUpdated"</span>: <span class="s2">"2015-12-04T21:18:23Z"</span>,
+  <span class="s2">"name"</span>: <span class="s2">"emptyBundle"</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dateCreated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T21:18:23Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T21:18:23Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emptyBundle"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
