@@ -2597,16 +2597,20 @@ The set of available API endpoints for managing bundles is:
 - `POST` to `bundles/context/BUNDLE_ID/entitySelection` adds a new entity selection to an already existing bundle
 - `POST` to `bundles/context/BUNDLE_ID/entitySelection/SELECTION_ID/propertySelection` adds a new property selection to an already existing entity selection within a bundle
 
+> Example of creating a new Bundle:
+
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
   -POST -d \ 
   '{
     "name": "emptyBundleTest5-1",
-    "entities": [
+    "entities": 
+    [
      {
        "entityKind": "person",
-       "properties": [
+       "properties": 
+       [
          {
            "propertyRelationshipKind": "dynamic",
            "propertyName": "BodyWeight"
@@ -2633,10 +2637,12 @@ Content-Type: application/json
 
 {
   "name": "emptyBundleTest5-1",
-  "entities": [
+  "entities": 
+  [
    {
      "entityKind": "person",
-     "properties": [
+     "properties": 
+     [
        {
          "propertyRelationshipKind": "dynamic",
          "propertyName": "BodyWeight"
@@ -2701,8 +2707,13 @@ curl -H "Content-Type: application/json" \
      "kind": "contextless",
      "bundleContextless": 
      {
-       "id": 3,
-       "name": "Kitchen electricity on weekend parties"
+       "name": "Everything kitchen",
+       "table": 
+       {
+         "id": 2,
+         "name": "kitchen",
+         "source": "fibaro"
+       }
      }
    }' \
   http://example.hatdex.org/users/user?access_token=$ACCESS_TOKEN
@@ -2724,8 +2735,13 @@ Content-Type: application/json
   "kind": "contextless",
   "bundleContextless": 
   {
-    "id": 3,
-    "name": "Kitchen electricity on weekend parties"
+    "name": "Everything kitchen",
+    "table": 
+    {
+      "id": 2,
+      "name": "kitchen",
+      "source": "fibaro"
+    }
   }
 }
 ```
@@ -2733,21 +2749,57 @@ Content-Type: application/json
 > Example of response:
 
 ``` shell
-TBD
+{
+  "rolling": false,
+  "name": "DD Kitchen electricity on weekend parties",
+  "endDate": "2015-10-30T10:00:00Z",
+  "lastUpdated": "2015-12-04T17:24:13Z",
+  "price": 100,
+  "key": "cf0bce2e-8ff1-41b9-bb47-90c42c35eecb",
+  "dateCreated": "2015-12-04T17:24:13Z",
+  "bundleContextless": 
+  {
+    "id": 3,
+    "dateCreated": "2015-12-04T17:24:13Z",
+    "lastUpdated": "2015-12-04T17:24:13Z",
+    "name": "Everything kitchen"
+  },
+  "kind": "contextless",
+  "startDate": "2015-09-30T10:00:00Z",
+  "sell": true
+}
 ```
 
 ``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-TBD
+{
+  "rolling": false,
+  "name": "DD Kitchen electricity on weekend parties",
+  "endDate": "2015-10-30T10:00:00Z",
+  "lastUpdated": "2015-12-04T17:24:13Z",
+  "price": 100,
+  "key": "cf0bce2e-8ff1-41b9-bb47-90c42c35eecb",
+  "dateCreated": "2015-12-04T17:24:13Z",
+  "bundleContextless": 
+  {
+    "id": 3,
+    "dateCreated": "2015-12-04T17:24:13Z",
+    "lastUpdated": "2015-12-04T17:24:13Z",
+    "name": "Everything kitchen"
+  },
+  "kind": "contextless",
+  "startDate": "2015-09-30T10:00:00Z",
+  "sell": true
+}
 ```
 
 ### Enabling/Disabling Direct Debit Requests
 
 Consider a situation where you, owner of the HAT, receive a request from Direct Debit to read some of your Data. You can either enable or disable that request. To do this, you should make an API request using PUT to `/directDebit/UUID/enable` or `/directDebit/UUID/disable` endpoint to enable or disable the request respectively. Note that the API request body should be left empty and that UUID is a Direct Debit `key` (see Direct Debit Structure table above). 
 
-> Example of enabling an Data Debit:
+> Example of enabling Data Debit:
 
 ``` shell
 curl -H "Content-Type: application/json" \
@@ -2778,6 +2830,8 @@ OK
 
 If a User enables a Data Debit (see "Enabling/Disabling Direct Debit Requests" above), then individuals or applications that proposed that Data Debit to you gain access to get your Data. Alternatively, if you proposed a Direct Debit and an individual enabled it, you can retrieve the Data yourself. To do this, you need to make a GET request to `/dataDebit/UUID/values` endpoint.
 
+> Example of retrieving Data Debit Values:
+
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
@@ -2793,13 +2847,35 @@ Content-Type: application/json
 > Example response:
 
 ``` shell
-TBD
+{
+  "rolling": false,
+  "name": "DD Kitchen electricity on weekend parties",
+  "endDate": "2015-10-30T10:00:00Z",
+  "lastUpdated": "2015-12-04T17:28:45Z",
+  "price": 100,
+  "key": "cf0bce2e-8ff1-41b9-bb47-90c42c35eecb",
+  "dateCreated": "2015-12-04T17:24:13Z",
+  "kind": "contextless",
+  "startDate": "2015-09-30T10:00:00Z",
+  "sell": true
+}
 ```
 
 ``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-TBD
+{
+  "rolling": false,
+  "name": "DD Kitchen electricity on weekend parties",
+  "endDate": "2015-10-30T10:00:00Z",
+  "lastUpdated": "2015-12-04T17:28:45Z",
+  "price": 100,
+  "key": "cf0bce2e-8ff1-41b9-bb47-90c42c35eecb",
+  "dateCreated": "2015-12-04T17:24:13Z",
+  "kind": "contextless",
+  "startDate": "2015-09-30T10:00:00Z",
+  "sell": true
+}
 ```
 
