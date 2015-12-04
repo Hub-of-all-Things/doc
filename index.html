@@ -67,6 +67,18 @@
 
 <p>The APIs detailed in this document detail how this functionality is achieved.</p>
 
+<h2 id="the-application-programming-interface-api">The Application Programming Interface (API)</h2>
+
+<p>The Application Programming Interface (API) of the HAT is designed to facilitate communication between individual HATs and services that use their data using the standard JSON data format. The APIs are split into inbound, outbound and management:</p>
+
+<ul>
+<li>Inbound ones are used by data sources to provide data to HATs and use the flexible data schema. </li>
+<li>Outbound APIs operate with the Data Debit mechanism, where the user approves each data user with each kind of data to be retrieved. They facilitate the only method of retrieving data from a HAT. </li>
+<li>Management APIs are used by the Hyperdata Browser to contextualise data, control Data Debits, authorisation, applications and other management functons. </li>
+</ul>
+
+<p>APIs provide users with help in contextualising their data as well as suggesting to the overall ecosystem (users and applications) what data bundles would be beneficial to have and what other data sources would bring the most value when connected to the HAT.</p>
+
 <h1 id="user-management">User Management</h1>
 
 <p>The HAT and its personal data ecosystem are designed to allow individual HAT Users to collect, contextualise and exchange our personal Data. The enabling technology for the HAT sits within the HAT Personal Data Platform (HATPDP, mostly referred to as &ldquo;HAT&rdquo;). With their Data, individuals can buy apps to analyse, view, create scenarios, trade or make important decisions based on our own Data for a smarter and more effective life. HAT is therefore a fully scalable platform that allows firms to offer individuals services for our personal data, and yet enables us as individuals to personalise that data to our own needs. Therefore, there are 4 Account <em>roles</em> defined within the HAT: </p>
