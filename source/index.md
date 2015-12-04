@@ -2559,7 +2559,9 @@ Content-Type: application/json
 
 # Data Bundling
 
-![Bundling](/images/bundling.png "Bundling")
+## Contextual Bundling
+
+![Contextual Bundling](/images/contextualBundles.png "Contextual Bundling")
 
 Bundles of _contextual_ data are sets of entities (people, things, events, locations and organisations) and their properties that a HAT owner has chosen to combine together for potentially sharing with others.
 
@@ -2597,7 +2599,7 @@ The set of available API endpoints for managing bundles is:
 - `POST` to `bundles/context/BUNDLE_ID/entitySelection` adds a new entity selection to an already existing bundle
 - `POST` to `bundles/context/BUNDLE_ID/entitySelection/SELECTION_ID/propertySelection` adds a new property selection to an already existing entity selection within a bundle
 
-> Example of creating a new Bundle:
+> Example of creating a new Contextual Bundle:
 
 ``` shell
 curl -H "Content-Type: application/json" \
@@ -2659,6 +2661,79 @@ Content-Type: application/json
   ]
 }
 ```
+## Contextless Bundling
+
+![Contextless Bundling](/images/contextlessBundles.png "Contextless Bundling")
+
+> Example of creating a new Contextless Bundle:
+
+``` shell
+curl -H "Content-Type: application/json" \
+  -H "Accept: application/json"  \
+  -POST -d \ 
+  '{
+     "name": "emptyBundle",
+     "bundleTable": 
+     [
+       {
+         "name": "Everything kitchen",
+         "table": 
+         {
+           "id": 2,
+           "name": "kitchen",
+           "source": "fibaro"
+         }
+       }
+     ]
+   }'\
+  "http://example.hatdex.org/bundles/contextless?name=meters&access_token=$ACCESS_TOKEN"
+```
+
+``` http
+POST /bundles/contextless?access_token=$ACCESS_TOKEN HTTP/1.1
+Accept: application/json
+Host: example.hatdex.org
+Content-Type: application/json
+
+{
+  "name": "emptyBundle",
+  "bundleTable": 
+  [
+    {
+      "name": "Everything kitchen",
+      "table": 
+      {
+        "id": 2,
+        "name": "kitchen",
+        "source": "fibaro"
+      }
+    }
+  ]
+}
+```
+> Example response:
+
+``` shell
+{
+  "id": 4,
+  "dateCreated": "2015-12-04T21:18:23Z",
+  "lastUpdated": "2015-12-04T21:18:23Z",
+  "name": "emptyBundle"
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 4,
+  "dateCreated": "2015-12-04T21:18:23Z",
+  "lastUpdated": "2015-12-04T21:18:23Z",
+  "name": "emptyBundle"
+}
+```
+
 
 # Sharing and Direct Data Debits
 
