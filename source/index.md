@@ -752,25 +752,26 @@ curl -H "Content-Type: application/json" \
   '{
      "record": 
      {
+       "lastUpdated": "2015-11-22T21:24:44Z",
        "name": "kitchenElectricityRow"
      },
-       "values": 
+     "values": 
      [
        {
-         "value": "september2014",
          "field": 
          {
            "id": 10,
            "name": "month2014"
-         }
-       }, 
+         },
+         "value": "september2014"
+       },
        {
-         "value": "september2015",
          "field": 
          {
            "id": 11,
            "name": "month2015"
-         }
+         },
+         "value": "september2015"
        }
      ]
    }' \
@@ -786,8 +787,6 @@ Content-Type: application/json
 {
   "record": 
   {
-    "id": 40,
-    "dateCreated": "2015-11-22T21:24:44Z",
     "lastUpdated": "2015-11-22T21:24:44Z",
     "name": "kitchenElectricityRow"
   },
@@ -797,24 +796,16 @@ Content-Type: application/json
       "field": 
       {
         "id": 10,
-        "tableId": 23,
         "name": "month2014"
       },
-      "lastUpdated": "2015-11-22T21:24:44Z",
-      "id": 390,
-      "dateCreated": "2015-11-22T21:24:44Z",
       "value": "september2014"
     },
     {
       "field": 
       {
         "id": 11,
-        "tableId": 24,
         "name": "month2015"
       },
-      "lastUpdated": "2015-11-22T21:24:44Z",
-      "id": 391,
-      "dateCreated": "2015-11-22T21:24:44Z",
       "value": "september2015"
     }
   ]
