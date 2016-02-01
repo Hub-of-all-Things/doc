@@ -2748,7 +2748,7 @@ All Direct Debit API calls contain all the information defined in Direct Debit S
 
 Parameter | Description | Optional / Mandatory
 --------- | ----------- | --------------------
-key | universally unique identifier (UUID)/userId | optional
+key | universally unique identifier (UUID)/userId | mandatory
 dateCreated | date when the direct debit was created | optional
 lastUpdated | date when the direct debit was updated | optional
 name | name of the direct debit | mandatory
