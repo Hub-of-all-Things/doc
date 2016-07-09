@@ -102,14 +102,16 @@
 <pre class="highlight shell"><code>
 curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  http://example.hatdex.org/<span class="nv">$API_ENDPOINT</span>?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/</span><span class="nv">$API_ENDPOINT</span><span class="s2">"</span>
 </code></pre>
 <pre class="highlight http"><code><span class="err">
-</span><span class="nf">GET</span> <span class="nn">API_ENDPOINT?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span><span class="nf">GET</span> <span class="nn">API_ENDPOINT</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 </code></pre>
 
@@ -123,21 +125,22 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 <pre class="highlight shell"><code>
 curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  http://example.hatdex.org/<span class="nv">$API_ENDPOINT</span>?username<span class="o">=</span>bob@example.com&amp;password<span class="o">=</span>bobIsSafe
+  <span class="s2">"http://hat.hubofallthings.net/</span><span class="nv">$API_ENDPOINT</span><span class="s2">"</span>
 
 </code></pre>
 <pre class="highlight http"><code><span class="err">
-</span><span class="nf">GET</span> <span class="nn">API_ENDPOINT?username=bob@example.com&amp;password=bobIsSafe</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span><span class="nf">GET</span> <span class="nn">API_ENDPOINT</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
 
 </code></pre>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET http://example.hatdex.org/</code></p>
+<p><code class="prettyprint">GET http://hat.hubofallthings.net/</code></p>
 
 <h3 id="query-parameters">Query Parameters</h3>
 
@@ -178,6 +181,7 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
      "userId": "5974832d-2dc1-4f49-adf1-c6d8bc790275",
@@ -186,11 +190,12 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
      "name": "apiclient.platform.com",
      "role": "dataDebit"
    }'</span> <span class="se">\</span>
-  http://example.hatdex.org/users/user?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/users/user"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/users/user?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/users/user</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -234,12 +239,14 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -PUT <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/users/user/UUID/enable?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/users/user/UUID/enable"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/users/user/UUID/enable?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/users/user/UUID/enable</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -302,6 +309,7 @@ Make sure to save the structure for yourself for each user you are storing the d
 <pre class="highlight shell"><code>
 curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
     "name": "kitchen",
@@ -321,14 +329,15 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
       }
     ]
   }'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/table?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/table"</span>
 
 </code></pre>
 <pre class="highlight http"><code><span class="err">
-</span><span class="nf">POST</span> <span class="nn">/data/table?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span><span class="nf">POST</span> <span class="nn">/data/table</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -413,12 +422,14 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/data/sources?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/sources"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/sources?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/sources</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -524,16 +535,18 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
        "name": "kitchen",
        "source": "fibaro"
    }'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/table?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/table"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/table?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/table</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -574,12 +587,14 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/data/table/TABLE_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/table/TABLE_ID?"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -658,15 +673,17 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
     "name": "testNewRecord"
   }'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/record?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/record"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -708,6 +725,7 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'[
      {
@@ -727,11 +745,12 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
            }
      }
    ]'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/record/RECORD_ID/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/record/RECORD_ID/values"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/RECORD_ID/values</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">[</span><span class="w">
@@ -835,6 +854,7 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
      "record": 
@@ -862,11 +882,12 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
        }
      ]
    }'</span> <span class="se">\</span>
-  http://example.hatdex.org/data/record/values?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/record/values"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/data/record/values</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -1081,6 +1102,7 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
      "value": "testValue",
@@ -1095,12 +1117,13 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
        "name": "kitchenElectricityRow"
      }
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/property?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/property"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/value?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/value</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
   "value": "testValue",
@@ -1171,12 +1194,14 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/data/table/TABLE_ID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/data/table/TABLE_ID/values"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/data/table/TABLE_ID/values</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -1416,16 +1441,18 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
      "name": "birthdayParty"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/event?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/event"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
   "name": "birthdayParty"
@@ -1458,13 +1485,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/person?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/person"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/person?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/person</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -1510,12 +1539,14 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/event/EVENT_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/event/EVENT_ID"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/event/EVENT_ID?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/event/EVENT_ID</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -1547,12 +1578,14 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/thing/THING_ID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/thing/THING_ID/values"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/thing/THING_ID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/thing/THING_ID/values</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -1642,16 +1675,18 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
      "relationshipType": "attends"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/event/EVENT_ID/person/PERSON_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/event/EVENT_ID/person/PERSON_ID"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event/EVENT_ID/person/PERSON_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event/EVENT_ID/person/PERSON_ID</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
   "relationshipType": "attends"
@@ -1710,16 +1745,18 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
        "name":"friend"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/person/relationshipType?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/person/relationshipType"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/relationshipType?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/relationshipType</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
     "name":"friend"
@@ -1754,13 +1791,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/person/relationshipType?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/person/relationshipType"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/person/relationshipType?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/person/relationshipType</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -1805,16 +1844,18 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
      "relationshipType": "date"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/event/EVENT_ID/type/TYPE_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/event/EVENT_ID/type/TYPE_ID"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event/EVENT_ID/type/TYPE_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/event/EVENT_ID/type/TYPE_ID</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
   "relationshipType": "date"
@@ -1847,6 +1888,7 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
      "property": 
@@ -1876,12 +1918,13 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
        "name": "Day 1"
      }
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/person/PERSON_ID/property/static/PROPERTY_ID"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/PERSON_ID/property/static/PROPERTY_ID</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
   "property": 
@@ -1939,6 +1982,7 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
      "property": 
@@ -1963,12 +2007,13 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
        "name": "Weight"
      }
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/person/PERSON_ID/property/static/PROPERTY_ID"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/person/PERSON_ID/property/static/PROPERTY_ID</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
   "property": 
@@ -2075,6 +2120,7 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
       "name": "bodyWeight",
@@ -2090,12 +2136,13 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
          "id": 1
       }
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/property?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/property"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/property?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/property</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
     "name": "bodyWeight",
@@ -2168,13 +2215,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/property?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/property"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/property?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/property</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -2294,13 +2343,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/property?name=height&amp;access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/property?name=height"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/property?name=height&amp;access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/property?name=height</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -2411,17 +2462,19 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
       "name": "Date",
       "description": "Date in time"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/type?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/type"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/type?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/type</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
     "name": "Date",
@@ -2461,16 +2514,18 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
       "relationshipType": "subtype"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/ID_1/type/ID_2?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/ID_1/type/ID_2"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/ID_1/type/ID_2?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/ID_1/type/ID_2</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
     "relationshipType": "subtype"
@@ -2503,13 +2558,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/type?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/type"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/type?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/type</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -2562,13 +2619,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/type?name=PostalAddress&amp;access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/type?name=PostalAddress"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/type?name=PostalAddress&amp;access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/type?name=PostalAddress</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -2650,18 +2709,20 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\</span>
   <span class="s1">'{
       "name": "kilograms",
       "description": "measurement of weight",
       "symbol": "kg"
    }'</span> <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/unitofmeasurement?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/unitofmeasurement"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/unitofmeasurement?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/type/unitofmeasurement</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 
 {
     "name": "kilograms",
@@ -2705,13 +2766,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/unitofmeasurement?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/unitofmeasurement"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/unitofmeasurement?access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/unitofmeasurement</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -2768,13 +2831,15 @@ Contextualisation APIs - all Data, Entities (People, Things, Events, Locations a
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/type/unitofmeasurement?name=meters&amp;access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/type/unitofmeasurement?name=meters"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/unitofmeasurement?name=meters&amp;access_token=ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/type/unitofmeasurement?name=meters</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 </code></pre>
 
 <blockquote>
@@ -2889,6 +2954,7 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
     "name": "emptyBundleTest5-1",
@@ -2913,11 +2979,12 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
      }
     ]
   }'</span><span class="se">\</span>
-  http://example.hatdex.org
+  <span class="s2">"http://hat.hubofallthings.net"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/bundles/context?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/bundles/context</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -2954,6 +3021,7 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
      "name": "emptyBundle",
@@ -2970,11 +3038,12 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
        }
      ]
    }'</span><span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/bundles/contextless?name=meters&amp;access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/bundles/contextless?name=meters"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/bundles/contextless?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/bundles/contextless</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -3105,6 +3174,7 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -POST -d <span class="se">\ </span>
   <span class="s1">'{
      "name": "DD Kitchen electricity on weekend parties",
@@ -3125,11 +3195,12 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
        }
      }
    }'</span> <span class="se">\</span>
-  http://example.hatdex.org/users/user?access_token<span class="o">=</span><span class="nv">$ACCESS_TOKEN</span>
+  <span class="s2">"http://hat.hubofallthings.net/users/user"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/dataDebit/propose?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/dataDebit/propose</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
@@ -3209,12 +3280,14 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -PUT <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/dataDebit/UUID/enable?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/dataDebit/UUID/enable"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/dataDebit/UUID/enable?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">PUT</span> <span class="nn">/dataDebit/UUID/enable</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
@@ -3238,12 +3311,14 @@ You can use `/bundles/context/` set of API endpoints to manage and view bundles,
 </blockquote>
 <pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
+  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
   -GET <span class="se">\</span>
-  <span class="s2">"http://example.hatdex.org/dataDebit/UUID/values?access_token=</span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span>
+  <span class="s2">"http://hat.hubofallthings.net/dataDebit/UUID/values"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/dataDebit/UUID/values?access_token=$ACCESS_TOKEN</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/dataDebit/UUID/values</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">example.hatdex.org</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
 
