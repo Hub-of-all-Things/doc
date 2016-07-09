@@ -117,26 +117,47 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 
 <blockquote>
 <p>Make sure to replace <code class="prettyprint">ACCESS_TOKEN</code> with your API access token, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with.</p>
-
-<p>You can also use username and password on behalf of the <em>owner</em> user or the <em>platform</em> user who have special privileges (covered later). Password-based authentication is disabled for other users.</p>
-
-<p>Response:</p>
 </blockquote>
-<pre class="highlight shell"><code>
-curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>  <span class="se">\</span>
-  -H <span class="s2">"X-Auth-Token: ACCESS_TOKEN"</span>  <span class="se">\</span>
-  -GET <span class="se">\</span>
-  <span class="s2">"http://hat.hubofallthings.net/</span><span class="nv">$API_ENDPOINT</span><span class="s2">"</span>
 
+<h3 id="acquiring-access-token">Acquiring Access Token</h3>
+
+<p>The tokens used are JWT tokens and you can see the values set by the HAT (such as the issuer) at <a href="jwt.io">jwt.io</a>. To acquire an access token, you should make a GET request to <code class="prettyprint">/user/access_token</code> endpoint and the request should contain headers with <code class="prettyprint">username</code> and <code class="prettyprint">pass</code> (password). The response will contain the access token and user ID.</p>
+
+<blockquote>
+<p>Example of acquiring Access Token:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"username: andy"</span> <span class="se">\</span>
+  -H <span class="s2">"password: testing"</span> <span class="se">\</span>
+  <span class="s2">"http://andy.hubofallthings.net/users/access_token"</span>
 </code></pre>
-<pre class="highlight http"><code><span class="err">
-</span><span class="nf">GET</span> <span class="nn">API_ENDPOINT</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MyClient/1.0.0</span>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/users/access_token</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">hat.hubofallthings.net</span>
-
+<span class="na">X-Auth-Token</span><span class="p">:</span> <span class="s">ACCESS_TOKEN</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 </code></pre>
+
+<blockquote>
+<p>Example of response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"accessToken"</span>: <span class="s2">"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoYXQiLCJyZXNvdXJjZSI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiYWNjZXNzU2NvcGUiOiJvd25lciIsImlzcyI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiZXhwIjoxNDY4MDg2ODM5fQ.JI3Mj1669AZ47zanVS5l3TqE6k8yJL0dX-XDycwJ3IR8zXmRSUYx_AGmqhbSRdAkLB15OBOTIupC4pMQ2k8UwWfB-l-5sC00nDyWHQU1M3Ac-DRu1xS9XKnNa0nzdqkFOKQKoeGJdEVtZY7OZsgvdeC68e55no6l4M7nKmVURZAwynStz0sQMMbP84tM516jXKlx9diZfTkvhOR68pQj0eV6llUZUjfkkCHSC1gD3pUbw-j7mTEp99Hl8qvn_tLizdhgJyoFYWBkUZSdTXXyH-gSvNDPQNrax_83iNX4__1XHBeHABD3Z9oroQNGWuLX7HoPbZzdV6xu3Qh4uz9Zmg"</span>,
+  <span class="s2">"userId"</span>: <span class="s2">"62b885fa-abc4-4bea-adc7-bc907f862132"</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoYXQiLCJyZXNvdXJjZSI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiYWNjZXNzU2NvcGUiOiJvd25lciIsImlzcyI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiZXhwIjoxNDY4MDg2ODM5fQ.JI3Mj1669AZ47zanVS5l3TqE6k8yJL0dX-XDycwJ3IR8zXmRSUYx_AGmqhbSRdAkLB15OBOTIupC4pMQ2k8UwWfB-l-5sC00nDyWHQU1M3Ac-DRu1xS9XKnNa0nzdqkFOKQKoeGJdEVtZY7OZsgvdeC68e55no6l4M7nKmVURZAwynStz0sQMMbP84tM516jXKlx9diZfTkvhOR68pQj0eV6llUZUjfkkCHSC1gD3pUbw-j7mTEp99Hl8qvn_tLizdhgJyoFYWBkUZSdTXXyH-gSvNDPQNrax_83iNX4__1XHBeHABD3Z9oroQNGWuLX7HoPbZzdV6xu3Qh4uz9Zmg"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"62b885fa-abc4-4bea-adc7-bc907f862132"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="validating-access-token">Validating Access Token</h3>
+
+<p>Tokens are signed by the HAT’s public key using RSA algorithm so that their authenticity can be independently verified. To make sure the provided access token works with the specific HAT, make a GET request containing a header with <code class="prettyprint">X-Auth-Token</code> to <code class="prettyprint">/users/access_token/validate</code> endpoint. In case of a valid access token, your response will say <code class="prettyprint">&quot;message&quot;: &quot;Authenticated&quot;</code> and in a case of an invalid access token, you will get <code class="prettyprint">&quot;message&quot;: &quot;The supplied authentication is invalid&quot;</code> and <code class="prettyprint">&quot;cause&quot;: &quot;...&quot;</code>.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -174,7 +195,7 @@ You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API acc
 
 <h3 id="creating-accounts">Creating Accounts</h3>
 
-<p>To create a new <code class="prettyprint">User</code>, the API request body should contain a new User <code class="prettyprint">ID</code>, <code class="prettyprint">email</code>, <code class="prettyprint">pass</code> (which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) <code class="prettyprint">name</code> and <code class="prettyprint">role</code>. Role can be defined as <code class="prettyprint">dataDebit</code> or <code class="prettyprint">dataCredit</code>. The special <code class="prettyprint">owner</code> and <code class="prettyprint">platform</code> accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to <code class="prettyprint">/users/user</code> endpoint. Note that in order to create a new Account.</p>
+<p>To create a new <code class="prettyprint">User</code>, the API request body should contain a new User <code class="prettyprint">ID</code>, <code class="prettyprint">email</code>, <code class="prettyprint">pass</code> (password, which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) <code class="prettyprint">name</code> and <code class="prettyprint">role</code>. Role can be defined as <code class="prettyprint">dataDebit</code> or <code class="prettyprint">dataCredit</code>. The special <code class="prettyprint">owner</code> and <code class="prettyprint">platform</code> accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to <code class="prettyprint">/users/user</code> endpoint. </p>
 
 <blockquote>
 <p>Example of creating a new Direct Debit Account:</p>
