@@ -84,27 +84,49 @@ X-Auth-Token: ACCESS_TOKEN
 
 > Make sure to replace `ACCESS_TOKEN` with your API access token, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with.
 
-> You can also use username and password on behalf of the _owner_ user or the _platform_ user who have special privileges (covered later). Password-based authentication is disabled for other users.
+### Acquiring Access Token
 
-> Response:
+The tokens used are JWT tokens and you can see the values set by the HAT (such as the issuer) at [jwt.io](jwt.io). To acquire an access token, you should make a GET request to `/user/access_token` endpoint and the request should contain headers with `username` and `pass` (password). The response will contain the access token and user ID.
+
+> Example of acquiring Access Token:
 
 ``` shell
-
-curl -H "Content-Type: application/json" \
-  -H "Accept: application/json"  \
-  -H "X-Auth-Token: ACCESS_TOKEN"  \
-  -GET \
-  "http://hat.hubofallthings.net/$API_ENDPOINT"
-
+curl -X GET -H "Accept: application/json" \
+  -H "username: andy" \
+  -H "password: testing" \
+  "http://andy.hubofallthings.net/users/access_token"
 ```
-``` http
 
-GET API_ENDPOINT HTTP/1.1
-User-Agent: MyClient/1.0.0
+``` http
+GET /users/access_token HTTP/1.1
 Accept: application/json
 Host: hat.hubofallthings.net
-
+X-Auth-Token: ACCESS_TOKEN
+Content-Type: application/json
 ```
+
+> Example of response:
+
+``` shell
+{
+  "accessToken": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoYXQiLCJyZXNvdXJjZSI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiYWNjZXNzU2NvcGUiOiJvd25lciIsImlzcyI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiZXhwIjoxNDY4MDg2ODM5fQ.JI3Mj1669AZ47zanVS5l3TqE6k8yJL0dX-XDycwJ3IR8zXmRSUYx_AGmqhbSRdAkLB15OBOTIupC4pMQ2k8UwWfB-l-5sC00nDyWHQU1M3Ac-DRu1xS9XKnNa0nzdqkFOKQKoeGJdEVtZY7OZsgvdeC68e55no6l4M7nKmVURZAwynStz0sQMMbP84tM516jXKlx9diZfTkvhOR68pQj0eV6llUZUjfkkCHSC1gD3pUbw-j7mTEp99Hl8qvn_tLizdhgJyoFYWBkUZSdTXXyH-gSvNDPQNrax_83iNX4__1XHBeHABD3Z9oroQNGWuLX7HoPbZzdV6xu3Qh4uz9Zmg",
+  "userId": "62b885fa-abc4-4bea-adc7-bc907f862132"
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "accessToken": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoYXQiLCJyZXNvdXJjZSI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiYWNjZXNzU2NvcGUiOiJvd25lciIsImlzcyI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiZXhwIjoxNDY4MDg2ODM5fQ.JI3Mj1669AZ47zanVS5l3TqE6k8yJL0dX-XDycwJ3IR8zXmRSUYx_AGmqhbSRdAkLB15OBOTIupC4pMQ2k8UwWfB-l-5sC00nDyWHQU1M3Ac-DRu1xS9XKnNa0nzdqkFOKQKoeGJdEVtZY7OZsgvdeC68e55no6l4M7nKmVURZAwynStz0sQMMbP84tM516jXKlx9diZfTkvhOR68pQj0eV6llUZUjfkkCHSC1gD3pUbw-j7mTEp99Hl8qvn_tLizdhgJyoFYWBkUZSdTXXyH-gSvNDPQNrax_83iNX4__1XHBeHABD3Z9oroQNGWuLX7HoPbZzdV6xu3Qh4uz9Zmg",
+  "userId": "62b885fa-abc4-4bea-adc7-bc907f862132"
+}
+```
+
+### Validating Access Token
+
+Tokens are signed by the HAT’s public key using RSA algorithm so that their authenticity can be independently verified. To make sure the provided access token works with the specific HAT, make a GET request containing a header with `X-Auth-Token` to `/users/access_token/validate` endpoint. In case of a valid access token, your response will say `"message": "Authenticated"` and in a case of an invalid access token, you will get `"message": "The supplied authentication is invalid"` and `"cause": "..."`.
 
 ### HTTP Request
 
@@ -128,7 +150,7 @@ Data Credit Account can create/record a Raw Data, whilst Data Debit Account can 
 
 ### Creating Accounts
         
-To create a new `User`, the API request body should contain a new User `ID`, `email`, `pass` (which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) `name` and `role`. Role can be defined as `dataDebit` or `dataCredit`. The special `owner` and `platform` accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to `/users/user` endpoint. Note that in order to create a new Account.
+To create a new `User`, the API request body should contain a new User `ID`, `email`, `pass` (password, which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) `name` and `role`. Role can be defined as `dataDebit` or `dataCredit`. The special `owner` and `platform` accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to `/users/user` endpoint. 
  
 > Example of creating a new Direct Debit Account:
 
