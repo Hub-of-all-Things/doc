@@ -47,6 +47,30 @@ The Application Programming Interface (API) of the HAT is designed to facilitate
 
 APIs provide users with help in contextualising their data as well as suggesting to the overall ecosystem (users and applications) what data bundles would be beneficial to have and what other data sources would bring the most value when connected to the HAT.
 
+# Login with HAT
+
+HAT differentiates services into _approved_ and _generic_.
+
+- _approved_ ones have been configured with a HAT and may have special permissions such as accessing HAT data (e.g. HyperDataBrowser such as Rumpel)
+- _generic_ services that only need to validate that the individual owns a specific HAT. Some _generic_ services may also be _approved_ but not require any privileges beyond validation
+
+Each HAT runs as a separate server and has a publicly-reachable address (such as `https://hat.hubofallthings.com`). All calls in this documentation are therefore executed against an individual HAT.
+
+To use login with HAT:
+
+1. Send the user to `/hatlogin?name=ServiceName&redirect=https://serviceurl.com/path` endpoint of the HAT
+2. The user will either see a Login screen for their own HAT first, or directly proceed to the next step
+3. The user will see an icon to click on in order to go back to your service, with service name and url below the icon
+4. On clicking the icon, the user will get redirected to `https://serviceurl.com/path?token=hat_access_token` where you need to get the token and complete user validation
+
+Access tokens user by the HAT are RS256-signed JWT tokens, i.e. using public key cryptography.
+Token can be decoded to see the issuer (`iss`) which is the HAT address without verifying the 
+signature, however it would obviously be insufficient. A HAT's public key can be accessed at
+`/publickey` endpoint of the HAT. The precise handling of tokens with asymmetric keys will depend
+on your [library](https://jwt.io/#libraries-io), however you need to make sure that your library
+supports RS256 keys.
+
+
 # User Management
 
 The HAT and its personal data ecosystem are designed to allow individual HAT Users to collect, contextualise and exchange our personal Data. The enabling technology for the HAT sits within the HAT Personal Data Platform (HATPDP, mostly referred to as "HAT"). With their Data, individuals can buy apps to analyse, view, create scenarios, trade or make important decisions based on our own Data for a smarter and more effective life. HAT is therefore a fully scalable platform that allows firms to offer individuals services for our personal data, and yet enables us as individuals to personalise that data to our own needs. Therefore, there are 4 Account _roles_ defined within the HAT: 
@@ -144,9 +168,9 @@ pass | password used for authentication together with username, instead of acces
 You must replace <code>ACCESS_TOKEN</code> with your application's API access token.
 </aside>
 
-## Direct Credit and Debit Accounts
+## Direct Data Credit and Debit Accounts
 
-Data Credit Account can create/record a Raw Data, whilst Data Debit Account can read the Data that Owner decided to share and exchange. For more detailed information about how the Direct Data Debit (D3) System works, see section "Sharing and Direct Data Debits" at the end of this document.
+Data Credit Account can create/record Raw Data, whilst Data Debit Account can read the Data that Owner decided to share and exchange. For more detailed information about how the Direct Data Debit (D3) System works, see section "Sharing and Direct Data Debits" at the end of this document.
 
 ### Creating Accounts
         
