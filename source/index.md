@@ -68,44 +68,69 @@ For both the Data import and export, the virtualised database will required perm
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  http://example.hatdex.org/$API_ENDPOINT?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/$API_ENDPOINT"
 ```
 ``` http
 
-GET API_ENDPOINT?access_token=$ACCESS_TOKEN HTTP/1.1
+GET API_ENDPOINT HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 ```
 
 > Make sure to replace `ACCESS_TOKEN` with your API access token, as well as the other variables for the JSON contents of the url, the API endpoint and the address of the HAT you are interacting with.
 
-> You can also use username and password on behalf of the _owner_ user or the _platform_ user who have special privileges (covered later). Password-based authentication is disabled for other users.
+### Acquiring Access Token
 
-> Response:
+The tokens used are JWT tokens and you can see the values set by the HAT (such as the issuer) at [jwt.io](jwt.io). To acquire an access token, you should make a GET request to `/user/access_token` endpoint and the request should contain headers with `username` and `pass` (password). The response will contain the access token and user ID.
+
+> Example of acquiring Access Token:
 
 ``` shell
-
-curl -H "Content-Type: application/json" \
-  -H "Accept: application/json"  \
-  -GET \
-  http://example.hatdex.org/$API_ENDPOINT?username=bob@example.com&password=bobIsSafe
-
+curl -X GET -H "Accept: application/json" \
+  -H "username: andy" \
+  -H "password: testing" \
+  "http://andy.hubofallthings.net/users/access_token"
 ```
+
 ``` http
-
-GET API_ENDPOINT?username=bob@example.com&password=bobIsSafe HTTP/1.1
-User-Agent: MyClient/1.0.0
+GET /users/access_token HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
-
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
+Content-Type: application/json
 ```
+
+> Example of response:
+
+``` shell
+{
+  "accessToken": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoYXQiLCJyZXNvdXJjZSI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiYWNjZXNzU2NvcGUiOiJvd25lciIsImlzcyI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiZXhwIjoxNDY4MDg2ODM5fQ.JI3Mj1669AZ47zanVS5l3TqE6k8yJL0dX-XDycwJ3IR8zXmRSUYx_AGmqhbSRdAkLB15OBOTIupC4pMQ2k8UwWfB-l-5sC00nDyWHQU1M3Ac-DRu1xS9XKnNa0nzdqkFOKQKoeGJdEVtZY7OZsgvdeC68e55no6l4M7nKmVURZAwynStz0sQMMbP84tM516jXKlx9diZfTkvhOR68pQj0eV6llUZUjfkkCHSC1gD3pUbw-j7mTEp99Hl8qvn_tLizdhgJyoFYWBkUZSdTXXyH-gSvNDPQNrax_83iNX4__1XHBeHABD3Z9oroQNGWuLX7HoPbZzdV6xu3Qh4uz9Zmg",
+  "userId": "62b885fa-abc4-4bea-adc7-bc907f862132"
+}
+```
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "accessToken": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoYXQiLCJyZXNvdXJjZSI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiYWNjZXNzU2NvcGUiOiJvd25lciIsImlzcyI6ImFuZHkuaHVib2ZhbGx0aGluZ3MubmV0IiwiZXhwIjoxNDY4MDg2ODM5fQ.JI3Mj1669AZ47zanVS5l3TqE6k8yJL0dX-XDycwJ3IR8zXmRSUYx_AGmqhbSRdAkLB15OBOTIupC4pMQ2k8UwWfB-l-5sC00nDyWHQU1M3Ac-DRu1xS9XKnNa0nzdqkFOKQKoeGJdEVtZY7OZsgvdeC68e55no6l4M7nKmVURZAwynStz0sQMMbP84tM516jXKlx9diZfTkvhOR68pQj0eV6llUZUjfkkCHSC1gD3pUbw-j7mTEp99Hl8qvn_tLizdhgJyoFYWBkUZSdTXXyH-gSvNDPQNrax_83iNX4__1XHBeHABD3Z9oroQNGWuLX7HoPbZzdV6xu3Qh4uz9Zmg",
+  "userId": "62b885fa-abc4-4bea-adc7-bc907f862132"
+}
+```
+
+### Validating Access Token
+
+Tokens are signed by the HAT’s public key using RSA algorithm so that their authenticity can be independently verified. To make sure the provided access token works with the specific HAT, make a GET request containing a header with `X-Auth-Token` to `/users/access_token/validate` endpoint. In case of a valid access token, your response will say `"message": "Authenticated"` and in a case of an invalid access token, you will get `"message": "The supplied authentication is invalid"` and `"cause": "..."`.
 
 ### HTTP Request
 
-`GET http://example.hatdex.org/`
+`GET http://hat.hubofallthings.net/`
 
 ### Query Parameters
 
@@ -125,13 +150,14 @@ Data Credit Account can create/record a Raw Data, whilst Data Debit Account can 
 
 ### Creating Accounts
         
-To create a new `User`, the API request body should contain a new User `ID`, `email`, `pass` (which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) `name` and `role`. Role can be defined as `dataDebit` or `dataCredit`. The special `owner` and `platform` accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to `/users/user` endpoint. Note that in order to create a new Account.
+To create a new `User`, the API request body should contain a new User `ID`, `email`, `pass` (password, which is bcrypt-hashed as application developers would request the paltform provider to create an account on their behalf) `name` and `role`. Role can be defined as `dataDebit` or `dataCredit`. The special `owner` and `platform` accounts can only be created at the time of creating a HAT and can not be added/replaced/disabled later. The API request should then be posted to `/users/user` endpoint. 
  
 > Example of creating a new Direct Debit Account:
 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
      "userId": "5974832d-2dc1-4f49-adf1-c6d8bc790275",
@@ -140,13 +166,14 @@ curl -H "Content-Type: application/json" \
      "name": "apiclient.platform.com",
      "role": "dataDebit"
    }' \
-  http://example.hatdex.org/users/user?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/users/user"
 ```
 
 ``` http
-POST /users/user?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /users/user HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -191,13 +218,16 @@ The `owner` enable or disable any Direct Debit Account. To do this, they should 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -PUT \
-  "http://example.hatdex.org/users/user/UUID/enable?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/users/user/UUID/enable"
 ```
+
 ``` http
-PUT /users/user/UUID/enable?access_token=$ACCESS_TOKEN HTTP/1.1
+PUT /users/user/UUID/enable HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > Example response:
@@ -258,6 +288,7 @@ Make sure to save the structure for yourself for each user you are storing the d
 
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
     "name": "kitchen",
@@ -277,16 +308,17 @@ curl -H "Content-Type: application/json" \
       }
     ]
   }' \
-  http://example.hatdex.org/data/table?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/data/table"
 
 ```
 
 ``` http
 
-POST /data/table?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /data/table HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -370,14 +402,16 @@ You might want to check what Sources have been already configured before configu
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/data/sources?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/data/sources"
 ```
 
 ``` http
-GET /data/sources?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /data/sources HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > Example response:
@@ -450,18 +484,20 @@ You should create a new `table` for every set of Values you want to be added to 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
        "name": "kitchen",
        "source": "fibaro"
    }' \
-  http://example.hatdex.org/data/table?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/data/table"
 ```
 
 ``` http
-POST /data/table?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /data/table HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -503,14 +539,16 @@ You might need to extract some information about a particular Table, e.g. a list
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/data/table/TABLE_ID?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/data/table/TABLE_ID?"
 ```
 
 ``` http
-GET /data/table/TABLE_ID?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /data/table/TABLE_ID HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > TABLE_ID must be replaced with the ID of the Table you want
@@ -568,17 +606,19 @@ You should create a new `record` for every set of Values you want to be treated 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
     "name": "testNewRecord"
   }' \
-  http://example.hatdex.org/data/record?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/data/record"
 ```
 
 ``` http
-POST /data/record?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /data/record HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -621,6 +661,7 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '[
      {
@@ -640,13 +681,14 @@ curl -H "Content-Type: application/json" \
            }
      }
    ]' \
-  http://example.hatdex.org/data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/data/record/RECORD_ID/values"
 ```
 
 ``` http
-POST /data/record/RECORD_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /data/record/RECORD_ID/values HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 [
@@ -748,6 +790,7 @@ Because multiple Data Fields can have the same name but different IDs, ID is man
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
      "record": 
@@ -775,13 +818,14 @@ curl -H "Content-Type: application/json" \
        }
      ]
    }' \
-  http://example.hatdex.org/data/record/values?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/data/record/values"
 ```
 
 ``` http
-POST /data/record/values?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /data/record/values HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -936,6 +980,7 @@ To create a new `Value`, the API request body should contain a new Value `value`
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
      "value": "testValue",
@@ -950,14 +995,15 @@ curl -H "Content-Type: application/json" \
        "name": "kitchenElectricityRow"
      }
    }' \
-  "http://example.hatdex.org/property?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/property"
 ```
 
 ``` http
-POST /value?access_token=ACCESS_TOKEN HTTP/1.1
+POST /value HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
   "value": "testValue",
@@ -1030,14 +1076,16 @@ Raw data retrieval is only available for the <em>Owner</em> user for the use by 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/data/table/TABLE_ID/values"
 ```
 
 ``` http
-GET /data/table/TABLE_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /data/table/TABLE_ID/values HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > TABLE_ID must be replaced with the ID of the Table you want
@@ -1234,18 +1282,20 @@ You should create a new Entity, implemented in each endpoint, separately for eve
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
      "name": "birthdayParty"
    }' \
-  "http://example.hatdex.org/event?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/event"
 ```
 
 ``` http
-POST /event?access_token=ACCESS_TOKEN HTTP/1.1
+POST /event HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
   "name": "birthdayParty"
@@ -1280,15 +1330,17 @@ You might want to check what Entities have been already created for a specific c
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/person?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/person"
 ```
 
 ``` http
-GET /person?access_token=ACCESS_TOKEN HTTP/1.1
+GET /person HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -1335,14 +1387,16 @@ You might need to extract some information about a particular Entity, e.g. it's 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/event/EVENT_ID?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/event/EVENT_ID"
 ```
 
 ``` http
-GET /event/EVENT_ID?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /event/EVENT_ID HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > EVENT_ID must be replaced with the ID of the Event you want
@@ -1375,14 +1429,16 @@ Sometimes you might want to extract all information in Entity structure. You can
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/thing/THING_ID/values?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/thing/THING_ID/values"
 ```
 
 ``` http
-GET /thing/THING_ID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /thing/THING_ID/values HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > THING_ID must be replaced with the ID of the Thing you want
@@ -1453,18 +1509,20 @@ organisation | organisation, location
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
      "relationshipType": "attends"
    }' \
-  "http://example.hatdex.org/event/EVENT_ID/person/PERSON_ID?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/event/EVENT_ID/person/PERSON_ID"
 ```
 
 ``` http
-POST /event/EVENT_ID/person/PERSON_ID?access_token=ACCESS_TOKEN HTTP/1.1
+POST /event/EVENT_ID/person/PERSON_ID HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
   "relationshipType": "attends"
@@ -1507,18 +1565,20 @@ Therefore, to create a new `Person Relationship Type`, the API request body shou
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
        "name":"friend"
    }' \
-  "http://example.hatdex.org/person/relationshipType?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/person/relationshipType"
 ```
 
 ``` http
-POST /person/relationshipType?access_token=ACCESS_TOKEN HTTP/1.1
+POST /person/relationshipType HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
     "name":"friend"
@@ -1555,15 +1615,17 @@ You might want to check what Person Relationship Types have been already created
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/person/relationshipType?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/person/relationshipType"
 ```
 
 ``` http
-GET /person/relationshipType?access_token=ACCESS_TOKEN HTTP/1.1
+GET /person/relationshipType HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -1609,18 +1671,20 @@ Sometimes you might need to add a `Type` to an existing `Entity`. For example, y
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
      "relationshipType": "date"
    }' \
-  "http://example.hatdex.org/event/EVENT_ID/type/TYPE_ID?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/event/EVENT_ID/type/TYPE_ID"
 ```
 
 ``` http
-POST /event/EVENT_ID/type/TYPE_ID?access_token=ACCESS_TOKEN HTTP/1.1
+POST /event/EVENT_ID/type/TYPE_ID HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
   "relationshipType": "date"
@@ -1654,6 +1718,7 @@ In order to link `Entity` to `Property` statically, you need to specify a single
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
      "property": 
@@ -1683,14 +1748,15 @@ curl -H "Content-Type: application/json" \
        "name": "Day 1"
      }
    }' \
-  "http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/person/PERSON_ID/property/static/PROPERTY_ID"
 ```
 
 ``` http
-POST /person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN HTTP/1.1
+POST /person/PERSON_ID/property/static/PROPERTY_ID HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
   "property": 
@@ -1750,6 +1816,7 @@ In contrast to linking Entities to Properties statically, to link them dynamical
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
      "property": 
@@ -1774,14 +1841,15 @@ curl -H "Content-Type: application/json" \
        "name": "Weight"
      }
    }' \
-  "http://example.hatdex.org/person/PERSON_ID/property/static/PROPERTY_ID?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/person/PERSON_ID/property/static/PROPERTY_ID"
 ```
 
 ``` http
-POST /person/PERSON_ID/property/static/PROPERTY_ID?access_token=ACCESS_TOKEN HTTP/1.1
+POST /person/PERSON_ID/property/static/PROPERTY_ID HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
   "property": 
@@ -1856,6 +1924,7 @@ You should create a new Property for every set of Values you want to be treated 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
       "name": "bodyWeight",
@@ -1871,14 +1940,15 @@ curl -H "Content-Type: application/json" \
          "id": 1
       }
    }' \
-  "http://example.hatdex.org/property?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/property"
 ```
 
 ``` http
-POST /property?access_token=ACCESS_TOKEN HTTP/1.1
+POST /property HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
     "name": "bodyWeight",
@@ -1953,15 +2023,17 @@ You might want to check what Properties have been already created before definin
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/property?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/property"
 ```
 
 ``` http
-GET /property?access_token=ACCESS_TOKEN HTTP/1.1
+GET /property HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -2082,15 +2154,17 @@ You might need to extract some information about a particular Property, e.g. its
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/property?name=height&access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/property?name=height"
 ```
 
 ``` http
-GET /property?name=height&access_token=ACCESS_TOKEN HTTP/1.1
+GET /property?name=height HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -2176,19 +2250,21 @@ You should create a new Type for every set of Values you want to be treated as a
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
       "name": "Date",
       "description": "Date in time"
    }' \
-  "http://example.hatdex.org/type/type?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/type"
 ```
 
 ``` http
-POST /type/type?access_token=ACCESS_TOKEN HTTP/1.1
+POST /type/type HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
     "name": "Date",
@@ -2229,18 +2305,20 @@ It is useful to link various Types. For example, you might have types "address" 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
       "relationshipType": "subtype"
    }' \
-  "http://example.hatdex.org/type/ID_1/type/ID_2?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/ID_1/type/ID_2"
 ```
 
 ``` http
-POST /type/ID_1/type/ID_2?access_token=ACCESS_TOKEN HTTP/1.1
+POST /type/ID_1/type/ID_2 HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
     "relationshipType": "subtype"
@@ -2274,15 +2352,17 @@ You might want to check what Types have been already created before defining a n
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/type/type?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/type"
 ```
 
 ``` http
-GET /type/type?access_token=ACCESS_TOKEN HTTP/1.1
+GET /type/type HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -2336,15 +2416,17 @@ You might need to extract some information about a particular Type, e.g. its ID 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/type/type?name=PostalAddress&access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/type?name=PostalAddress"
 ```
 
 ``` http
-GET /type/type?name=PostalAddress&access_token=ACCESS_TOKEN HTTP/1.1
+GET /type/type?name=PostalAddress HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -2397,20 +2479,22 @@ You should create a new `Unit of Measurement` for every set of Values you want t
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \
   '{
       "name": "kilograms",
       "description": "measurement of weight",
       "symbol": "kg"
    }' \
-  "http://example.hatdex.org/type/unitofmeasurement?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/unitofmeasurement"
 ```
 
 ``` http
-POST /type/unitofmeasurement?access_token=ACCESS_TOKEN HTTP/1.1
+POST /type/unitofmeasurement HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 
 {
     "name": "kilograms",
@@ -2455,15 +2539,17 @@ You might want to check what Units of Measurement have been already created befo
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/type/unitofmeasurement?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/unitofmeasurement"
 ```
 
 ``` http
-GET /type/unitofmeasurement?access_token=ACCESS_TOKEN HTTP/1.1
+GET /type/unitofmeasurement HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -2521,15 +2607,17 @@ You might need to extract some information about a particular Unit of Measuremen
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/type/unitofmeasurement?name=meters&access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/type/unitofmeasurement?name=meters"
 ```
 
 ``` http
-GET /type/unitofmeasurement?name=meters&access_token=ACCESS_TOKEN HTTP/1.1
+GET /type/unitofmeasurement?name=meters HTTP/1.1
 User-Agent: MyClient/1.0.0
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 ```
 > Example response:
 
@@ -2605,6 +2693,7 @@ The set of available API endpoints for managing bundles is:
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
     "name": "emptyBundleTest5-1",
@@ -2629,13 +2718,14 @@ curl -H "Content-Type: application/json" \
      }
     ]
   }'\
-  http://example.hatdex.org
+  "http://hat.hubofallthings.net"
 ```
 
 ``` http
-POST /bundles/context?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /bundles/context HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -2671,6 +2761,7 @@ Content-Type: application/json
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
      "name": "emptyBundle",
@@ -2687,13 +2778,14 @@ curl -H "Content-Type: application/json" \
        }
      ]
    }'\
-  "http://example.hatdex.org/bundles/contextless?name=meters&access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/bundles/contextless?name=meters"
 ```
 
 ``` http
-POST /bundles/contextless?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /bundles/contextless HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -2748,7 +2840,7 @@ All Direct Debit API calls contain all the information defined in Direct Debit S
 
 Parameter | Description | Optional / Mandatory
 --------- | ----------- | --------------------
-key | universally unique identifier (UUID)/userId | optional
+key | universally unique identifier (UUID)/userId | mandatory
 dateCreated | date when the direct debit was created | optional
 lastUpdated | date when the direct debit was updated | optional
 name | name of the direct debit | mandatory
@@ -2772,6 +2864,7 @@ To propose a new `Direct Debit`, the API request body should contain all the man
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -POST -d \ 
   '{
      "name": "DD Kitchen electricity on weekend parties",
@@ -2792,13 +2885,14 @@ curl -H "Content-Type: application/json" \
        }
      }
    }' \
-  http://example.hatdex.org/users/user?access_token=$ACCESS_TOKEN
+  "http://hat.hubofallthings.net/users/user"
 ```
 
 ``` http
-POST /dataDebit/propose?access_token=$ACCESS_TOKEN HTTP/1.1
+POST /dataDebit/propose HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 
 {
@@ -2880,13 +2974,15 @@ Consider a situation where you, owner of the HAT, receive a request from Direct 
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -PUT \
-  "http://example.hatdex.org/dataDebit/UUID/enable?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/dataDebit/UUID/enable"
 ```
 ``` http
-PUT /dataDebit/UUID/enable?access_token=$ACCESS_TOKEN HTTP/1.1
+PUT /dataDebit/UUID/enable HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > Example response:
@@ -2911,13 +3007,15 @@ If a User enables a Data Debit (see "Enabling/Disabling Direct Debit Requests" a
 ``` shell
 curl -H "Content-Type: application/json" \
   -H "Accept: application/json"  \
+  -H "X-Auth-Token: ACCESS_TOKEN"  \
   -GET \
-  "http://example.hatdex.org/dataDebit/UUID/values?access_token=$ACCESS_TOKEN"
+  "http://hat.hubofallthings.net/dataDebit/UUID/values"
 ```
 ``` http
-GET /dataDebit/UUID/values?access_token=$ACCESS_TOKEN HTTP/1.1
+GET /dataDebit/UUID/values HTTP/1.1
 Accept: application/json
-Host: example.hatdex.org
+Host: hat.hubofallthings.net
+X-Auth-Token: ACCESS_TOKEN
 Content-Type: application/json
 ```
 > Example response:
