@@ -5,7 +5,7 @@
  * 2. Prevent iOS text size adjust after orientation change, without disabling
  *    user zoom.
  */
-/* line 10, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 10, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 html {
   font-family: sans-serif;
   /* 1 */
@@ -17,7 +17,7 @@ html {
 /**
  * Remove default margin.
  */
-/* line 20, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 20, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 body {
   margin: 0; }
 
@@ -29,7 +29,7 @@ body {
  * and Firefox.
  * Correct `block` display not defined for `main` in IE 11.
  */
-/* line 34, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 34, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 article,
 aside,
 details,
@@ -49,7 +49,7 @@ summary {
  * 1. Correct `inline-block` display not defined in IE 8/9.
  * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
  */
-/* line 55, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 55, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 audio,
 canvas,
 progress,
@@ -63,7 +63,7 @@ video {
  * Prevent modern browsers from displaying `audio` without controls.
  * Remove excess height in iOS 5 devices.
  */
-/* line 68, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 68, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 audio:not([controls]) {
   display: none;
   height: 0; }
@@ -72,7 +72,7 @@ audio:not([controls]) {
  * Address `[hidden]` styling not present in IE 8/9/10.
  * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
  */
-/* line 78, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 78, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 [hidden],
 template {
   display: none; }
@@ -82,14 +82,14 @@ template {
 /**
  * Remove the gray background color from active links in IE 10.
  */
-/* line 90, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 90, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 a {
   background-color: transparent; }
 
 /**
  * Improve readability when focused and also mouse hovered in all browsers.
  */
-/* line 98, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 98, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 a:active,
 a:hover {
   outline: 0; }
@@ -99,14 +99,14 @@ a:hover {
 /**
  * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
  */
-/* line 110, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 110, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 abbr[title] {
   border-bottom: 1px dotted; }
 
 /**
  * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
  */
-/* line 118, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 118, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 b,
 strong {
   font-weight: bold; }
@@ -114,7 +114,7 @@ strong {
 /**
  * Address styling not present in Safari and Chrome.
  */
-/* line 127, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 127, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 dfn {
   font-style: italic; }
 
@@ -122,7 +122,7 @@ dfn {
  * Address variable `h1` font-size and margin within `section` and `article`
  * contexts in Firefox 4+, Safari, and Chrome.
  */
-/* line 136, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 136, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 h1 {
   font-size: 2em;
   margin: 0.67em 0; }
@@ -130,7 +130,7 @@ h1 {
 /**
  * Address styling not present in IE 8/9.
  */
-/* line 145, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 145, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 mark {
   background: #ff0;
   color: #000; }
@@ -138,14 +138,14 @@ mark {
 /**
  * Address inconsistent and variable font size in all browsers.
  */
-/* line 154, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 154, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 small {
   font-size: 80%; }
 
 /**
  * Prevent `sub` and `sup` affecting `line-height` in all browsers.
  */
-/* line 162, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 162, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 sub,
 sup {
   font-size: 75%;
@@ -153,11 +153,11 @@ sup {
   position: relative;
   vertical-align: baseline; }
 
-/* line 170, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 170, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 sup {
   top: -0.5em; }
 
-/* line 174, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 174, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 sub {
   bottom: -0.25em; }
 
@@ -166,14 +166,14 @@ sub {
 /**
  * Remove border when inside `a` element in IE 8/9/10.
  */
-/* line 185, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 185, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 img {
   border: 0; }
 
 /**
  * Correct overflow not hidden in IE 9/10/11.
  */
-/* line 193, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 193, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 svg:not(:root) {
   overflow: hidden; }
 
@@ -182,14 +182,14 @@ svg:not(:root) {
 /**
  * Address margin not present in IE 8/9 and Safari.
  */
-/* line 204, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 204, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 figure {
   margin: 1em 40px; }
 
 /**
  * Address differences between Firefox and other browsers.
  */
-/* line 212, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 212, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 hr {
   box-sizing: content-box;
   height: 0; }
@@ -197,14 +197,14 @@ hr {
 /**
  * Contain overflow in all browsers.
  */
-/* line 222, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 222, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 pre {
   overflow: auto; }
 
 /**
  * Address odd `em`-unit font size rendering in all browsers.
  */
-/* line 230, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 230, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 code,
 kbd,
 pre,
@@ -224,7 +224,7 @@ samp {
  * 2. Correct font properties not being inherited.
  * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
  */
-/* line 253, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 253, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button,
 input,
 optgroup,
@@ -240,7 +240,7 @@ textarea {
 /**
  * Address `overflow` set to `hidden` in IE 8/9/10/11.
  */
-/* line 267, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 267, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button {
   overflow: visible; }
 
@@ -250,7 +250,7 @@ button {
  * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
  * Correct `select` style inheritance in Firefox.
  */
-/* line 278, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 278, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button,
 select {
   text-transform: none; }
@@ -262,7 +262,7 @@ select {
  * 3. Improve usability and consistency of cursor style between image-type
  *    `input` and others.
  */
-/* line 291, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 291, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -275,7 +275,7 @@ input[type="submit"] {
 /**
  * Re-set default cursor for disabled elements.
  */
-/* line 303, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 303, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button[disabled],
 html input[disabled] {
   cursor: default; }
@@ -283,7 +283,7 @@ html input[disabled] {
 /**
  * Remove inner padding and border in Firefox 4+.
  */
-/* line 312, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 312, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -293,7 +293,7 @@ input::-moz-focus-inner {
  * Address Firefox 4+ setting `line-height` on `input` using `!important` in
  * the UA stylesheet.
  */
-/* line 323, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 323, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input {
   line-height: normal; }
 
@@ -304,7 +304,7 @@ input {
  * 1. Address box sizing set to `content-box` in IE 8/9/10.
  * 2. Remove excess padding in IE 8/9/10.
  */
-/* line 335, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 335, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
@@ -317,7 +317,7 @@ input[type="radio"] {
  * `font-size` values of the `input`, it causes the cursor style of the
  * decrement button to change from `default` to `text`.
  */
-/* line 347, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 347, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   height: auto; }
@@ -327,7 +327,7 @@ input[type="number"]::-webkit-outer-spin-button {
  * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
  *    (include `-moz` to future-proof).
  */
-/* line 358, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 358, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
@@ -339,7 +339,7 @@ input[type="search"] {
  * Safari (but not Chrome) clips the cancel button when the search input has
  * padding (and `textfield` appearance).
  */
-/* line 371, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 371, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none; }
@@ -347,7 +347,7 @@ input[type="search"]::-webkit-search-decoration {
 /**
  * Define consistent border, margin, and padding.
  */
-/* line 380, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 380, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
@@ -357,7 +357,7 @@ fieldset {
  * 1. Correct `color` not being inherited in IE 8/9/10/11.
  * 2. Remove padding so people aren't caught out if they zero out fieldsets.
  */
-/* line 391, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 391, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 legend {
   border: 0;
   /* 1 */
@@ -367,7 +367,7 @@ legend {
 /**
  * Remove default vertical scrollbar in IE 8/9/10/11.
  */
-/* line 400, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 400, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 textarea {
   overflow: auto; }
 
@@ -375,7 +375,7 @@ textarea {
  * Don't inherit the `font-weight` (applied by a rule above).
  * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
  */
-/* line 409, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 409, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 optgroup {
   font-weight: bold; }
 
@@ -384,12 +384,12 @@ optgroup {
 /**
  * Remove most spacing between table cells.
  */
-/* line 420, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 420, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-/* line 425, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_normalize.css */
+/* line 425, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_normalize.css */
 td,
 th {
   padding: 0; }
@@ -409,22 +409,22 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 */
-/* line 70, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 70, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content h1, .content h2, .content h3, .content h4, .content h5, .content h6, html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei","微软雅黑", STXihei, "华文细黑", sans-serif;
   font-size: 13px; }
 
-/* line 75, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 75, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
   font-weight: bold; }
 
-/* line 80, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 80, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content code, .content pre {
   font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
   font-size: 12px;
   line-height: 1.5; }
 
-/* line 102, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_variables.scss */
+/* line 102, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_variables.scss */
 .content code {
   word-break: break-all;
   /* Non standard for webkit */
@@ -449,119 +449,119 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 */
-/* line 20, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 20, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight table td {
   padding: 5px; }
 
-/* line 21, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 21, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight table pre {
   margin: 0; }
 
-/* line 22, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 22, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight, .highlight .w {
   color: #f8f8f2;
   background-color: #272822; }
 
-/* line 26, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 26, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .err {
   color: #151515;
   background-color: #ac4142; }
 
-/* line 30, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 30, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
   color: #505050; }
 
-/* line 33, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 33, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .cp {
   color: #f4bf75; }
 
-/* line 36, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 36, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .nt {
   color: #f4bf75; }
 
-/* line 39, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 39, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .o, .highlight .ow {
   color: #d0d0d0; }
 
-/* line 42, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 42, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .p, .highlight .pi {
   color: #d0d0d0; }
 
-/* line 45, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 45, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .gi {
   color: #90a959; }
 
-/* line 48, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 48, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .gd {
   color: #ac4142; }
 
-/* line 51, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 51, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .gh {
   color: #6a9fb5;
   background-color: #151515;
   font-weight: bold; }
 
-/* line 56, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 56, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
   color: #aa759f; }
 
-/* line 59, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 59, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .kc {
   color: #d28445; }
 
-/* line 62, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 62, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .kt {
   color: #d28445; }
 
-/* line 65, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 65, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .kd {
   color: #d28445; }
 
-/* line 68, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 68, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
   color: #90a959; }
 
-/* line 71, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 71, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .sr {
   color: #75b5aa; }
 
-/* line 74, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 74, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .si {
   color: #8f5536; }
 
-/* line 77, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 77, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .se {
   color: #8f5536; }
 
-/* line 80, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 80, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .nn {
   color: #f4bf75; }
 
-/* line 83, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 83, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .nc {
   color: #f4bf75; }
 
-/* line 86, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 86, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .no {
   color: #f4bf75; }
 
-/* line 89, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 89, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .na {
   color: #6a9fb5; }
 
-/* line 92, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 92, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
   color: #90a959; }
 
-/* line 95, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 95, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .ss {
   color: #90a959; }
 
-/* line 98, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 98, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight .c, .highlight .cm, .highlight .c1, .highlight .cs {
   color: #909090; }
 
-/* line 102, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_syntax.scss.erb */
+/* line 102, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_syntax.scss.erb */
 .highlight, .highlight .w {
   background-color: #292929; }
 
@@ -571,7 +571,7 @@ under the License.
   src: url("../fonts/slate.eot?#iefix-syv14m") format("embedded-opentype"), url("../fonts/slate.woff2?-syv14m") format("woff2"), url("../fonts/slate.woff?-syv14m") format("woff"), url("../fonts/slate.ttf?-syv14m") format("truetype"), url("../fonts/slate.svg?-syv14m#slate") format("svg");
   font-weight: normal;
   font-style: normal; }
-/* line 13, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 13, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.warning:before, .content aside.notice:before, .content aside.success:before, .tocify-wrapper > .search:before {
   font-family: 'slate';
   speak: none;
@@ -581,19 +581,19 @@ under the License.
   text-transform: none;
   line-height: 1; }
 
-/* line 23, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 23, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.warning:before {
   content: "\e600"; }
 
-/* line 27, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 27, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.notice:before {
   content: "\e602"; }
 
-/* line 31, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 31, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .content aside.success:before {
   content: "\e606"; }
 
-/* line 35, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/_icon-font.scss */
+/* line 35, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/_icon-font.scss */
 .tocify-wrapper > .search:before {
   content: "\e607"; }
 
@@ -612,7 +612,7 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 */
-/* line 28, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 28, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 html, body {
   color: #333;
   padding: 0;
@@ -624,14 +624,14 @@ html, body {
   -webkit-text-size-adjust: none;
   /* Never autoresize text */ }
 
-/* line 44, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 44, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 #toc > ul > li > a > span {
   float: right;
   background-color: #2484FF;
   border-radius: 40px;
   width: 20px; }
 
-/* line 60, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 60, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 .tocify-wrapper {
   transition: left 0.3s ease-in-out;
   overflow-y: auto;
@@ -645,20 +645,20 @@ html, body {
   background-color: #fff;
   font-size: 13px;
   font-weight: bold; }
-  /* line 76, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 76, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .lang-selector {
     display: none; }
-    /* line 78, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 78, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .lang-selector a {
       padding-top: 0.5em;
       padding-bottom: 0.5em; }
-  /* line 85, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 85, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper > img {
     display: block; }
-  /* line 89, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 89, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper > .search {
     position: relative; }
-    /* line 92, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 92, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper > .search input {
       background: #fff;
       border-width: 0 0 1px 0;
@@ -671,16 +671,16 @@ html, body {
       color: #333;
       border-radius: 0;
       /* ios has a default border radius */ }
-    /* line 105, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 105, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper > .search:before {
       position: absolute;
       top: 17px;
       left: 15px;
       color: #333; }
-  /* line 114, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 114, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper img + .tocify {
     margin-top: 20px; }
-  /* line 118, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 118, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .search-results {
     margin-top: 0;
     box-sizing: border-box;
@@ -691,77 +691,77 @@ html, body {
     transition-duration: 180ms;
     transition-timing-function: ease-in-out;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 8px), linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 8px), linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0) 1.5px), linear-gradient(to top, #ffffff, rgba(255, 255, 255, 0) 1.5px), #fff; }
-    /* line 127, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 127, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .search-results.visible {
       height: 30%;
       margin-bottom: 1em; }
-    /* line 134, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 134, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .search-results li {
       margin: 1em 15px;
       line-height: 1; }
-    /* line 139, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 139, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .search-results a {
       color: #333;
       text-decoration: none; }
-      /* line 143, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+      /* line 143, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
       .tocify-wrapper .search-results a:hover {
         text-decoration: underline; }
-  /* line 150, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 150, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .tocify-item > a, .tocify-wrapper .toc-footer li {
     padding: 0 15px 0 15px;
     display: block;
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
-  /* line 161, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 161, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper ul, .tocify-wrapper li {
     list-style: none;
     margin: 0;
     padding: 0;
     line-height: 28px; }
-  /* line 168, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 168, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper li {
     color: #333;
     transition-property: background;
     transition-timing-function: linear;
     transition-duration: 230ms; }
-  /* line 176, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 176, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .tocify-focus {
     box-shadow: 0px 1px 0px #fff;
     background-color: #eaf2f6;
     color: #333; }
-  /* line 184, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 184, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .tocify-subheader {
     display: none;
     background-color: #fff;
     font-weight: 500;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 8px), linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 8px), linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0) 1.5px), linear-gradient(to top, #ffffff, rgba(255, 255, 255, 0) 1.5px), #fff; }
-    /* line 188, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 188, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .tocify-subheader .tocify-item > a {
       padding-left: 25px;
       font-size: 12px; }
-    /* line 195, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 195, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .tocify-subheader > li:last-child {
       box-shadow: none; }
-  /* line 200, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 200, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .toc-footer {
     padding: 1em 0;
     margin-top: 1em;
     border-top: 1px dashed #666; }
-    /* line 205, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 205, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .toc-footer li, .tocify-wrapper .toc-footer a {
       color: #333;
       text-decoration: none; }
-    /* line 210, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 210, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .toc-footer a:hover {
       text-decoration: underline; }
-    /* line 214, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 214, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper .toc-footer li {
       font-size: 0.8em;
       line-height: 1.7;
       text-decoration: none; }
 
-/* line 224, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 224, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 #nav-button {
   padding: 0 1.5em 5em 0;
   display: none;
@@ -775,7 +775,7 @@ html, body {
   opacity: 0.7;
   line-height: 16px;
   transition: left 0.3s ease-in-out; }
-  /* line 225, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 225, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   #nav-button span {
     display: block;
     padding: 6px 6px 6px;
@@ -785,18 +785,18 @@ html, body {
     -webkit-transform: rotate(-90deg) translate(-100%, 0);
     transform: rotate(-90deg) translate(-100%, 0);
     border-radius: 0 0 0 5px; }
-  /* line 245, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 245, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   #nav-button img {
     height: 16px;
     vertical-align: bottom; }
-  /* line 252, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 252, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   #nav-button:hover {
     opacity: 1; }
-  /* line 253, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 253, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   #nav-button.open {
     left: 230px; }
 
-/* line 261, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 261, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 .page-wrapper {
   margin-left: 230px;
   position: relative;
@@ -804,7 +804,7 @@ html, body {
   background-color: #eaf2f6;
   min-height: 100%;
   padding-bottom: 1px; }
-  /* line 275, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 275, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .page-wrapper .dark-box {
     width: 50%;
     background-color: #393939;
@@ -812,18 +812,18 @@ html, body {
     right: 0;
     top: 0;
     bottom: 0; }
-  /* line 284, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 284, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .page-wrapper .lang-selector {
     position: fixed;
     z-index: 50;
     border-bottom: 5px solid #393939; }
 
-/* line 291, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 291, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 .lang-selector {
   background-color: #222;
   width: 100%;
   font-weight: bold; }
-  /* line 295, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 295, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .lang-selector a {
     display: block;
     float: left;
@@ -832,43 +832,43 @@ html, body {
     padding: 0 10px;
     line-height: 30px;
     outline: 0; }
-    /* line 304, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 304, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .lang-selector a:active, .lang-selector a:focus {
       background-color: #111;
       color: #fff; }
-    /* line 309, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 309, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .lang-selector a.active {
       background-color: #393939;
       color: #fff; }
-  /* line 315, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 315, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .lang-selector:after {
     content: '';
     clear: both;
     display: block; }
 
-/* line 327, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 327, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 .content {
   position: relative;
   z-index: 30; }
-  /* line 332, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 332, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content:after {
     content: '';
     display: block;
     clear: both; }
-  /* line 338, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 338, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content > h1, .content > h2, .content > h3, .content > h4, .content > h5, .content > h6, .content > p, .content > table, .content > ul, .content > ol, .content > aside, .content > dl {
     margin-right: 50%;
     padding: 0 28px;
     box-sizing: border-box;
     display: block;
     text-shadow: 0px 1px 0px #fff; }
-  /* line 348, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 348, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content > ul, .content > ol {
     padding-left: 43px; }
-  /* line 353, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 353, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content > h1, .content > h2, .content > div {
     clear: both; }
-  /* line 357, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 357, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content h1 {
     font-size: 30px;
     padding-top: 0.5em;
@@ -878,11 +878,11 @@ html, body {
     margin-top: 2em;
     border-top: 1px solid #ddd;
     background-image: linear-gradient(to bottom, #ffffff, #f9f9f9); }
-  /* line 369, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 369, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content h1:first-child, .content div:first-child + h1 {
     border-top-width: 0;
     margin-top: 0; }
-  /* line 374, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 374, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content h2 {
     font-size: 20px;
     margin-top: 4em;
@@ -891,72 +891,72 @@ html, body {
     padding-top: 1.2em;
     padding-bottom: 1.2em;
     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)); }
-  /* line 387, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 387, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content h1 + h2, .content h1 + div + h2 {
     margin-top: -21px;
     border-top: none; }
-  /* line 392, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 392, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content h3, .content h4, .content h5, .content h6 {
     font-size: 15px;
     margin-top: 2.5em;
     margin-bottom: 0.8em; }
-  /* line 399, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 399, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content h4, .content h5, .content h6 {
     font-size: 10px; }
-  /* line 403, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 403, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content hr {
     margin: 2em 0;
     border-top: 2px solid #393939;
     border-bottom: 2px solid #eaf2f6; }
-  /* line 409, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 409, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content table {
     margin-bottom: 1em;
     overflow: auto; }
-    /* line 412, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 412, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content table th, .content table td {
       text-align: left;
       vertical-align: top;
       line-height: 1.6; }
-    /* line 418, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 418, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content table th {
       padding: 5px 10px;
       border-bottom: 1px solid #ccc;
       vertical-align: bottom; }
-    /* line 424, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 424, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content table td {
       padding: 10px; }
-    /* line 428, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 428, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content table tr:last-child {
       border-bottom: 1px solid #ccc; }
-    /* line 432, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 432, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content table tr:nth-child(odd) > td {
       background-color: #f9fbfc; }
-    /* line 436, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 436, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content table tr:nth-child(even) > td {
       background-color: #f3f7fa; }
-  /* line 441, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 441, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content dt {
     font-weight: bold; }
-  /* line 445, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 445, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content dd {
     margin-left: 15px; }
-  /* line 449, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 449, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content p, .content li, .content dt, .content dd {
     line-height: 1.6;
     margin-top: 0; }
-  /* line 454, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 454, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content img {
     max-width: 100%; }
-  /* line 458, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 458, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content code {
     background-color: rgba(0, 0, 0, 0.05);
     padding: 3px;
     border-radius: 3px; }
-  /* line 466, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 466, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content pre > code {
     background-color: transparent;
     padding: 0; }
-  /* line 471, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 471, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content aside {
     padding-top: 1em;
     padding-bottom: 1em;
@@ -965,20 +965,20 @@ html, body {
     margin-bottom: 1.5em;
     background: #8fbcd4;
     line-height: 1.6; }
-    /* line 480, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 480, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content aside.warning {
       background-color: #c97a7e;
       text-shadow: 0 1px 0 #dfb0b3; }
-    /* line 485, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 485, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .content aside.success {
       background-color: #6ac174;
       text-shadow: 0 1px 0 #a0d7a6; }
-  /* line 491, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 491, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content aside:before {
     vertical-align: middle;
     padding-right: 0.5em;
     font-size: 14px; }
-  /* line 509, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 509, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content .search-highlight {
     padding: 2px;
     margin: -2px;
@@ -987,7 +987,7 @@ html, body {
     text-shadow: 1px 1px 0 #666;
     background: linear-gradient(to top left, #f7e633 0%, #f1d32f 100%); }
 
-/* line 525, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 525, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 .content pre, .content blockquote {
   background-color: #292929;
   color: #fff;
@@ -998,15 +998,15 @@ html, body {
   clear: right;
   box-sizing: border-box;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4); }
-  /* line 541, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 541, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content pre > p, .content blockquote > p {
     margin: 0; }
-  /* line 543, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 543, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content pre a, .content blockquote a {
     color: #fff;
     text-decoration: none;
     border-bottom: dashed 1px #ccc; }
-/* line 555, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+/* line 555, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
 .content blockquote > p {
   background-color: #1c1c1c;
   border-radius: 5px;
@@ -1016,47 +1016,47 @@ html, body {
   border-bottom: 1px solid #404040; }
 
 @media (max-width: 930px) {
-  /* line 573, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 573, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper {
     left: -230px; }
-    /* line 576, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+    /* line 576, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
     .tocify-wrapper.open {
       left: 0; }
 
-  /* line 581, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 581, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .page-wrapper {
     margin-left: 0; }
 
-  /* line 585, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 585, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   #nav-button {
     display: block; }
 
-  /* line 589, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 589, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .tocify-item > a {
     padding-top: 0.3em;
     padding-bottom: 0.3em; } }
 @media (max-width: 700px) {
-  /* line 596, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 596, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .dark-box {
     display: none; }
 
-  /* line 600, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 600, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content > h1, .content > h2, .content > h3, .content > h4, .content > h5, .content > h6, .content > p, .content > table, .content > ul, .content > ol, .content > aside, .content > dl {
     margin-right: 0; }
 
-  /* line 604, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 604, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .tocify-wrapper .lang-selector {
     display: block; }
 
-  /* line 608, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 608, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .page-wrapper .lang-selector {
     display: none; }
 
-  /* line 612, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 612, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content pre, .content blockquote {
     width: auto;
     float: none; }
 
-  /* line 617, /Users/aistenorkute/Desktop/HAT/doc/source/stylesheets/screen.css.scss */
+  /* line 617, /Users/andrius/development/the_hat/hat-doc/source/stylesheets/screen.css.scss */
   .content > pre + h1, .content > blockquote + h1, .content > pre + h2, .content > blockquote + h2, .content > pre + h3, .content > blockquote + h3, .content > pre + h4, .content > blockquote + h4, .content > pre + h5, .content > blockquote + h5, .content > pre + h6, .content > blockquote + h6, .content > pre + p, .content > blockquote + p, .content > pre + table, .content > blockquote + table, .content > pre + ul, .content > blockquote + ul, .content > pre + ol, .content > blockquote + ol, .content > pre + aside, .content > blockquote + aside, .content > pre + dl, .content > blockquote + dl {
     margin-top: 28px; } }

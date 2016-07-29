@@ -38,7 +38,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='http://forum.hatdex.org'>Visit our Forum</a></li>
             <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -78,6 +78,33 @@
 </ul>
 
 <p>APIs provide users with help in contextualising their data as well as suggesting to the overall ecosystem (users and applications) what data bundles would be beneficial to have and what other data sources would bring the most value when connected to the HAT.</p>
+
+<h1 id="login-with-hat">Login with HAT</h1>
+
+<p>HAT differentiates services into <em>approved</em> and <em>generic</em>.</p>
+
+<ul>
+<li><em>approved</em> ones have been configured with a HAT and may have special permissions such as accessing HAT data (e.g. HyperDataBrowser such as Rumpel)</li>
+<li><em>generic</em> services that only need to validate that the individual owns a specific HAT. Some <em>generic</em> services may also be <em>approved</em> but not require any privileges beyond validation</li>
+</ul>
+
+<p>Each HAT runs as a separate server and has a publicly-reachable address (such as <code class="prettyprint">https://hat.hubofallthings.com</code>). All calls in this documentation are therefore executed against an individual HAT.</p>
+
+<p>To use login with HAT:</p>
+
+<ol>
+<li>Send the user to <code class="prettyprint">/hatlogin?name=ServiceName&amp;redirect=https://serviceurl.com/path</code> endpoint of the HAT</li>
+<li>The user will either see a Login screen for their own HAT first, or directly proceed to the next step</li>
+<li>The user will see an icon to click on in order to go back to your service, with service name and url below the icon</li>
+<li>On clicking the icon, the user will get redirected to <code class="prettyprint">https://serviceurl.com/path?token=hat_access_token</code> where you need to get the token and complete user validation</li>
+</ol>
+
+<p>Access tokens user by the HAT are RS256-signed JWT tokens, i.e. using public key cryptography.
+Token can be decoded to see the issuer (<code class="prettyprint">iss</code>) which is the HAT address without verifying the 
+signature, however it would obviously be insufficient. A HAT&rsquo;s public key can be accessed at
+<code class="prettyprint">/publickey</code> endpoint of the HAT. The precise handling of tokens with asymmetric keys will depend
+on your <a href="https://jwt.io/#libraries-io">library</a>, however you need to make sure that your library
+supports RS256 keys.</p>
 
 <h1 id="user-management">User Management</h1>
 
@@ -189,9 +216,9 @@ curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se
 You must replace <code>ACCESS_TOKEN</code> with your application&rsquo;s API access token.
 </aside>
 
-<h2 id="direct-credit-and-debit-accounts">Direct Credit and Debit Accounts</h2>
+<h2 id="direct-data-credit-and-debit-accounts">Direct Data Credit and Debit Accounts</h2>
 
-<p>Data Credit Account can create/record a Raw Data, whilst Data Debit Account can read the Data that Owner decided to share and exchange. For more detailed information about how the Direct Data Debit (D3) System works, see section &ldquo;Sharing and Direct Data Debits&rdquo; at the end of this document.</p>
+<p>Data Credit Account can create/record Raw Data, whilst Data Debit Account can read the Data that Owner decided to share and exchange. For more detailed information about how the Direct Data Debit (D3) System works, see section &ldquo;Sharing and Direct Data Debits&rdquo; at the end of this document.</p>
 
 <h3 id="creating-accounts">Creating Accounts</h3>
 
